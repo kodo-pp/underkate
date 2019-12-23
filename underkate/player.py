@@ -12,10 +12,10 @@ def get_player():
     if _player is None:
         _player = TexturedWalkingSprite(
             pos = Vector(100, 100),
-            left = load_animation('textures/player/left', 4),
-            right = load_animation('textures/player/right', 4),
-            front = load_animation('textures/player/front', 4),
-            back = load_animation('textures/player/back', 4),
+            left = load_animation('assets/player/left', 4),
+            right = load_animation('assets/player/right', 4),
+            front = load_animation('assets/player/front', 4),
+            back = load_animation('assets/player/back', 4),
             speed = 160.0,
         )
     return _player
