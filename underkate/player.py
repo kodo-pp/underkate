@@ -1,5 +1,6 @@
-from .textured_walking_sprite import TexturedWalkingSprite
 from .animation import load_animation
+from .pass_map import PassMap
+from .textured_walking_sprite import TexturedWalkingSprite
 from .vector import Vector
 
 from typing import Optional
@@ -8,7 +9,7 @@ import pygame as pg
 
 
 class Player(TexturedWalkingSprite):
-    def __init__(self, pos: Vector):
+    def __init__(self, pos: Vector, game: 'typing go fuck yourself please'):
         super().__init__(
             pos = pos,
             left = load_animation('assets/player/left', 4),
@@ -17,6 +18,11 @@ class Player(TexturedWalkingSprite):
             back = load_animation('assets/player/back', 4),
             speed = 160.0,
         )
+        self.game = game
+
+    @staticmethod
+    def get_hitbox():
+        return pg.Rect(0, 0, 14 * 4, 18 * 4)
 
     def update(self, time_delta: float):
         super().update(time_delta)
@@ -31,14 +37,11 @@ class Player(TexturedWalkingSprite):
         if pressed_keys[pg.K_DOWN]:
             y += 1
         self.set_moving(x, y)
-
-
-_player: Optional[Player] = None
-
-
-def get_player() -> Player:
-    global _player
-
-    if _player is None:
-        _player = Player(pos=Vector(100, 100))
-    return _player
+    
+    def move(self, delta):
+        result = self.pos + delta
+        rect = self.get_hitbox()
+        rect.center = result.ints()
+        pass_map = self.game.room.pass_map
+        if pass_map.is_passable(rect):
+            super().move(delta)

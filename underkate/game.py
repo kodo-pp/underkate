@@ -1,7 +1,10 @@
 from . import player
+from . import room
 from . import sprite
+from . import vector
 
-from typing import Tuple, Optional
+from pathlib import Path
+from typing import Tuple, Optional, List
 
 import pygame as pg
 
@@ -12,31 +15,36 @@ class GameExited(BaseException):
 
 class Game:
     def __init__(self, window_size: Tuple[int, int] = (800, 600), target_fps: int = 60):
+        # Save parameters
         self.window_size = window_size
         self.target_fps = target_fps
-        self._fill_with_defaults()
 
-
-    def _fill_with_defaults(self):
-        self.player: Optional[player.Player] = None
-        self.clock: Optional[pg.time.Clock] = None
-        self.sprites: List[sprite.Sprite] = []
-        self.screen: pg.Surface = []
-
-
-    def __enter__(self) -> 'Game':
+        # Initialize PyGame
         pg.init()
         pg.display.set_mode(self.window_size)
         self.screen = pg.display.get_surface()
-        self.player = player.get_player()
-        self.sprites.append(self.player)
+
+        # Initialize clock
         self.clock = pg.time.Clock()
+
+        # Initialize player
+        self.player = player.Player(vector.Vector(100, 100), self)
+        self.sprites: List[sprite.Sprite] = [self.player]
+
+        # Load starting room
+        self.load_room('start')
+
+
+    def __enter__(self) -> 'Game':
         return self
 
 
     def __exit__(self, *args):
         pg.quit()
-        self._fill_with_defaults()
+
+
+    def load_room(self, room_name: str):
+        self.room = room.load_room(Path('.') / 'assets' / 'rooms' / room_name)
 
 
     def update(self, time_delta: float):
@@ -58,6 +66,7 @@ class Game:
 
     def draw(self):
         self.screen.fill((0, 0, 0))
+        self.room.draw(self.screen)
         self._draw_sprites()
         pg.display.flip()
 

@@ -63,6 +63,9 @@ class TexturedWalkingSprite(Sprite):
 
     def update(self, time_delta):
         delta = Vector(self.moving_x, self.moving_y) * (self.speed * time_delta)
+        self.move(delta)
+
+    def move(self, delta):
         self.pos += delta
 
     def get_current_texture(self):
