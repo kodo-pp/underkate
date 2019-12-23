@@ -17,3 +17,6 @@ class Sprite:
     @abc.abstractmethod
     def update(self, time_delta: float):
         pass
+
+    def is_alive(self) -> bool:
+        return True
