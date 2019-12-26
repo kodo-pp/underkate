@@ -2,7 +2,7 @@ from .pass_map import PassMap
 from .texture import BaseTexture, load_texture
 
 from pathlib import Path
-from typing import Union, cast
+from typing import Union, cast, Tuple
 
 import pygame as pg
 import yaml
@@ -19,6 +19,10 @@ class Room:
 
     def is_passable(self, rect: pg.Rect) -> bool:
         return self.pass_map.is_passable(rect)
+
+    def get_size(self) -> Tuple[int, int]:
+        rect = self.pass_map.image.get_rect()
+        return rect.width, rect.height
 
 
 def load_room(path: Union[Path, str]) -> Room:

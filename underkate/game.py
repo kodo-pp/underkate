@@ -45,6 +45,7 @@ class Game:
 
     def load_room(self, room_name: str):
         self.room = room.load_room(Path('.') / 'assets' / 'rooms' / room_name)
+        self.room_screen = pg.Surface(self.room.get_size())
 
 
     def update(self, time_delta: float):
@@ -65,15 +66,45 @@ class Game:
 
 
     def draw(self):
-        self.screen.fill((0, 0, 0))
-        self.room.draw(self.screen)
+        self.room_screen.fill((0, 0, 0))
+        self.room.draw(self.room_screen)
         self._draw_sprites()
+        self._blit_scrolled_screen()
         pg.display.flip()
+
+
+    def _blit_scrolled_screen(self):
+        rect = self.get_view_rect()
+        self.screen.blit(self.room_screen, self.room_screen.get_rect(), rect)
+
+
+    def get_view_rect(self) -> pg.Rect:
+        width, height = self.room.get_size()
+        x, y = self.player.pos.ints()
+        view_width, view_height = 800, 600
+
+        if view_width >= width:
+            offset_x = 0
+        else:
+            scrolled_width = max(0.0, width - view_width)
+            half_view_width = 0.5 * view_width
+            k_x = max(0.0, min(1.0, (x - half_view_width) / (width - view_width)))
+            offset_x = int(round(scrolled_width * k_x))
+
+        if view_height >= height:
+            offset_y = 0
+        else:
+            scrolled_height = max(0.0, height - view_height)
+            half_view_height = 0.5 * view_height
+            k_y = max(0.0, min(1.0, (y - half_view_height) / (height - view_height)))
+            offset_y = int(round(scrolled_height * k_y))
+
+        return pg.Rect(offset_x, offset_y, offset_x + view_width, offset_y + view_height)
 
 
     def _draw_sprites(self):
         for sprite in self.sprites:
-            sprite.draw(self.screen)
+            sprite.draw(self.room_screen)
 
 
     def run(self):
