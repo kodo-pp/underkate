@@ -38,10 +38,24 @@ class Player(TexturedWalkingSprite):
             y += 1
         self.set_moving(x, y)
     
-    def move(self, delta):
+    def _can_move(self, delta: Vector) -> bool:
         result = self.pos + delta
         rect = self.get_hitbox()
         rect.center = result.ints()
         pass_map = self.game.room.pass_map
-        if pass_map.is_passable(rect):
-            super().move(delta)
+        return pass_map.is_passable(rect)
+
+    def _move_unchecked(self, delta: Vector):
+        super().move(delta)
+
+    def move(self, delta: Vector):
+        if self._can_move(delta):
+            self._move_unchecked(delta)
+            return
+
+        eps = 1e-9
+        if abs(delta.x) > eps and abs(delta.y) > eps:
+            if self._can_move(Vector(delta.x, 0.0)):
+                self._move_unchecked(Vector(delta.x, 0.0))
+            elif self._can_move(Vector(0.0, delta.y)):
+                self._move_unchecked(Vector(0.0, delta.y))
