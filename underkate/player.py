@@ -22,7 +22,7 @@ class Player(TexturedWalkingSprite):
 
     @staticmethod
     def get_hitbox() -> pg.Rect:
-        return pg.Rect(0, 0, 14 * 4, 18 * 4)
+        return pg.Rect(0, 0, 8 * 4, 18 * 4)
 
     def get_hitbox_with_position(self) -> pg.Rect:
         hitbox = self.get_hitbox()
