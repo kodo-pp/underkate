@@ -21,8 +21,13 @@ class Player(TexturedWalkingSprite):
         self.game = game
 
     @staticmethod
-    def get_hitbox():
+    def get_hitbox() -> pg.Rect:
         return pg.Rect(0, 0, 14 * 4, 18 * 4)
+
+    def get_hitbox_with_position(self) -> pg.Rect:
+        hitbox = self.get_hitbox()
+        hitbox.center = self.pos.ints()
+        return hitbox
 
     def update(self, time_delta: float):
         super().update(time_delta)

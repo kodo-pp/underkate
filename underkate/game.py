@@ -58,6 +58,8 @@ class Game:
         for sprite in self.sprites:
             sprite.update(time_delta)
 
+        # Update the room
+        self.room.update(self.player)
 
     def process_events(self):
         for event in pg.event.get():
