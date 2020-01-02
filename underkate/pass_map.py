@@ -8,6 +8,14 @@ class PassMap:
         self.image = image
 
     def is_passable(self, rect: pg.Rect) -> bool:
+        # TODO: rewrite the algorithm or use JIT/AOT
+        # compilation to speed it up in case optimization
+        # is required
+
+        clipped = rect.clip(self.image.get_rect())
+        if rect != clipped:
+            return False
+
         self.image.lock()
         try:
             for y in range(rect.top, rect.bottom):
