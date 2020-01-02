@@ -7,7 +7,7 @@ class PassMap:
     def __init__(self, image: pg.Surface):
         self.image = image
 
-    def is_passable(self, rect: List[pg.Rect]) -> bool:
+    def is_passable(self, rect: pg.Rect) -> bool:
         self.image.lock()
         try:
             for y in range(rect.top, rect.bottom):
