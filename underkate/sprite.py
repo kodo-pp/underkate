@@ -2,7 +2,7 @@ from .vector import Vector
 
 import abc
 
-import pygame
+import pygame as pg # type: ignore
 
 
 # Not using pygame's sprite because it has inconvenient API for my purpose
@@ -11,7 +11,7 @@ class Sprite:
         self.pos = pos
 
     @abc.abstractmethod
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pg.Surface):
         pass
 
     @abc.abstractmethod

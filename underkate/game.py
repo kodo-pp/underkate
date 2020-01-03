@@ -6,7 +6,7 @@ from . import vector
 from pathlib import Path
 from typing import Tuple, Optional, List, cast
 
-import pygame as pg
+import pygame as pg # type: ignore
 
 
 class GameExited(BaseException):
@@ -30,6 +30,9 @@ class Game:
         # Initialize player
         self.player = player.Player(vector.Vector(100, 100), self)
         self.sprites: List[sprite.Sprite] = [self.player]
+    
+        self.room_loaded = False
+        self.room: room.Room
 
         # Load starting room
         self.load_room('start')
@@ -44,7 +47,7 @@ class Game:
 
 
     def load_room(self, room_name: str, argument: str = ''):
-        if hasattr(self, 'room'):
+        if self.room_loaded:
             prev_room_name = self.room.name
         else:
             prev_room_name = 'default'

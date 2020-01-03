@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 from typing import List, Union, Optional
 
-import pygame
+import pygame # type: ignore
 import yaml
 
 

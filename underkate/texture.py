@@ -1,5 +1,5 @@
-import pygame
-import pygame.image
+import pygame # type: ignore
+import pygame.image # type: ignore
 
 import abc
 from pathlib import Path

@@ -3,13 +3,16 @@ from .pass_map import PassMap
 from .textured_walking_sprite import TexturedWalkingSprite
 from .vector import Vector
 
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-import pygame as pg
+import pygame as pg # type: ignore
+
+if TYPE_CHECKING:
+    from .game import Game
 
 
 class Player(TexturedWalkingSprite):
-    def __init__(self, pos: Vector, game: 'typing go fuck yourself please'):
+    def __init__(self, pos: Vector, game: 'Game'):
         super().__init__(
             pos = pos,
             left = load_animation('assets/player/left', 4),

@@ -7,7 +7,7 @@ from .vector import Vector
 from pathlib import Path
 from typing import Union, cast, Tuple, List, Dict, NewType, Callable, TYPE_CHECKING
 
-import pygame as pg
+import pygame as pg # type: ignore
 import yaml
 
 if TYPE_CHECKING:
