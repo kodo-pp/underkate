@@ -4,7 +4,7 @@ from . import sprite
 from . import vector
 
 from pathlib import Path
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, cast
 
 import pygame as pg
 
@@ -43,9 +43,19 @@ class Game:
         pg.quit()
 
 
-    def load_room(self, room_name: str):
-        self.room = room.load_room(Path('.') / 'assets' / 'rooms' / room_name)
+    def load_room(self, room_name: str, argument: str = ''):
+        if hasattr(self, 'room'):
+            prev_room_name = self.room.name
+        else:
+            prev_room_name = 'default'
+
+        self.room = room.load_room(
+            Path('.') / 'assets' / 'rooms' / room_name,
+            game = self,
+        )
+        self.player.pos = self.room.initial_positions[prev_room_name]
         self.room_screen = pg.Surface(self.room.get_size())
+        self.room.on_load()
 
 
     def update(self, time_delta: float):

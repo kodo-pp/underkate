@@ -1,12 +1,17 @@
+from . import script
 from .pass_map import PassMap
 from .player import Player
 from .texture import BaseTexture, load_texture
+from .vector import Vector
 
 from pathlib import Path
-from typing import Union, cast, Tuple, List, Dict, NewType, Callable
+from typing import Union, cast, Tuple, List, Dict, NewType, Callable, TYPE_CHECKING
 
 import pygame as pg
 import yaml
+
+if TYPE_CHECKING:
+    from .game import Game
 
 
 Event = NewType('Event', str)
@@ -31,7 +36,7 @@ class TriggerEventWatcher:
         self.was_touching = False
 
     def update(self, player: Player) -> List[Event]:
-        events = []
+        events: List[Event] = []
 
         player_hitbox = player.get_hitbox_with_position()
         is_touching = self.trigger.is_touching(player_hitbox)
@@ -51,16 +56,22 @@ class TriggerEventWatcher:
 class Room:
     def __init__(
         self,
+        name: str,
         background: BaseTexture,
         pass_map: PassMap,
         triggers: List[Trigger],
+        initial_positions: Dict[str, Vector],
+        on_load: Callable,
     ):
+        self.name = name
         self.background = background
         self.pass_map = pass_map
         self.trigger_event_watchers = [
             TriggerEventWatcher(trigger)
             for trigger in triggers
         ]
+        self.initial_positions = initial_positions
+        self.on_load = on_load
 
     def draw(self, surface: pg.Surface):
         x, y = surface.get_rect().center
@@ -80,25 +91,58 @@ class Room:
                 watcher.pass_event(event)
 
 
-def load_room(path: Union[Path, str]) -> Room:
+class RoomError(Exception):
+    pass
+
+
+def load_room(path: Union[Path, str], game: 'Game') -> Room:
     if isinstance(path, str):
         path = Path(path)
 
     with open(path / 'room.yml') as f:
         data = yaml.safe_load(f)
 
+    room_name = cast(str, data['name'])
     background_filename = path / cast(str, data['background'])
     pass_map_filename = path / cast(str, data['pass_map'])
     background = load_texture(background_filename)
     pass_map = PassMap(pg.image.load(str(pass_map_filename)))
-    # TODO: load triggers from the room file
-    triggers = [
-        Trigger(
-            pg.Rect(0, 0, 100, 100),
-            {
-                'enter': lambda: print('Enter'),
-                'exit': lambda: print('Exit'),
-            },
-        ),
-    ]
-    return Room(background, pass_map, triggers)
+
+    triggers: List[Trigger] = []
+
+    for trigger_description in data['triggers']:
+        x1, y1, width, height = trigger_description['rect']
+        if width < 0 or height < 0:
+            raise RoomError('Height or width of a trigger is negative')
+
+        event_handlers: Dict[Event, Callable] = {}
+        for event_name, raw_script_filename in trigger_description['events'].items():
+            script_filename = path / cast(str, raw_script_filename)
+            script_object = script.load_script(script_filename, game)
+            event_handlers[Event(event_name)] = script_object
+
+        triggers.append(
+            Trigger(
+                pg.Rect(x1, y1, width, height),
+                event_handlers,
+            ),
+        )
+
+    if 'on_load' in data:
+        on_load = script.load_script(path / data['on_load'], game)
+    else:
+        on_load = lambda: None
+
+    initial_positions = {
+        name: Vector(x, y)
+        for (name, [x, y]) in data['initial_positions'].items()
+    }
+
+    return Room(
+        name = room_name,
+        background = background,
+        pass_map = pass_map,
+        triggers = triggers,
+        on_load = on_load,
+        initial_positions = initial_positions,
+    )

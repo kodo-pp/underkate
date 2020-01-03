@@ -1,0 +1,10 @@
+name: room2
+background: bg.png
+pass_map: pass.png
+triggers:
+    -   rect: [1300, 108, 192, 12]
+        events:
+            enter: prev_room.kates
+initial_positions:
+    default: [1400, 206]
+    start: [1400, 206]
