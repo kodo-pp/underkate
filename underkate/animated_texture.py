@@ -8,7 +8,7 @@ import pygame # type: ignore
 import yaml
 
 
-class Animation(BaseTexture):
+class AnimatedTexture(BaseTexture):
     def __init__(self, frames: List[BaseTexture], fps: int):
         self.frames = frames
         self.fps = fps
@@ -22,7 +22,7 @@ class Animation(BaseTexture):
         self.frames[frame_num].draw(surface, x, y)
 
 
-def load_animation(path: Union[Path, str], scale: int = 1) -> Animation:
+def load_animated_texture(path: Union[Path, str], scale: int = 1) -> AnimatedTexture:
     if isinstance(path, str):
         path = Path(path)
 
@@ -35,4 +35,4 @@ def load_animation(path: Union[Path, str], scale: int = 1) -> Animation:
         frames.append(load_texture(path / frame_filename, scale))
     
     fps = config['fps']
-    return Animation(frames, fps)
+    return AnimatedTexture(frames, fps)

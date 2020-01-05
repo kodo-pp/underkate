@@ -1,4 +1,4 @@
-from .animation import Animation
+from .animated_texture import AnimatedTexture
 from .sprite import Sprite
 from .vector import Vector
 
@@ -11,10 +11,10 @@ class TexturedWalkingSprite(Sprite):
     def __init__(
         self,
         pos: Vector,
-        left: Animation,
-        right: Animation,
-        front: Animation,
-        back: Animation,
+        left: AnimatedTexture,
+        right: AnimatedTexture,
+        front: AnimatedTexture,
+        back: AnimatedTexture,
         speed: float,
     ):
         super().__init__(pos)

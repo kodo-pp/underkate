@@ -1,9 +1,10 @@
-from .animation import load_animation
+from .animated_texture import load_animated_texture
+from .counter import Counter
 from .pass_map import PassMap
 from .textured_walking_sprite import TexturedWalkingSprite
 from .vector import Vector
 
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, ContextManager
 
 import pygame as pg # type: ignore
 
@@ -15,13 +16,14 @@ class Player(TexturedWalkingSprite):
     def __init__(self, pos: Vector, game: 'Game'):
         super().__init__(
             pos = pos,
-            left = load_animation('assets/player/left', 4),
-            right = load_animation('assets/player/right', 4),
-            front = load_animation('assets/player/front', 4),
-            back = load_animation('assets/player/back', 4),
+            left = load_animated_texture('assets/player/left', 4),
+            right = load_animated_texture('assets/player/right', 4),
+            front = load_animated_texture('assets/player/front', 4),
+            back = load_animated_texture('assets/player/back', 4),
             speed = 160.0,
         )
         self.game = game
+        self._controls_disabled_counter = Counter()
 
     @staticmethod
     def get_hitbox() -> pg.Rect:
@@ -67,3 +69,15 @@ class Player(TexturedWalkingSprite):
                 self._move_unchecked(Vector(delta.x, 0.0))
             elif self._can_move(Vector(0.0, delta.y)):
                 self._move_unchecked(Vector(0.0, delta.y))
+    
+    def are_controls_disabled(self) -> bool:
+        return self._controls_disabled_counter.is_zero()
+
+    def disable_controls(self):
+        self._controls_disabled_counter.increase()
+
+    def restore_controls(self):
+        self._controls_disabled_counter.decrease()
+
+    def with_controls_disabled(self) -> ContextManager[None]:
+        return self._controls_disabled_counter.with_increased()
