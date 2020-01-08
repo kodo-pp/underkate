@@ -27,7 +27,7 @@ class Game:
 
         # Initialize PyGame
         pg.init()
-        pg.display.set_mode(self.window_size)
+        pg.display.set_mode(self.window_size, pg.HWSURFACE | pg.DOUBLEBUF)
         self.screen = pg.display.get_surface()
         self._should_draw = True
 
@@ -55,6 +55,9 @@ class Game:
         self.player.disable_controls()
         self._run_room_loading_logic('start')
 
+        # Initialize FPS counter
+        get_pending_callback_queue().fire_after(1.0, self._print_fps)
+
 
     def __enter__(self) -> 'Game':
         return self
@@ -62,6 +65,11 @@ class Game:
 
     def __exit__(self, *args):
         pg.quit()
+
+
+    def _print_fps(self):
+        logger.debug('FPS: {}', self.clock.get_fps())
+        get_pending_callback_queue().fire_after(1.0, self._print_fps)
 
 
     def _run_room_loading_logic(self, room_name: str):
@@ -143,6 +151,7 @@ class Game:
 
 
     def draw(self):
+        self.room_screen.set_clip(self.get_view_rect())
         self.room_screen.fill((0, 0, 0))
         if self._should_draw:
             self.room.draw(self.room_screen)
