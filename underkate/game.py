@@ -1,7 +1,10 @@
+from . import font
 from . import player
 from . import room
 from . import sprite
+from . import text
 from . import vector
+from .pending_callback_queue import get_pending_callback_queue
 
 from pathlib import Path
 from typing import Tuple, Optional, List, cast
@@ -33,6 +36,15 @@ class Game:
     
         self.room_loaded = False
         self.room: room.Room
+
+        self.font = font.load_font(Path('.') / 'assets' / 'fonts' / 'default')
+
+        txt = text.DisplayedText([
+            text.TextPage('A strange light fills the room, which is a test message intended to be long enough to cause a line break to occur naturally. However\nwe can also force it to appear', self.font),
+            text.TextPage('Hello world!', self.font),
+        ], self)
+        self.sprites.append(txt)
+        txt.initialize()
 
         # Load starting room
         self.load_room('start')
@@ -74,6 +86,9 @@ class Game:
         # Update the room
         self.room.update(self.player)
 
+        # Run callbacks
+        get_pending_callback_queue().update()
+
     def process_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -83,8 +98,9 @@ class Game:
     def draw(self):
         self.room_screen.fill((0, 0, 0))
         self.room.draw(self.room_screen)
-        self._draw_sprites()
+        self._draw_non_osd_sprites()
         self._blit_scrolled_screen()
+        self._draw_osd_sprites()
         pg.display.flip()
 
 
@@ -117,9 +133,16 @@ class Game:
         return pg.Rect(offset_x, offset_y, offset_x + view_width, offset_y + view_height)
 
 
-    def _draw_sprites(self):
+    def _draw_non_osd_sprites(self):
         for sprite in self.sprites:
-            sprite.draw(self.room_screen)
+            if not sprite.is_osd():
+                sprite.draw(self.room_screen)
+
+
+    def _draw_osd_sprites(self):
+        for sprite in self.sprites:
+            if sprite.is_osd():
+                sprite.draw(self.screen)
 
 
     def run(self):

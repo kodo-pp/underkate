@@ -20,3 +20,6 @@ class Sprite:
 
     def is_alive(self) -> bool:
         return True
+
+    def is_osd(self) -> bool:
+        return False

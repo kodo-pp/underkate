@@ -46,6 +46,9 @@ class Player(TexturedWalkingSprite):
             y -= 1
         if pressed_keys[pg.K_DOWN]:
             y += 1
+
+        if self.are_controls_disabled():
+            x, y = 0, 0
         self.set_moving(x, y)
     
     def _can_move(self, delta: Vector) -> bool:
@@ -71,7 +74,7 @@ class Player(TexturedWalkingSprite):
                 self._move_unchecked(Vector(0.0, delta.y))
     
     def are_controls_disabled(self) -> bool:
-        return self._controls_disabled_counter.is_zero()
+        return not self._controls_disabled_counter.is_zero()
 
     def disable_controls(self):
         self._controls_disabled_counter.increase()
