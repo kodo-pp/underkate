@@ -68,6 +68,7 @@ class Game:
             Path('.') / 'assets' / 'rooms' / room_name,
             game = self,
         )
+        self.room_loaded = True
         self.player.pos = self.room.initial_positions[prev_room_name]
         self.room_screen = pg.Surface(self.room.get_size())
         self.room.on_load()
