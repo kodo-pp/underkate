@@ -95,14 +95,6 @@ class Game:
         self.spawn(RoomTransitionFadeIn(self.screen.get_size(), self).start_animation())
         get_event_manager().subscribe(
             'room_exit_animation_finished',
-            Subscriber(lambda event_id, arg: self.disable_drawing),
-        )
-        get_event_manager().subscribe(
-            'room_enter_animation_started',
-            Subscriber(lambda event_id, arg: self.enable_drawing),
-        )
-        get_event_manager().subscribe(
-            'room_exit_animation_finished',
             Subscriber(lambda event_id, arg: self._run_room_loading_logic(room_name)),
         )
 
