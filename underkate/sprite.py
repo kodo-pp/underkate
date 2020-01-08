@@ -23,3 +23,6 @@ class Sprite:
 
     def is_osd(self) -> bool:
         return False
+
+    def on_kill(self):
+        pass

@@ -20,7 +20,7 @@ class Player(TexturedWalkingSprite):
             right = load_animated_texture('assets/player/right', 4),
             front = load_animated_texture('assets/player/front', 4),
             back = load_animated_texture('assets/player/back', 4),
-            speed = 160.0,
+            speed = 250.0,
         )
         self.game = game
         self._controls_disabled_counter = Counter()
@@ -52,6 +52,8 @@ class Player(TexturedWalkingSprite):
         self.set_moving(x, y)
     
     def _can_move(self, delta: Vector) -> bool:
+        if delta.is_zero():
+            return True
         result = self.pos + delta
         rect = self.get_hitbox()
         rect.center = result.ints()

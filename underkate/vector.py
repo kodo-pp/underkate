@@ -6,6 +6,9 @@ class Vector:
         self.x = x
         self.y = y
 
+    def is_zero(self, eps: float = 1e-9) -> bool:
+        return abs(self.x) + abs(self.y) < eps
+
     def __add__(self, p: 'Vector') -> 'Vector':
         return Vector(self.x + p.x, self.y + p.y)
 

@@ -1,6 +1,8 @@
 from collections import namedtuple
 from typing import Any, Callable, Dict, Hashable, List
 
+from loguru import logger
+
 
 EventId = Hashable
 
@@ -15,11 +17,20 @@ class Subscriber:
 class EventManager:
     def __init__(self):
         self.subscribers: Dict[EventId, List[Subscriber]] = {}
+        self._counter = 0
+
+    def unique_id(self) -> EventId:
+        event_id = self._counter
+        self._counter += 1
+        logger.debug('EventManager: unique_id: {}', event_id)
+        return event_id
 
     def subscribe(self, event_id: EventId, subscriber: Subscriber):
+        logger.debug('EventManager: subscribe: `{}`', event_id)
         self.subscribers.setdefault(event_id, []).append(subscriber)
 
     def raise_event(self, event_id: EventId, argument: Any):
+        logger.debug('EventManager: raise_event: `{}` with argument `{}`', event_id, argument)
         subscribers = self.subscribers.get(event_id, [])
         for sub in subscribers:
             sub.handler(event_id, argument)
@@ -33,6 +44,6 @@ class EventManager:
 
 _event_manager = EventManager()
 
-def get_event_manager():
+def get_event_manager() -> EventManager:
     global _event_manager
     return _event_manager

@@ -1,15 +1,18 @@
 from . import font
 from . import player
 from . import room
-from . import sprite
 from . import text
 from . import vector
+from .event_manager import get_event_manager, Subscriber
 from .pending_callback_queue import get_pending_callback_queue
+from .room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
+from .sprite import Sprite
 
 from pathlib import Path
 from typing import Tuple, Optional, List, cast
 
 import pygame as pg # type: ignore
+from loguru import logger
 
 
 class GameExited(BaseException):
@@ -26,28 +29,31 @@ class Game:
         pg.init()
         pg.display.set_mode(self.window_size)
         self.screen = pg.display.get_surface()
+        self._should_draw = True
 
         # Initialize clock
         self.clock = pg.time.Clock()
 
         # Initialize player
         self.player = player.Player(vector.Vector(100, 100), self)
-        self.sprites: List[sprite.Sprite] = [self.player]
+        self.sprites: List[Sprite] = [self.player]
+        self._sprite_queue: List[Sprite] = []
     
         self.room_loaded = False
         self.room: room.Room
 
         self.font = font.load_font(Path('.') / 'assets' / 'fonts' / 'default')
 
-        txt = text.DisplayedText([
-            text.TextPage('A strange light fills the room, which is a test message intended to be long enough to cause a line break to occur naturally. However\nwe can also force it to appear', self.font),
-            text.TextPage('Hello world!', self.font),
-        ], self)
-        self.sprites.append(txt)
-        txt.initialize()
+        #txt = text.DisplayedText([
+        #    text.TextPage('A strange light fills the room, which is a test message intended to be long enough to cause a line break to occur naturally. However\nwe can also force it to appear', self.font),
+        #    text.TextPage('Hello world!', self.font),
+        #], self)
+        #self.sprites.append(txt)
+        #txt.initialize()
 
         # Load starting room
-        self.load_room('start')
+        self.player.disable_controls()
+        self._run_room_loading_logic('start')
 
 
     def __enter__(self) -> 'Game':
@@ -58,7 +64,8 @@ class Game:
         pg.quit()
 
 
-    def load_room(self, room_name: str, argument: str = ''):
+    def _run_room_loading_logic(self, room_name: str):
+        logger.debug('Game._run_room_loading_logic({})', room_name)
         if self.room_loaded:
             prev_room_name = self.room.name
         else:
@@ -71,14 +78,56 @@ class Game:
         self.room_loaded = True
         self.player.pos = self.room.initial_positions[prev_room_name]
         self.room_screen = pg.Surface(self.room.get_size())
+        self.spawn(RoomTransitionFadeOut(self.screen.get_size(), self).start_animation())
+        subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading(room_name))
+        get_event_manager().subscribe('room_enter_animation_finished', subscriber)
+
+
+    def _finalize_room_loading(self, room_name: str):
+        logger.debug('Game._finalize_room_loading({})', room_name)
+        self.player.restore_controls()
         self.room.on_load()
 
+
+    def load_room(self, room_name: str):
+        logger.debug('Game.load_room({})', room_name)
+        self.player.disable_controls()
+        self.spawn(RoomTransitionFadeIn(self.screen.get_size(), self).start_animation())
+        get_event_manager().subscribe(
+            'room_exit_animation_finished',
+            Subscriber(lambda event_id, arg: self.disable_drawing),
+        )
+        get_event_manager().subscribe(
+            'room_enter_animation_started',
+            Subscriber(lambda event_id, arg: self.enable_drawing),
+        )
+        get_event_manager().subscribe(
+            'room_exit_animation_finished',
+            Subscriber(lambda event_id, arg: self._run_room_loading_logic(room_name)),
+        )
+
+    def disable_drawing(self):
+        self._should_draw = False
+
+    def enable_drawing(self):
+        self._should_draw = True
 
     def update(self, time_delta: float):
         self.process_events()
 
         # Filter out dead sprites
+        dead_sprites = [sprite for sprite in self.sprites if not sprite.is_alive()]
+        for sprite in dead_sprites:
+            sprite.on_kill()
         self.sprites = [sprite for sprite in self.sprites if sprite.is_alive()]
+        if dead_sprites:
+            logger.debug('Removed {} sprites', len(dead_sprites))
+
+        # Add spawned sprites
+        self.sprites += self._sprite_queue
+        if self._sprite_queue:
+            logger.debug('Spawned {} sprites', len(self._sprite_queue))
+        self._sprite_queue = []
 
         # Update all alive sprites
         for sprite in self.sprites:
@@ -90,18 +139,24 @@ class Game:
         # Run callbacks
         get_pending_callback_queue().update()
 
+
     def process_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 raise GameExited()
+    
+
+    def spawn(self, sprite: Sprite):
+        self._sprite_queue.append(sprite)
 
 
     def draw(self):
         self.room_screen.fill((0, 0, 0))
-        self.room.draw(self.room_screen)
-        self._draw_non_osd_sprites()
-        self._blit_scrolled_screen()
-        self._draw_osd_sprites()
+        if self._should_draw:
+            self.room.draw(self.room_screen)
+            self._draw_non_osd_sprites()
+            self._blit_scrolled_screen()
+            self._draw_osd_sprites()
         pg.display.flip()
 
 
@@ -141,9 +196,13 @@ class Game:
 
 
     def _draw_osd_sprites(self):
+        sprites_drawn = 0
         for sprite in self.sprites:
             if sprite.is_osd():
                 sprite.draw(self.screen)
+                sprites_drawn += 1
+        if sprites_drawn > 1:
+            logger.trace('Drew {} OSD sprites', sprites_drawn)
 
 
     def run(self):
