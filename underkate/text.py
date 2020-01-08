@@ -1,3 +1,4 @@
+from .animated_sprite import AnimatedSprite
 from .font import Font
 from .pending_callback_queue import get_pending_callback_queue
 from .sprite import Sprite
@@ -7,13 +8,21 @@ from typing import List
 import pygame as pg  # type: ignore
 
 
-class TextPage:
-    def __init__(self, text: str, font: Font):
+class TextPage(AnimatedSprite):
+    def __init__(self, text: str, font: Font, delay: float = 0.05):
+        super().__init__()
         self.text = text
         self.font = font
-        self.current_position = -1
+        self.delay = delay
 
-    def draw(self, surface: pg.Surface):
+    def update(self, time_delta: float):
+        pass
+
+    def get_current_position(self):
+        elapsed_time = self.get_elapsed_time()
+        return int(elapsed_time / self.delay)
+
+    def draw_frame(self, surface: pg.Surface, elapsed_time: float):
         surface.fill((60, 60, 60, 255))
         surface_width, surface_height = surface.get_size()
         glyph_width, glyph_height = self.font.glyph_size
@@ -22,8 +31,10 @@ class TextPage:
         
         index = 0
         x, y = 0, 0
-        while y < num_rows and index < self.current_position:
-            while x < num_cols and index < self.current_position:
+        current_position = self.get_current_position()
+        limit = min(current_position, len(self.text))
+        while y < num_rows and index < limit:
+            while x < num_cols and index < limit:
                 char = self.text[index]
                 index += 1
                 if char == '\n':
@@ -36,13 +47,8 @@ class TextPage:
             x = 0
             y += 1
 
-    def has_finished(self) -> bool:
-        return self.current_position >= len(self.text)
-
-    def next(self):
-        self.current_position += 1
-        if self.current_position < len(self.text):
-            get_pending_callback_queue().fire_after(0.01, self.next)
+    def has_animation_finished(self) -> bool:
+        return self.get_current_position() >= len(self.text)
 
 
 class DisplayedText(Sprite):
@@ -60,7 +66,7 @@ class DisplayedText(Sprite):
         rect = pg.Rect(0, 3 * height // 4, width, height // 4)
         sub = surface.subsurface(rect)
         self.pages[self.page_index].draw(sub)
-        if self.pages[self.page_index].has_finished() and not self._next_scheduled:
+        if self.pages[self.page_index].has_animation_finished() and not self._next_scheduled:
             get_pending_callback_queue().fire_after(1.0, self.next)
             self._next_scheduled = True
 
@@ -70,7 +76,7 @@ class DisplayedText(Sprite):
         if self.page_index >= len(self.pages):
             self.finalize()
             return
-        self.pages[self.page_index].next()
+        self.pages[self.page_index].start_animation()
 
     def initialize(self):
         self.game.player.disable_controls()

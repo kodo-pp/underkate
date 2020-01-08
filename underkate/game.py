@@ -44,12 +44,12 @@ class Game:
 
         self.font = font.load_font(Path('.') / 'assets' / 'fonts' / 'default')
 
-        #txt = text.DisplayedText([
-        #    text.TextPage('A strange light fills the room, which is a test message intended to be long enough to cause a line break to occur naturally. However\nwe can also force it to appear', self.font),
-        #    text.TextPage('Hello world!', self.font),
-        #], self)
-        #self.sprites.append(txt)
-        #txt.initialize()
+        txt = text.DisplayedText([
+            text.TextPage('A strange light fills the room, which is a test message intended to be long enough to cause a line break to occur naturally. However\nwe can also force it to appear', self.font),
+            text.TextPage('Hello world!', self.font),
+        ], self)
+        self.sprites.append(txt)
+        txt.initialize()
 
         # Load starting room
         self.player.disable_controls()
