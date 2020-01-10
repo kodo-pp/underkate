@@ -1,4 +1,5 @@
 from .animated_sprite import AnimatedSprite
+from .event_manager import get_event_manager, Subscriber
 from .font import Font
 from .pending_callback_queue import get_pending_callback_queue
 from .sprite import Sprite
@@ -9,16 +10,26 @@ import pygame as pg  # type: ignore
 
 
 class TextPage(AnimatedSprite):
-    def __init__(self, text: str, font: Font, delay: float = 0.05):
+    def __init__(
+        self,
+        text: str,
+        font: Font,
+        delay: float = 0.05,
+        skippable: bool = True,
+    ):
         super().__init__()
         self.text = text
         self.font = font
         self.delay = delay
+        self.skippable = skippable
+        self._force_finished = False
 
     def update(self, time_delta: float):
         pass
 
     def get_current_position(self):
+        if self._force_finished:
+            return len(self.text)
         elapsed_time = self.get_elapsed_time()
         return int(elapsed_time / self.delay)
 
@@ -47,6 +58,10 @@ class TextPage(AnimatedSprite):
             x = 0
             y += 1
 
+    def try_force_finish(self):
+        if self.skippable:
+            self._force_finished = True
+
     def has_animation_finished(self) -> bool:
         return self.get_current_position() >= len(self.text)
 
@@ -57,7 +72,6 @@ class DisplayedText(Sprite):
         self.page_index = -1
         self.game = game
         self._is_alive = True
-        self._next_scheduled = False
 
     def draw(self, surface: pg.Surface):
         if self.page_index >= len(self.pages):
@@ -66,20 +80,31 @@ class DisplayedText(Sprite):
         rect = pg.Rect(0, 3 * height // 4, width, height // 4)
         sub = surface.subsurface(rect)
         self.pages[self.page_index].draw(sub)
-        if self.pages[self.page_index].has_animation_finished() and not self._next_scheduled:
-            get_pending_callback_queue().fire_after(1.0, self.next)
-            self._next_scheduled = True
 
     def next(self):
-        self._next_scheduled = False
         self.page_index += 1
         if self.page_index >= len(self.pages):
             self.finalize()
             return
         self.pages[self.page_index].start_animation()
 
+    def on_confirm(self, event, arg):
+        if not self.is_alive():
+            return
+        if self.pages[self.page_index].has_animation_finished():
+            self.next()
+        get_event_manager().subscribe('key:confirm', Subscriber(self.on_confirm))
+
+    def on_cancel(self, event, arg):
+        if not self.is_alive():
+            return
+        self.pages[self.page_index].try_force_finish()
+        get_event_manager().subscribe('key:cancel', Subscriber(self.on_cancel))
+
     def initialize(self):
         self.game.player.disable_controls()
+        get_event_manager().subscribe('key:confirm', Subscriber(self.on_confirm))
+        get_event_manager().subscribe('key:cancel', Subscriber(self.on_cancel))
         self.next()
 
     def is_alive(self):

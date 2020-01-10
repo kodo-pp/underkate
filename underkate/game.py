@@ -144,7 +144,14 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 raise GameExited()
-    
+            if event.type == pg.KEYDOWN:
+                if event.key in (pg.K_z, pg.K_RETURN):
+                    get_event_manager().raise_event('key:confirm', event)
+                elif event.key in (pg.K_x, pg.K_LSHIFT, pg.K_RSHIFT):
+                    get_event_manager().raise_event('key:cancel', event)
+                elif event.key in (pg.K_c, pg.K_LCTRL, pg.K_RCTRL):
+                    get_event_manager().raise_event('key:menu', event)
+
 
     def spawn(self, sprite: Sprite):
         self._sprite_queue.append(sprite)
