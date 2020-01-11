@@ -1,10 +1,11 @@
 from .animated_sprite import AnimatedSprite
 from .event_manager import get_event_manager, Subscriber
 from .font import Font
+from .game_singletone import get_game
 from .pending_callback_queue import get_pending_callback_queue
 from .sprite import Sprite
 
-from typing import List
+from typing import List, Callable
 
 import pygame as pg  # type: ignore
 
@@ -67,11 +68,21 @@ class TextPage(AnimatedSprite):
 
 
 class DisplayedText(Sprite):
-    def __init__(self, pages: List[TextPage], game):
+    def __init__(self, pages: List[TextPage], game, on_finish: Callable = lambda: None):
+        # TODO: get rid of `game` as an argument (and property) and use get_game() instead
         self.pages = pages
         self.page_index = -1
         self.game = game
         self._is_alive = True
+        self.on_finish_callback = on_finish
+
+    @staticmethod
+    def loads(serialized_data):
+        data = json.loads(serialized_data)
+        return DisplayedText(
+            pages = [TextPage.from_dict(d) for d in data['pages']],
+            game = get_game(),
+        )
 
     def draw(self, surface: pg.Surface):
         if self.page_index >= len(self.pages):
@@ -113,6 +124,7 @@ class DisplayedText(Sprite):
     def finalize(self):
         self.game.player.restore_controls()
         self._is_alive = False
+        self.on_finish_callback()
 
     def is_osd(self):
         return True

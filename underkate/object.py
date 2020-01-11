@@ -25,6 +25,7 @@ class Object(Sprite):
         self.texture = texture
         self.is_passable = is_passable
         self.hitbox = hitbox if hitbox is not None else generate_hitbox(20, 20)
+        self._is_alive = True
 
     def update(self):
         pass
@@ -37,3 +38,9 @@ class Object(Sprite):
 
     def can_player_pass(self, player_position: pg.Rect) -> bool:
         return bool(self.hitbox.colliderect(player_position))
+
+    def kill(self):
+        self._is_alive = False
+
+    def is_alive(self) -> bool:
+        return self._is_alive

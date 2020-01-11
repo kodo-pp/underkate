@@ -37,22 +37,6 @@ class KateScript(Script):
         self.runner.run()
 
 
-class ScriptError(Exception):
-    pass
-
-
-def _check(value: bool):
-    if not value:
-        raise ScriptError(f'Check failed: `{value}`')
-
-
-def kates_load_room(game: 'Game', runner: kates.runner.Runner, args: List[str]):
-    _check(len(args) == 1)
-    game.load_room(args[0])
-    runner.execution_stop_reason = kates.runner.ExecutionStopReason('room_unload')
-    return ''
-
-
 def load_python_script(path: Path, game: 'Game'):
     code = path.read_bytes()
     compiled_code = compile(code, str(path), 'exec')
@@ -65,6 +49,7 @@ BoundFunctionType = Callable[[kates.runner.Runner, List[str]], str]
 def make_function(function: UnboundFunctionType, game: 'Game') -> BoundFunctionType:
     f: BoundFunctionType = lambda runner, args: function(game, runner, args)
     return f
+
 
 def load_kate_script(path: Path, game: 'Game'):
     code = path.read_text()

@@ -63,6 +63,7 @@ class Room:
         triggers: List[Trigger],
         initial_positions: Dict[str, Vector],
         on_load: Callable,
+        path: Path,
     ):
         self.name = name
         self.background = background
@@ -74,6 +75,7 @@ class Room:
         self.initial_positions = initial_positions
         self.on_load = on_load
         self.objects: List[Object] = []
+        self.path = path
 
     def draw(self, surface: pg.Surface):
         x, y = surface.get_rect().center
@@ -161,4 +163,5 @@ def load_room(path: Union[Path, str], game: 'Game') -> Room:
         triggers = triggers,
         on_load = on_load,
         initial_positions = initial_positions,
+        path = path,
     )
