@@ -1,5 +1,6 @@
 from .sprite import Sprite
 from .texture import BaseTexture
+from .vector import Vector
 
 from typing import Optional
 
@@ -20,10 +21,10 @@ class Object(Sprite):
         is_passable: bool = False,
         hitbox: Optional[pg.Rect] = None,
     ):
-        super().__init__(self, pos)
+        super().__init__(pos)
         self.texture = texture
         self.is_passable = is_passable
-        self.hitbox = hitbox if self.hitbox is not None else generate_hitbox(20, 20)
+        self.hitbox = hitbox if hitbox is not None else generate_hitbox(20, 20)
 
     def update(self):
         pass
