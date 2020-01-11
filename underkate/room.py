@@ -1,4 +1,5 @@
 from . import script
+from .object import Object
 from .pass_map import PassMap
 from .player import Player
 from .texture import BaseTexture, load_texture
@@ -72,13 +73,19 @@ class Room:
         ]
         self.initial_positions = initial_positions
         self.on_load = on_load
+        self.objects: List[Object] = []
 
     def draw(self, surface: pg.Surface):
         x, y = surface.get_rect().center
         self.background.draw(surface, x, y)
+        for obj in self.objects:
+            obj.draw(surface)
 
     def is_passable(self, rect: pg.Rect) -> bool:
-        return self.pass_map.is_passable(rect)
+        return self.pass_map.is_passable(rect) and all(
+            obj.can_player_pass(rect)
+            for obj in self.objects
+        )
 
     def get_size(self) -> Tuple[int, int]:
         rect = self.pass_map.image.get_rect()
@@ -89,6 +96,15 @@ class Room:
             events = watcher.update(player)
             for event in events:
                 watcher.pass_event(event)
+    
+        alive_objects = [obj for obj in self.objects if obj.is_alive()]
+        self.objects = alive_objects
+
+        for obj in self.objects:
+            obj.update()
+
+    def add_object(self, obj: Object):
+        self.objects.append(obj)
 
 
 class RoomError(Exception):
