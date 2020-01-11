@@ -4,6 +4,7 @@ from . import room
 from . import text
 from . import vector
 from .event_manager import get_event_manager, Subscriber
+from .game_singletone import set_game
 from .pending_callback_queue import get_pending_callback_queue
 from .room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
 from .sprite import Sprite
@@ -21,6 +22,9 @@ class GameExited(BaseException):
 
 class Game:
     def __init__(self, window_size: Tuple[int, int] = (800, 600), target_fps: int = 60):
+        # Initialize singletone
+        set_game(self)
+
         # Save parameters
         self.window_size = window_size
         self.target_fps = target_fps
@@ -57,7 +61,6 @@ class Game:
 
         # Initialize FPS counter
         get_pending_callback_queue().fire_after(1.0, self._print_fps)
-
 
     def __enter__(self) -> 'Game':
         return self
