@@ -23,9 +23,11 @@ class Trigger:
         self.rect = rect
         self.event_handlers = event_handlers
 
+
     def handle_event(self, event_name: Event):
         if event_name in self.event_handlers:
             self.event_handlers[event_name]()
+
 
     def is_touching(self, rect: pg.Rect) -> bool:
         return bool(self.rect.colliderect(rect))
@@ -35,6 +37,7 @@ class TriggerEventWatcher:
     def __init__(self, trigger: Trigger):
         self.trigger = trigger
         self.was_touching = False
+
 
     def update(self, player: Player) -> List[Event]:
         events: List[Event] = []
@@ -49,6 +52,7 @@ class TriggerEventWatcher:
 
         self.was_touching = is_touching
         return events
+
 
     def pass_event(self, event: Event):
         self.trigger.handle_event(event)
@@ -77,11 +81,13 @@ class Room:
         self.objects: List[Object] = []
         self.path = path
 
+
     def draw(self, surface: pg.Surface):
         x, y = surface.get_rect().center
         self.background.draw(surface, x, y)
         for obj in self.objects:
             obj.draw(surface)
+
 
     def is_passable(self, rect: pg.Rect) -> bool:
         return self.pass_map.is_passable(rect) and all(
@@ -89,21 +95,24 @@ class Room:
             for obj in self.objects
         )
 
+
     def get_size(self) -> Tuple[int, int]:
         rect = self.pass_map.image.get_rect()
         return rect.width, rect.height
+
 
     def update(self, player: Player):
         for watcher in self.trigger_event_watchers:
             events = watcher.update(player)
             for event in events:
                 watcher.pass_event(event)
-    
+
         alive_objects = [obj for obj in self.objects if obj.is_alive()]
         self.objects = alive_objects
 
         for obj in self.objects:
             obj.update()
+
 
     def add_object(self, obj: Object):
         self.objects.append(obj)

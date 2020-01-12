@@ -18,17 +18,21 @@ class Font:
         self.glyph_size = glyph_size
         self._glyph_positions = glyph_positions
 
+
     def get_glyph_name(self, character: str) -> str:
         return self._glyph_name_mapping[character]
+
 
     def get_glyph_position(self, glyph_name: str) -> Tuple[int, int]:
         y, x = self._glyph_positions[glyph_name]
         return x, y
 
+
     def get_glyph_rectangle(self, glyph_name: str) -> pg.Rect:
         x, y = self.get_glyph_position(glyph_name)
         rect = pg.Rect((x * self.glyph_size[0], y * self.glyph_size[1]), self.glyph_size)
         return rect
+
 
     _glyph_name_mapping = {
         ' ': 'space',
@@ -140,18 +144,18 @@ def load_font(path: Union[str, Path]):
 
     with open(path / 'font.yml') as f:
         data = yaml.safe_load(f)
-    
+
     font_name = data['name']
     font_image_path = path / cast(str, data['image'])
     font_image = pg.image.load(str(font_image_path))
     scale_factor = cast(int, data['scale'])
     font_image = prepare_font_image(font_image, scale_factor)
-    
+
     initial_glyph_width, initial_glyph_height = cast(Tuple[int, int], data['glyph_size'])
     glyph_width = initial_glyph_width * scale_factor
     glyph_height = initial_glyph_height * scale_factor
 
     # Actually, the type does not match exactly, but I don't give a fuck
     name_to_position_mapping = cast(Dict[str, Tuple[int, int]], data['mappings'])
-    
+
     return Font(font_name, font_image, (glyph_width, glyph_height), name_to_position_mapping)

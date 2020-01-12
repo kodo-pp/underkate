@@ -5,8 +5,8 @@ from loguru import logger
 
 
 EventId = Hashable
-
 EventHandler = Callable[[EventId, Any], None]
+
 
 class Subscriber:
     def __init__(self, handler: EventHandler, is_persistent: bool = False):
@@ -21,20 +21,24 @@ class EventManager:
         self._lock_level = 0
         self._write_queue: List[Tuple[EventId, Subscriber]] = []
 
+
     def __enter__(self):
         self._lock_level += 1
         return self
+
 
     def __exit__(self, *args):
         self._lock_level -= 1
         if self._lock_level == 0:
             self._finalize_lock()
 
+
     def unique_id(self) -> EventId:
         event_id = self._counter
         self._counter += 1
         logger.debug('EventManager: unique_id: {}', event_id)
         return event_id
+
 
     def subscribe(self, event_id: EventId, subscriber: Subscriber):
         logger.debug('EventManager: subscribe: `{}`', event_id)
@@ -43,6 +47,7 @@ class EventManager:
         else:
             with self:
                 self.subscribers.setdefault(event_id, []).append(subscriber)
+
 
     def raise_event(self, event_id: EventId, argument: Any):
         logger.debug('EventManager: raise_event: `{}` with argument `{}`', event_id, argument)
@@ -58,10 +63,11 @@ class EventManager:
                 self.subscribers.pop(event_id, None)
         for sub in subscribers:
             sub.handler(event_id, argument)
-            
-    
+
+
     def _is_locked(self) -> bool:
         return self._lock_level > 0
+
 
     def _finalize_lock(self):
         assert not self._is_locked()

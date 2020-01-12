@@ -9,11 +9,14 @@ class PendingCallback:
         self.fire_timestamp = fire_timestamp
         self.handler = handler
 
+
     def handle(self):
         self.handler()
 
+
     def has_fired(self, current_timestamp: float) -> bool:
         return current_timestamp >= self.fire_timestamp
+
 
     def key(self):
         return self.fire_timestamp
@@ -22,11 +25,13 @@ class PendingCallback:
 class PendingCallbackQueue:
     def __init__(self):
         self.queue = SortedList(key=PendingCallback.key)
-    
+
+
     def fire_after(self, delay: float, handler: Callable):
         fire_timestamp = time.monotonic() + delay
         pending_callback = PendingCallback(fire_timestamp, handler)
         self.queue.add(pending_callback)
+
 
     def update(self):
         current_timestamp = time.monotonic()
@@ -38,6 +43,7 @@ class PendingCallbackQueue:
 
 
 _pending_callback_queue = PendingCallbackQueue()
+
 
 def get_pending_callback_queue() -> PendingCallbackQueue:
     global _pending_callback_queue

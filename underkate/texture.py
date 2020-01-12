@@ -24,6 +24,7 @@ class Texture(BaseTexture):
             self.image.fill((0,0,0,0))
             self.image.blit(sw_image, self.image.get_rect())
 
+
     def draw(self, surface: pygame.Surface, x: int, y: int):
         destination = self.image.get_rect()
         destination.center = (x, y)
@@ -33,6 +34,6 @@ class Texture(BaseTexture):
 def load_texture(path: Union[Path, str], scale: int = 1) -> Texture:
     if isinstance(path, str):
         path = Path(path)
-    
+
     with path.open() as f:
         return Texture(pygame.image.load(f), scale)

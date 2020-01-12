@@ -42,7 +42,7 @@ class Game:
         self.player = player.Player(vector.Vector(100, 100), self)
         self.sprites: List[Sprite] = [self.player]
         self._sprite_queue: List[Sprite] = []
-    
+
         self.room_loaded = False
         self.room: room.Room
 
@@ -54,6 +54,7 @@ class Game:
 
         # Initialize FPS counter
         get_pending_callback_queue().fire_after(1.0, self._print_fps)
+
 
     def __enter__(self) -> 'Game':
         return self
@@ -102,11 +103,14 @@ class Game:
             Subscriber(lambda event_id, arg: self._run_room_loading_logic(room_name)),
         )
 
+
     def disable_drawing(self):
         self._should_draw = False
 
+
     def enable_drawing(self):
         self._should_draw = True
+
 
     def update(self, time_delta: float):
         self.process_events()

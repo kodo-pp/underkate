@@ -13,6 +13,7 @@ class AnimatedTexture(BaseTexture):
         self.frames = frames
         self.fps = fps
 
+
     def draw(self, surface: pygame.Surface, x, y, force_frame: Optional[int] = None):
         now = time.time()
         if force_frame is not None:
@@ -29,10 +30,10 @@ def load_animated_texture(path: Union[Path, str], scale: int = 1) -> AnimatedTex
     config_path = path / 'animation.yml'
     with open(config_path) as f:
         config = yaml.safe_load(f)
-    
+
     frames: List[BaseTexture] = []
     for frame_filename in config['frames']:
         frames.append(load_texture(path / frame_filename, scale))
-    
+
     fps = config['fps']
     return AnimatedTexture(frames, fps)

@@ -21,6 +21,7 @@ class PythonScript(Script):
         self.compiled_code = compiled_code
         self.game = game
 
+
     def __call__(self):
         local_vars = {
             'game': self.game,
@@ -32,6 +33,7 @@ class KateScript(Script):
     def __init__(self, runner: kates.runner.Runner, game: 'Game'):
         self.runner = runner
         self.game = game
+
 
     def __call__(self):
         self.runner.run()

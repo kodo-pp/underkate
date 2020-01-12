@@ -25,14 +25,17 @@ class Player(TexturedWalkingSprite):
         self.game = game
         self._controls_disabled_counter = Counter()
 
+
     @staticmethod
     def get_hitbox() -> pg.Rect:
         return pg.Rect(0, 0, 8 * 4, 18 * 4)
+
 
     def get_hitbox_with_position(self) -> pg.Rect:
         hitbox = self.get_hitbox()
         hitbox.center = self.pos.ints()
         return hitbox
+
 
     def update(self, time_delta: float):
         super().update(time_delta)
@@ -50,18 +53,21 @@ class Player(TexturedWalkingSprite):
         if self.are_controls_disabled():
             x, y = 0, 0
         self.set_moving(x, y)
-    
+
+
     def _can_move(self, delta: Vector) -> bool:
         if delta.is_zero():
             return True
         result = self.pos + delta
         rect = self.get_hitbox()
         rect.center = result.ints()
-        pass_map = self.game.room.pass_map 
+        pass_map = self.game.room.pass_map
         return pass_map.is_passable(rect)
+
 
     def _move_unchecked(self, delta: Vector):
         super().move(delta)
+
 
     def move(self, delta: Vector):
         if self._can_move(delta):
@@ -74,15 +80,19 @@ class Player(TexturedWalkingSprite):
                 self._move_unchecked(Vector(delta.x, 0.0))
             elif self._can_move(Vector(0.0, delta.y)):
                 self._move_unchecked(Vector(0.0, delta.y))
-    
+
+
     def are_controls_disabled(self) -> bool:
         return not self._controls_disabled_counter.is_zero()
+
 
     def disable_controls(self):
         self._controls_disabled_counter.increase()
 
+
     def restore_controls(self):
         self._controls_disabled_counter.decrease()
+
 
     def with_controls_disabled(self) -> ContextManager[None]:
         return self._controls_disabled_counter.with_increased()

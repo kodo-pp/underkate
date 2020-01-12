@@ -7,6 +7,7 @@ class PassMap:
     def __init__(self, image: pg.Surface):
         self.image = image
 
+
     def is_passable(self, rect: pg.Rect) -> bool:
         # TODO: rewrite the algorithm or use JIT/AOT
         # compilation to speed it up in case optimization
