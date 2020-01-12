@@ -1,13 +1,18 @@
 from .animated_sprite import AnimatedSprite
 from .event_manager import get_event_manager, Subscriber
-from .font import Font
+from .font import Font, load_font
 from .game_singletone import get_game
 from .pending_callback_queue import get_pending_callback_queue
 from .sprite import Sprite
 
-from typing import List, Callable
+import json
+from pathlib import Path
+from typing import List, Callable, Union
 
 import pygame as pg  # type: ignore
+
+
+SerializedData = Union[str, bytes]
 
 
 class TextPage(AnimatedSprite):
@@ -24,6 +29,38 @@ class TextPage(AnimatedSprite):
         self.delay = delay
         self.skippable = skippable
         self._force_finished = False
+
+    @staticmethod
+    def from_dict(d: dict) -> 'TextPage':
+        schema = [
+            # KEY, TYPE, DEFAULT
+            ('text', str, None),
+            ('font_name', str, 'default'),
+            ('delay', float, 0.05),
+            ('skippable', bool, True),
+        ]
+
+        values: dict = {}
+
+        for key, required_type, default in schema:
+            if key in d and not isinstance(d[key], required_type):
+                # Key is present but the value is of a wrong type
+                raise TypeError('Failed to deserialize TextPage: invalid data types')
+            if key in d:
+                values[key] = d[key]
+            else:
+                values[key] = default
+
+        font = load_font(Path('.') / 'assets' / 'fonts' / values['font_name'])
+        return TextPage(values['text'], font=font, delay=values['delay'], skippable=values['skippable'])
+
+    def to_dict(self) -> dict:
+        return {
+            'text': self.text,
+            'font_name': self.font.name,
+            'delay': self.delay,
+            'skippable': self.skippable,
+        }
 
     def update(self, time_delta: float):
         pass
@@ -77,12 +114,20 @@ class DisplayedText(Sprite):
         self.on_finish_callback = on_finish
 
     @staticmethod
-    def loads(serialized_data):
+    def loads(serialized_data: SerializedData) -> 'DisplayedText':
         data = json.loads(serialized_data)
         return DisplayedText(
             pages = [TextPage.from_dict(d) for d in data['pages']],
             game = get_game(),
         )
+
+    def dumps(self) -> SerializedData:
+        return json.dumps({
+            'pages': [
+                page.to_dict()
+                for page in self.pages
+            ],
+        })
 
     def draw(self, surface: pg.Surface):
         if self.page_index >= len(self.pages):

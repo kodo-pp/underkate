@@ -5,7 +5,7 @@ triggers:
     -   rect: [1300, 1080, 192, 12]
         events:
             enter: next_room.kates
-on_load: on_load.py
+on_load: on_load.kates
 initial_positions:
     default: [140, 182]
     room2: [1400, 1000]

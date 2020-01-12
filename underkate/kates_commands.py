@@ -4,13 +4,14 @@ from .managers import texture_manager, object_manager
 from .object import Object
 from .pending_callback_queue import get_pending_callback_queue
 from .room import load_room
-from .texture import load_texture
+from .text import DisplayedText
+from .texture import Texture, load_texture
 from .vector import Vector
 
-from typing import List, Optional
+from typing import List, Optional, Dict, Callable
 
-import pygame as pg
-from kates.runner import Runner
+import pygame as pg  # type: ignore
+from kates.runner import Runner, ExecutionStopReason
 
 
 class ScriptError(Exception):
@@ -25,7 +26,7 @@ def _check(value: bool):
 def kates_load_room(runner: Runner, args: List[str]) -> str:
     _check(len(args) == 1)
     get_game().load_room(args[0])
-    runner.execution_stop_reason = kates.runner.ExecutionStopReason('room_unload')
+    runner.execution_stop_reason = ExecutionStopReason('room_unload')
     return ''
 
 
@@ -63,7 +64,7 @@ def kates_create_object(runner: Runner, args: List[str]) -> str:
         is_passable = False
 
     hitbox: Optional[pg.Rect]
-    if len(args) >= 8
+    if len(args) >= 8:
         x_center, y_center, width, height = map(int, args[4:8])
         hitbox = pg.Rect(0, 0, width, height)
         hitbox.center = (x_center, y_center)
@@ -109,7 +110,7 @@ def kates_object_set_pos(runner: Runner, args: List[str]) -> str:
     return ''
 
 
-def kates_object_delete(runner: Runner, args: List[str]) -> str:
+def kates_delete_object(runner: Runner, args: List[str]) -> str:
     _check(len(args) == 1)
     object_id = args[0]
     object_manager[object_id].kill()
@@ -119,15 +120,34 @@ def kates_object_delete(runner: Runner, args: List[str]) -> str:
 def kates_sleep(runner: Runner, args: List[str]) -> str:
     _check(len(args) == 1)
     delay = float(args[0])
-    get_pending_callback_queue().fire_after(delay, self.runner.run)
-    self.runner.execution_stop_reason = 'Zzz...'
+    get_pending_callback_queue().fire_after(delay, runner.run)
+    runner.execution_stop_reason = ExecutionStopReason('Zzz...')
     return ''
 
 
 def kates_text(runner: Runner, args: List[str]) -> str:
     _check(len(args) == 1)
     serialized_text = args[0]
-    text = Text.loads(serialized_text)
-    text.on_finish_callback = self.runner.run
+    text = DisplayedText.loads(serialized_text)
+    text.on_finish_callback = runner.run
     text.initialize()
     get_game().spawn(text)
+    return ''
+
+
+FunctionType = Callable[[Runner, List[str]], str]
+
+
+def get_command_list() -> Dict[str, FunctionType]:
+    return {
+        'create_object': kates_create_object,
+        'delete_object': kates_delete_object,
+        'load_room': kates_load_room,
+        'load_texture': kates_load_texture,
+        'object:set_hitbox': kates_object_set_hitbox,
+        'object:set_passable': kates_object_set_passable,
+        'object:set_pos': kates_object_set_pos,
+        'object:set_texture': kates_object_set_texture,
+        'sleep': kates_sleep,
+        'text': kates_text,
+    }

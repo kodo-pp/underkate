@@ -7,24 +7,24 @@ if TYPE_CHECKING:
 
 __all__ = ['texture_manager', 'object_manager', 'ResourceId', 'GroupId', 'ResourceManager']
 
-T_co = TypeVar('T_co', covariant=True)
+T = TypeVar('T')
 
 
 ResourceId = str
 GroupId = Hashable
 
 
-class ResourceManager(Generic[T_co]):
+class ResourceManager(Generic[T]):
     def __init__(self):
         self._counter = 0
-        self._resources: Dict[ResourceId, T_co] = {}
+        self._resources: Dict[ResourceId, T] = {}
         self._groups: Dict[GroupId, List[ResourceId]]
 
     def unique_id(self) -> ResourceId:
         self._counter += 1
         return str(self._counter)
 
-    def add(self, resource: T_co, group: Optional[GroupId] = None) -> ResourceId:
+    def add(self, resource: T, group: Optional[GroupId] = None) -> ResourceId:
         resource_id = self.unique_id()
         self._resources[resource_id] = resource
         if group is not None:
@@ -43,12 +43,12 @@ class ResourceManager(Generic[T_co]):
         else:
             self._resources.pop(resource_id, None)
 
-    def __getitem__(self, resource_id: ResourceId) -> T_co:
+    def __getitem__(self, resource_id: ResourceId) -> T:
         return self._resources[resource_id]
 
     def __contains__(self, resource_id: ResourceId) -> bool:
         return resource_id in self._resources
 
 
-texture_manager: ResourceManager[Texture] = ResourceManager()
-object_manager: ResourceManager[Object] = ResourceManager()
+texture_manager: ResourceManager['Texture'] = ResourceManager()
+object_manager: ResourceManager['Object'] = ResourceManager()

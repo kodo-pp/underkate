@@ -8,10 +8,12 @@ import yaml
 class Font:
     def __init__(
         self,
+        name: str,
         image: pg.Surface,
         glyph_size: Tuple[int, int],
         glyph_positions: Dict[str, Tuple[int, int]],
     ):
+        self.name = name
         self.image = image
         self.glyph_size = glyph_size
         self._glyph_positions = glyph_positions
@@ -128,13 +130,18 @@ def prepare_font_image(image: pg.Surface, scale_factor: int) -> pg.Surface:
     return pg.transform.scale(image, (new_width, new_height))
 
 
+def find_font(name: str) -> Path:
+    return Path('.') / 'assets' / 'fonts' / name
+
+
 def load_font(path: Union[str, Path]):
     if isinstance(path, str):
         path = Path(path)
 
     with open(path / 'font.yml') as f:
         data = yaml.safe_load(f)
-
+    
+    font_name = data['name']
     font_image_path = path / cast(str, data['image'])
     font_image = pg.image.load(str(font_image_path))
     scale_factor = cast(int, data['scale'])
@@ -147,4 +154,4 @@ def load_font(path: Union[str, Path]):
     # Actually, the type does not match exactly, but I don't give a fuck
     name_to_position_mapping = cast(Dict[str, Tuple[int, int]], data['mappings'])
     
-    return Font(font_image, (glyph_width, glyph_height), name_to_position_mapping)
+    return Font(font_name, font_image, (glyph_width, glyph_height), name_to_position_mapping)
