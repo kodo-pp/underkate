@@ -5,6 +5,7 @@ import pygame as pg  # type: ignore
 import yaml
 
 from loguru import logger
+from memoization import cached  # type: ignore
 
 
 class Font:
@@ -139,7 +140,7 @@ def prepare_font_image(image: pg.Surface, scale_factor: int) -> pg.Surface:
 def find_font(name: str) -> Path:
     return Path('.') / 'assets' / 'fonts' / name
 
-
+@cached
 def load_font(path: Union[str, Path]):
     logger.info('Loading font: {}', path)
 

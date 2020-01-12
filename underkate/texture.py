@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Union
 
 from loguru import logger
+from memoization import cached  # type: ignore
 
 
 class BaseTexture:
@@ -33,6 +34,7 @@ class Texture(BaseTexture):
         surface.blit(self.image, destination)
 
 
+@cached
 def load_texture(path: Union[Path, str], scale: int = 1) -> Texture:
     logger.info('Loading texture: {}', path)
     if isinstance(path, str):
