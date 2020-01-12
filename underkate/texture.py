@@ -5,6 +5,8 @@ import abc
 from pathlib import Path
 from typing import Union
 
+from loguru import logger
+
 
 class BaseTexture:
     @abc.abstractmethod
@@ -32,6 +34,7 @@ class Texture(BaseTexture):
 
 
 def load_texture(path: Union[Path, str], scale: int = 1) -> Texture:
+    logger.info('Loading texture: {}', path)
     if isinstance(path, str):
         path = Path(path)
 

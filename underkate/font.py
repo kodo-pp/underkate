@@ -4,6 +4,8 @@ from typing import Dict, Tuple, Union, cast
 import pygame as pg  # type: ignore
 import yaml
 
+from loguru import logger
+
 
 class Font:
     def __init__(
@@ -139,6 +141,8 @@ def find_font(name: str) -> Path:
 
 
 def load_font(path: Union[str, Path]):
+    logger.info('Loading font: {}', path)
+
     if isinstance(path, str):
         path = Path(path)
 
