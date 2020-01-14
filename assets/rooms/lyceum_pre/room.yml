@@ -1,0 +1,10 @@
+name: lyceum_pre
+background: bg.png
+pass_map: pass.png
+triggers:
+    -   rect: [300, 585, 200, 15]
+        events:
+            enter: room_start.kates
+initial_positions:
+    default: [400, 500]
+    start: [400, 500]

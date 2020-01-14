@@ -1,2 +1,0 @@
-sleep 3
-text '{"pages": [{"text": "This text should be displayed 3 seconds after the room is entered"}]}'
