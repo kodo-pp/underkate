@@ -27,14 +27,18 @@ class Player(TexturedWalkingSprite):
 
 
     @staticmethod
+    def get_hitbox_for(pos: Vector) -> pg.Rect:
+        x, y = pos.ints()
+        return pg.Rect(x - 16, y + 4, 32, 32)
+
+
+    @staticmethod
     def get_hitbox() -> pg.Rect:
-        return pg.Rect(0, 0, 8 * 4, 18 * 4)
+        return pg.Rect(0, 40, 8 * 4, 8 * 4)
 
 
     def get_hitbox_with_position(self) -> pg.Rect:
-        hitbox = self.get_hitbox()
-        hitbox.center = self.pos.ints()
-        return hitbox
+        return self.get_hitbox_for(self.pos)
 
 
     def update(self, time_delta: float):
@@ -59,8 +63,7 @@ class Player(TexturedWalkingSprite):
         if delta.is_zero():
             return True
         result = self.pos + delta
-        rect = self.get_hitbox()
-        rect.center = result.ints()
+        rect = self.get_hitbox_for(result)
         pass_map = self.game.room.pass_map
         return pass_map.is_passable(rect)
 
