@@ -55,7 +55,7 @@ def kates_create_object(runner: Runner, args: List[str]) -> str:
         texture = None
     else:
         texture = texture_manager[texture_id]
-    
+
     is_passable: bool
     if len(args) >= 4:
         _check(args[3] in '01')
@@ -70,8 +70,9 @@ def kates_create_object(runner: Runner, args: List[str]) -> str:
         hitbox.center = (x_center, y_center)
     else:
         hitbox = None
-    
+
     obj = Object(pos=Vector(x, y), texture=texture, is_passable=is_passable, hitbox=hitbox)
+    get_game().room.add_object(obj)
     return object_manager.add(obj, group='current_room')
 
 

@@ -118,6 +118,7 @@ class Room:
 
 
     def add_object(self, obj: Object):
+        logger.debug('Room.add_object({})', obj)
         self.objects.append(obj)
 
 

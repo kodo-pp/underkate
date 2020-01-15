@@ -39,8 +39,13 @@ class Object(Sprite):
         self.texture.draw(surface, x, y)
 
 
+    def get_hitbox_with_position(self) -> pg.Rect:
+        x, y = self.pos.ints()
+        return self.hitbox.move(x, y)
+
+
     def can_player_pass(self, player_position: pg.Rect) -> bool:
-        return bool(self.hitbox.colliderect(player_position))
+        return not bool(self.get_hitbox_with_position().colliderect(player_position))
 
 
     def kill(self):

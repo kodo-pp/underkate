@@ -9,5 +9,5 @@ triggers:
         events:
             enter: room_lyceum_entrance.kates
 initial_positions:
-    default: [400, 500]
     start: [400, 500]
+    lyceum_entrance: [400, 361]

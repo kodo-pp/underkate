@@ -17,7 +17,7 @@ class ResourceManager(Generic[T]):
     def __init__(self):
         self._counter = 0
         self._resources: Dict[ResourceId, T] = {}
-        self._groups: Dict[GroupId, List[ResourceId]]
+        self._groups: Dict[GroupId, List[ResourceId]] = {}
 
 
     def unique_id(self) -> ResourceId:

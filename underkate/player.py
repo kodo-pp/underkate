@@ -64,8 +64,8 @@ class Player(TexturedWalkingSprite):
             return True
         result = self.pos + delta
         rect = self.get_hitbox_for(result)
-        pass_map = self.game.room.pass_map
-        return pass_map.is_passable(rect)
+        #pass_map = self.game.room.pass_map
+        return self.game.room.is_passable(rect)
 
 
     def _move_unchecked(self, delta: Vector):
