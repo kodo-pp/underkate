@@ -1,2 +1,2 @@
 flate_texture = load_texture flate/overworld.png 2
-flate_object = create_object 400 150 $flate_texture 0 0 0 100 40
+flate_object = create_object 400 150 $flate_texture 0 0 0 120 40
