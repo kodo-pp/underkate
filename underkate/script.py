@@ -1,4 +1,5 @@
 import abc
+import copy
 from pathlib import Path
 from types import CodeType
 from typing import List, Callable, TYPE_CHECKING
@@ -36,7 +37,7 @@ class KateScript(Script):
 
 
     def __call__(self):
-        self.runner.run()
+        copy.deepcopy(self.runner).run()
 
 
 def load_python_script(path: Path, game: 'Game'):

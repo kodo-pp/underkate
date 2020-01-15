@@ -11,6 +11,8 @@ from typing import Union, cast, Tuple, List, Dict, NewType, Callable, TYPE_CHECK
 import pygame as pg # type: ignore
 import yaml
 
+from loguru import logger
+
 if TYPE_CHECKING:
     from .game import Game
 
@@ -55,6 +57,7 @@ class TriggerEventWatcher:
 
 
     def pass_event(self, event: Event):
+        logger.debug('TriggerEventWatcher: pass_event({}, {})', self, event)
         self.trigger.handle_event(event)
 
 
