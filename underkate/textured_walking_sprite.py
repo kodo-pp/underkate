@@ -1,6 +1,6 @@
-from .animated_texture import AnimatedTexture
-from .sprite import Sprite
-from .vector import Vector
+from underkate.animated_texture import AnimatedTexture
+from underkate.sprite import Sprite
+from underkate.vector import Vector
 
 
 def clamp(a, b, x):

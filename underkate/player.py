@@ -1,15 +1,15 @@
-from .animated_texture import load_animated_texture
-from .counter import Counter
-from .pass_map import PassMap
-from .textured_walking_sprite import TexturedWalkingSprite
-from .vector import Vector
+from underkate.animated_texture import load_animated_texture
+from underkate.counter import Counter
+from underkate.pass_map import PassMap
+from underkate.textured_walking_sprite import TexturedWalkingSprite
+from underkate.vector import Vector
 
 from typing import Optional, TYPE_CHECKING, ContextManager
 
 import pygame as pg # type: ignore
 
 if TYPE_CHECKING:
-    from .game import Game
+    from underkate.game import Game
 
 
 class Player(TexturedWalkingSprite):

@@ -1,4 +1,4 @@
-from .texture import BaseTexture, load_texture
+from underkate.texture import BaseTexture, load_texture
 
 import time
 from pathlib import Path

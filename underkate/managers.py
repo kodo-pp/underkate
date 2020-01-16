@@ -1,8 +1,8 @@
 from typing import TypeVar, Generic, Hashable, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .object import Object
-    from .texture import Texture
+    from underkate.object import Object
+    from underkate.texture import Texture
 
 
 __all__ = ['texture_manager', 'object_manager', 'ResourceId', 'GroupId', 'ResourceManager']

@@ -1,4 +1,4 @@
-from .vector import Vector
+from underkate.vector import Vector
 
 import abc
 

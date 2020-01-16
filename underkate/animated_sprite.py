@@ -1,4 +1,4 @@
-from .sprite import Sprite
+from underkate.sprite import Sprite
 
 import abc
 import time

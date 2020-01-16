@@ -1,9 +1,9 @@
-from .animated_sprite import AnimatedSprite
-from .event_manager import get_event_manager, Subscriber
-from .font import Font, load_font
-from .game_singletone import get_game
-from .pending_callback_queue import get_pending_callback_queue
-from .sprite import Sprite
+from underkate.animated_sprite import AnimatedSprite
+from underkate.event_manager import get_event_manager, Subscriber
+from underkate.font import Font, load_font
+from underkate.game_singletone import get_game
+from underkate.pending_callback_queue import get_pending_callback_queue
+from underkate.sprite import Sprite
 
 import json
 from pathlib import Path

@@ -1,7 +1,7 @@
-from .animated_sprite import AnimatedSprite
-from .pending_callback_queue import get_pending_callback_queue
-from .event_manager import get_event_manager, Subscriber
-from .util import clamp
+from underkate.animated_sprite import AnimatedSprite
+from underkate.pending_callback_queue import get_pending_callback_queue
+from underkate.event_manager import get_event_manager, Subscriber
+from underkate.util import clamp
 
 import abc
 from typing import Tuple

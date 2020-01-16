@@ -1,6 +1,6 @@
-from .sprite import Sprite
-from .texture import BaseTexture
-from .vector import Vector
+from underkate.sprite import Sprite
+from underkate.texture import BaseTexture
+from underkate.vector import Vector
 
 from typing import Optional
 

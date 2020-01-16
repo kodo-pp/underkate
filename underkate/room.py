@@ -1,9 +1,9 @@
-from . import script
-from .object import Object
-from .pass_map import PassMap
-from .player import Player
-from .texture import BaseTexture, load_texture
-from .vector import Vector
+from underkate import script
+from underkate.object import Object
+from underkate.pass_map import PassMap
+from underkate.player import Player
+from underkate.texture import BaseTexture, load_texture
+from underkate.vector import Vector
 
 from pathlib import Path
 from typing import Union, cast, Tuple, List, Dict, NewType, Callable, TYPE_CHECKING
@@ -14,7 +14,7 @@ import yaml
 from loguru import logger
 
 if TYPE_CHECKING:
-    from .game import Game
+    from underkate.game import Game
 
 
 Event = NewType('Event', str)

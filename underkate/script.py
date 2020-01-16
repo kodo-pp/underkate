@@ -8,7 +8,7 @@ import kates.parser
 import kates.runner
 
 if TYPE_CHECKING:
-    from .game import Game
+    from underkate.game import Game
 
 
 class Script:
@@ -47,7 +47,7 @@ def load_python_script(path: Path, game: 'Game'):
 
 
 def load_kate_script(path: Path, game: 'Game'):
-    from .kates_commands import get_command_list
+    from underkate.kates_commands import get_command_list
     code = path.read_text()
     functions = get_command_list()
     script = kates.runner.Script(kates.parser.parse(code))

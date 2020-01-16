@@ -1,13 +1,13 @@
-from . import font
-from . import player
-from . import room
-from . import text
-from . import vector
-from .event_manager import get_event_manager, Subscriber
-from .game_singletone import set_game
-from .pending_callback_queue import get_pending_callback_queue
-from .room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
-from .sprite import Sprite
+from underkate import font
+from underkate import player
+from underkate import room
+from underkate import text
+from underkate import vector
+from underkate.event_manager import get_event_manager, Subscriber
+from underkate.game_singletone import set_game
+from underkate.pending_callback_queue import get_pending_callback_queue
+from underkate.room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
+from underkate.sprite import Sprite
 
 from pathlib import Path
 from typing import Tuple, Optional, List, cast

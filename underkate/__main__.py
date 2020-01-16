@@ -1,4 +1,4 @@
-from .game import Game
+from underkate.game import Game
 
 
 def main():

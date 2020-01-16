@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from .game import Game
+    from underkate.game import Game
 
 
 _game: Optional['Game'] = None

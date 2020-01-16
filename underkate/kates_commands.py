@@ -1,12 +1,12 @@
-from .animated_texture import load_animated_texture
-from .game_singletone import get_game
-from .managers import texture_manager, object_manager
-from .object import Object
-from .pending_callback_queue import get_pending_callback_queue
-from .room import load_room
-from .text import DisplayedText
-from .texture import Texture, load_texture
-from .vector import Vector
+from underkate.animated_texture import load_animated_texture
+from underkate.game_singletone import get_game
+from underkate.managers import texture_manager, object_manager
+from underkate.object import Object
+from underkate.pending_callback_queue import get_pending_callback_queue
+from underkate.room import load_room
+from underkate.text import DisplayedText
+from underkate.texture import Texture, load_texture
+from underkate.vector import Vector
 
 from typing import List, Optional, Dict, Callable
 
