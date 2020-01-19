@@ -1,6 +1,7 @@
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.game_mode import GameMode
-from underkate.overworld.room import Room, load_room
+from underkate.overworld.load_room import load_room
+from underkate.overworld.room import Room
 from underkate.room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
 from underkate.sprite import Sprite
 from underkate.vector import Vector

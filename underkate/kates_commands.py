@@ -2,7 +2,7 @@ from underkate.animated_texture import load_animated_texture
 from underkate.global_game import get_game
 from underkate.managers import texture_manager, object_manager
 from underkate.object import Object
-from underkate.overworld.room import load_room
+from underkate.overworld.load_room import load_room
 from underkate.pending_callback_queue import get_pending_callback_queue
 from underkate.text import DisplayedText
 from underkate.texture import Texture, load_texture
