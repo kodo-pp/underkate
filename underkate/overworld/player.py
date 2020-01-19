@@ -7,7 +7,7 @@ from underkate.vector import Vector
 
 from typing import Optional, TYPE_CHECKING, ContextManager
 
-import pygame as pg # type: ignore
+import pygame as pg  # type: ignore
 
 
 class Player(TexturedWalkingSprite):

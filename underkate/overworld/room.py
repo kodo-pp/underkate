@@ -81,6 +81,7 @@ class Room:
             for trigger in triggers
         ]
         self.player = Player(player_position)
+        self.player.disable_controls()
         self.scripts = scripts
         self.path = path
         self.objects: WalList[Object] = WalList([])
@@ -112,6 +113,8 @@ class Room:
             events = watcher.update(self.player)
             for event in events:
                 watcher.pass_event(event)
+
+        self.player.update(time_delta)
 
         self.objects.filter(lambda x: x.is_alive())
         with self.objects:

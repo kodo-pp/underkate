@@ -31,8 +31,7 @@ class Overworld(GameMode):
             prev_room_name = 'default'
 
         self.room = load_room(Path('.') / 'assets' / 'rooms' / room_name, prev_room_name)
-        self.room_loaded = True
-        self.room_screen = pg.Surface(self.room.get_size())
+        self._room_screen = pg.Surface(self.room.get_size())
         self.spawn(RoomTransitionFadeOut(self.game.screen.get_size()).start_animation())
         subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading(room_name))
         get_event_manager().subscribe('room_enter_animation_finished', subscriber)
@@ -40,11 +39,13 @@ class Overworld(GameMode):
 
     def _finalize_room_loading(self, room_name: str):
         self.room.player.restore_controls()
+        self._room_loaded = True
         self.room.maybe_run_script('on_load')
 
 
     def load_room(self, room_name: str):
         logger.debug('Loading room {}', room_name)
+        self._room_ready = False
         self.room.player.disable_controls()
         self.spawn(RoomTransitionFadeIn(self.game.screen.get_size()).start_animation())
         get_event_manager().subscribe(
@@ -80,14 +81,14 @@ class Overworld(GameMode):
     def draw(self, destination: pg.Surface):
         self._room_screen.set_clip(self._get_view_rect())
         self._room_screen.fill((0, 0, 0))
-        self.room.draw(self.room_screen)
+        self.room.draw(self._room_screen)
         self._blit_scrolled_screen(destination)
         super().draw(destination)
 
 
     def _blit_scrolled_screen(self, destination: pg.Surface):
         rect = self._get_view_rect()
-        destination.blit(self.room_screen, self.room_screen.get_rect(), rect)
+        destination.blit(self._room_screen, self._room_screen.get_rect(), rect)
 
 
     def update(self, time_delta: float):

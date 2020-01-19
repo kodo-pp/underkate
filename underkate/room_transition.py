@@ -23,7 +23,8 @@ class RoomTransitionBase(AnimatedSprite):
 
 
     def has_animation_finished(self):
-        return self.get_elapsed_time() > self.length
+        value = self.get_elapsed_time() > self.length
+        return value
 
 
     @abc.abstractmethod

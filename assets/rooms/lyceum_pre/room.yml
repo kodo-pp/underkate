@@ -4,10 +4,10 @@ pass_map: pass.png
 triggers:
     -   rect: [300, 585, 200, 15]
         events:
-            enter: room_start.kates
+            enter: kates::room_start.kates
     -   rect: [335, 296, 111, 22]
         events:
-            enter: room_lyceum_entrance.kates
+            enter: kates::room_lyceum_entrance.kates
 initial_positions:
     start: [400, 500]
     lyceum_entrance: [400, 361]

@@ -7,4 +7,4 @@ triggers:
             enter: room_lyceum_pre.kates
 initial_positions:
     lyceum_pre: [400, 532]
-on_load: load.kates
+on_load: kates::load.kates

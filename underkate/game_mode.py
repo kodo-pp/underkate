@@ -26,7 +26,7 @@ class GameMode:
         with self.sprites:
             for sprite in self.sprites:
                 sprite.update(time_delta)
-        self.sprites.filter(lambda x: x.is_alive())
+        self.sprites.filter(lambda x: x.is_alive(), deleter = lambda x: x.on_kill())
 
 
     def spawn(self, sprite: Sprite):

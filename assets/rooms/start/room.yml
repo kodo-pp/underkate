@@ -4,7 +4,7 @@ pass_map: pass.png
 triggers:
     -   rect: [300, 0, 200, 15]
         events:
-            enter: next_room.kates
+            enter: kates::next_room.kates
 initial_positions:
     default: [320, 480]
     lyceum_pre: [400, 60]
