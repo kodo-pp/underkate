@@ -1,7 +1,7 @@
 from underkate.animated_sprite import AnimatedSprite
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.font import Font, load_font
-from underkate.game_singletone import get_game
+from underkate.global_game import get_game
 from underkate.pending_callback_queue import get_pending_callback_queue
 from underkate.sprite import Sprite
 

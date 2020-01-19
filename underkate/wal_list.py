@@ -63,15 +63,22 @@ class WalList(Generic[T]):
         return len(self._list)
 
 
-    def append(self, item: T):
-        if self.is_locked():
-            self._wal.append(Append(item))
+    def _apply_or_defer(self, operation: Operation):
+        if self.is_locked:
+            self._wal.append(operation)
         else:
-            self._list.append(item)
+            operation(self._list)
+
+
+    def append(self, item: T):
+        self._apply_or_defer(Append(item))
 
 
     def filter(self, predicate: Callable[[T], bool]):
-        if self.is_locked():
-            self._wal.append(Filter(predicate))
-        else:
-            self._list = [item for item in self._list if predicate(item)]
+        self._apply_or_defer(Filter(predicate))
+
+
+    def _apply_wal(self):
+        for operation in self._wal:
+            operation(self._list)
+        self._wal = []

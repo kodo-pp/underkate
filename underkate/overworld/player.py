@@ -1,6 +1,7 @@
 from underkate.animated_texture import load_animated_texture
 from underkate.counter import Counter
-from underkate.pass_map import PassMap
+from underkate.global_game import get_game
+from underkate.overworld.pass_map import PassMap
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.vector import Vector
 
@@ -8,12 +9,9 @@ from typing import Optional, TYPE_CHECKING, ContextManager
 
 import pygame as pg # type: ignore
 
-if TYPE_CHECKING:
-    from underkate.game import Game
-
 
 class Player(TexturedWalkingSprite):
-    def __init__(self, pos: Vector, game: 'Game'):
+    def __init__(self, pos: Vector):
         super().__init__(
             pos = pos,
             left = load_animated_texture('assets/player/left', 4),
@@ -22,7 +20,6 @@ class Player(TexturedWalkingSprite):
             back = load_animated_texture('assets/player/back', 4),
             speed = 250.0,
         )
-        self.game = game
         self._controls_disabled_counter = Counter()
 
 
@@ -64,8 +61,7 @@ class Player(TexturedWalkingSprite):
             return True
         result = self.pos + delta
         rect = self.get_hitbox_for(result)
-        #pass_map = self.game.room.pass_map
-        return self.game.room.is_passable(rect)
+        return get_game().overworld.room.is_passable(rect)
 
 
     def _move_unchecked(self, delta: Vector):

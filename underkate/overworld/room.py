@@ -1,9 +1,11 @@
-from underkate import script
+from underkate.script import Script, load_script
 from underkate.object import Object
-from underkate.pass_map import PassMap
-from underkate.player import Player
+from underkate.overworld.pass_map import PassMap
+from underkate.overworld.player import Player
+from underkate.script import load_script
 from underkate.texture import BaseTexture, load_texture
 from underkate.vector import Vector
+from underkate.wal_list import WalList
 
 from pathlib import Path
 from typing import Union, cast, Tuple, List, Dict, NewType, Callable, TYPE_CHECKING
@@ -43,7 +45,6 @@ class TriggerEventWatcher:
 
     def update(self, player: Player) -> List[Event]:
         events: List[Event] = []
-
         player_hitbox = player.get_hitbox_with_position()
         is_touching = self.trigger.is_touching(player_hitbox)
         was_touching = self.was_touching
@@ -68,8 +69,8 @@ class Room:
         background: BaseTexture,
         pass_map: PassMap,
         triggers: List[Trigger],
-        initial_positions: Dict[str, Vector],
-        on_load: Callable,
+        player_position: Vector,
+        scripts: Dict[str, Callable[[], None]],
         path: Path,
     ):
         self.name = name
@@ -79,17 +80,19 @@ class Room:
             TriggerEventWatcher(trigger)
             for trigger in triggers
         ]
-        self.initial_positions = initial_positions
-        self.on_load = on_load
-        self.objects: List[Object] = []
+        self.player = Player(player_position)
+        self.scripts = scripts
         self.path = path
+        self.objects: WalList[Object] = WalList([])
 
 
     def draw(self, surface: pg.Surface):
         x, y = surface.get_rect().center
         self.background.draw(surface, x, y)
-        for obj in self.objects:
-            obj.draw(surface)
+        with self.objects:
+            for obj in self.objects:
+                obj.draw(surface)
+        self.player.draw(surface)
 
 
     def is_passable(self, rect: pg.Rect) -> bool:
@@ -104,17 +107,16 @@ class Room:
         return rect.width, rect.height
 
 
-    def update(self, player: Player):
+    def update(self, time_delta: float):
         for watcher in self.trigger_event_watchers:
-            events = watcher.update(player)
+            events = watcher.update(self.player)
             for event in events:
                 watcher.pass_event(event)
 
-        alive_objects = [obj for obj in self.objects if obj.is_alive()]
-        self.objects = alive_objects
-
-        for obj in self.objects:
-            obj.update()
+        self.objects.filter(lambda x: x.is_alive())
+        with self.objects:
+            for obj in self.objects:
+                obj.update()
 
 
     def add_object(self, obj: Object):
@@ -122,11 +124,16 @@ class Room:
         self.objects.append(obj)
 
 
+    def maybe_run_script(self, script_name: str):
+        if script_name in self.scripts:
+            self.scripts[script_name]()
+
+
 class RoomError(Exception):
     pass
 
 
-def load_room(path: Union[Path, str], game: 'Game') -> Room:
+def load_room(path: Union[Path, str], prev_room_name: str) -> Room:
     if isinstance(path, str):
         path = Path(path)
 
@@ -147,10 +154,12 @@ def load_room(path: Union[Path, str], game: 'Game') -> Room:
             raise RoomError('Height or width of a trigger is negative')
 
         event_handlers: Dict[Event, Callable] = {}
-        for event_name, raw_script_filename in trigger_description['events'].items():
-            script_filename = path / cast(str, raw_script_filename)
-            script_object = script.load_script(script_filename, game)
-            event_handlers[Event(event_name)] = script_object
+        for event_name, script_filename in cast(
+            Dict[str, str],
+            trigger_description['events']
+        ).items():
+            script = load_script(script_filename, root=path)
+            event_handlers[Event(event_name)] = script
 
         triggers.append(
             Trigger(
@@ -159,22 +168,25 @@ def load_room(path: Union[Path, str], game: 'Game') -> Room:
             ),
         )
 
-    if 'on_load' in data:
-        on_load = script.load_script(path / data['on_load'], game)
-    else:
-        on_load = lambda: None
-
-    initial_positions = {
-        name: Vector(x, y)
-        for (name, [x, y]) in data['initial_positions'].items()
+    data_scripts = cast(Dict[str, str], data.get('scripts', {}))
+    scripts = {
+        script_name: load_script(script_identifier, root=path)
+        for script_name, script_identifier in data_scripts.items()
     }
+
+    initial_positions = cast(Dict[str, List[int]], data['initial_positions'])
+    if prev_room_name in initial_positions:
+        x, y = initial_positions[prev_room_name]
+    else:
+        x, y = initial_positions['default']
+    player_position = Vector(x, y)
 
     return Room(
         name = room_name,
         background = background,
         pass_map = pass_map,
         triggers = triggers,
-        on_load = on_load,
-        initial_positions = initial_positions,
+        scripts = scripts,
+        player_position = player_position,
         path = path,
     )

@@ -11,9 +11,8 @@ from loguru import logger
 
 
 class RoomTransitionBase(AnimatedSprite):
-    def __init__(self, size: Tuple[int, int], game, length = 0.35):
+    def __init__(self, size: Tuple[int, int], length = 0.35):
         super().__init__()
-        self.game = game
         self.length = length
         self.surface = pg.Surface(size)
         self.surface = self.surface.convert_alpha()

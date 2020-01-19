@@ -1,9 +1,9 @@
 from underkate.animated_texture import load_animated_texture
-from underkate.game_singletone import get_game
+from underkate.global_game import get_game
 from underkate.managers import texture_manager, object_manager
 from underkate.object import Object
+from underkate.overworld.room import load_room
 from underkate.pending_callback_queue import get_pending_callback_queue
-from underkate.room import load_room
 from underkate.text import DisplayedText
 from underkate.texture import Texture, load_texture
 from underkate.vector import Vector
@@ -25,14 +25,14 @@ def _check(value: bool):
 
 def kates_load_room(runner: Runner, args: List[str]) -> str:
     _check(len(args) == 1)
-    get_game().load_room(args[0])
+    get_game().overworld.load_room(args[0])
     runner.execution_stop_reason = ExecutionStopReason('room_unload')
     return ''
 
 
 def kates_load_texture(runner: Runner, args: List[str]) -> str:
     _check(1 <= len(args) <= 2)
-    texture_path = get_game().room.path / args[0]
+    texture_path = get_game().overworld.room.path / args[0]
     if len(args) < 2:
         scale = 1
     else:
@@ -72,7 +72,7 @@ def kates_create_object(runner: Runner, args: List[str]) -> str:
         hitbox = None
 
     obj = Object(pos=Vector(x, y), texture=texture, is_passable=is_passable, hitbox=hitbox)
-    get_game().room.add_object(obj)
+    get_game().overworld.room.add_object(obj)
     return object_manager.add(obj, group='current_room')
 
 
@@ -132,7 +132,7 @@ def kates_text(runner: Runner, args: List[str]) -> str:
     text = DisplayedText.loads(serialized_text)
     text.on_finish_callback = runner.run
     text.initialize()
-    get_game().spawn(text)
+    get_game().current_game_mode.spawn(text)
     return ''
 
 
