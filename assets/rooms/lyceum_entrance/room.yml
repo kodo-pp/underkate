@@ -7,5 +7,5 @@ triggers:
             enter: room::lyceum_pre
 initial_positions:
     lyceum_pre: [400, 532]
-#scripts:
-#    on_load: kates::load.kates
+scripts:
+    on_load: python::spawn_flate.py

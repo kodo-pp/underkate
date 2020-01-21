@@ -8,5 +8,3 @@ triggers:
 initial_positions:
     default: [320, 480]
     lyceum_pre: [400, 60]
-scripts:
-    on_load: python::on_load.py

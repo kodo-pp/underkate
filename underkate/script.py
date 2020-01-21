@@ -27,8 +27,9 @@ class RoomScript(Script):
 
 
 class PythonScript(Script):
-    def __init__(self, module: Any):
+    def __init__(self, module: Any, root: Path):
         self.module = module
+        self.root = root
 
 
     def __call__(self, *args, **kwargs) -> 'SuspendedPythonScript':
@@ -36,12 +37,12 @@ class PythonScript(Script):
         print(type(self.module))
         print(repr(self.module))
         print(dir(self.module))
-        return SuspendedPythonScript(self.module.main, args, kwargs)
+        return SuspendedPythonScript(self.module.main, self.root, args, kwargs)
 
 
 class SuspendedPythonScript:
-    def __init__(self, func: Callable, args: Union[tuple, list], kwargs: dict):
-        self.coro = func(*args, script=self, **kwargs)
+    def __init__(self, func: Callable, root: Path, args: Union[tuple, list], kwargs: dict):
+        self.coro = func(*args, script=self, root=root, **kwargs)
         self()
 
 
@@ -57,7 +58,7 @@ def load_python_script(path: Path):
     spec = spec_from_file_location('<script:{str(path)}>', path)
     module = module_from_spec(spec)
     spec.loader.exec_module(module)
-    return PythonScript(module)
+    return PythonScript(module, root=path.parent)
 
 
 def load_script(script_identifier: str, root: Path):
