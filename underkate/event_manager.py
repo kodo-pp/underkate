@@ -49,8 +49,9 @@ class EventManager:
                 self.subscribers.setdefault(event_id, []).append(subscriber)
 
 
-    def raise_event(self, event_id: EventId, argument: Any):
-        logger.debug('EventManager: raise_event: `{}` with argument `{}`', event_id, argument)
+    def raise_event(self, event_id: EventId, argument: Any, silent: bool = False):
+        if not silent:
+            logger.debug('EventManager: raise_event: `{}` with argument `{}`', event_id, argument)
         if self._is_locked():
             # TODO: nested raise_event()
             raise NotImplementedError()

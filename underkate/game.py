@@ -64,7 +64,7 @@ class Game:
         self.current_game_mode.update(time_delta)
 
         # Finalize the update cycle
-        get_event_manager().raise_event('end_of_cycle', None)
+        get_event_manager().raise_event('end_of_cycle', None, silent=True)
 
 
     def process_events(self):
