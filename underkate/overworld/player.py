@@ -20,7 +20,6 @@ class Player(TexturedWalkingSprite):
             back = load_animated_texture('assets/player/back', 4),
             speed = 250.0,
         )
-        self._controls_disabled_counter = Counter()
 
 
     @staticmethod
@@ -36,6 +35,19 @@ class Player(TexturedWalkingSprite):
 
     def get_hitbox_with_position(self) -> pg.Rect:
         return self.get_hitbox_for(self.pos)
+
+
+    def get_extended_hitbox(self, distance: int = 40) -> pg.Rect:
+        hitbox = self.get_hitbox_with_position()
+        if self.direction == 'right':
+            return hitbox.inflate(distance, 0)
+        if self.direction == 'left':
+            return hitbox.inflate(distance, 0).move(-distance, 0)
+        if self.direction == 'down':
+            return hitbox.inflate(0, distance)
+        if self.direction == 'up':
+            return hitbox.inflate(0, distance).move(0, -distance)
+        raise Exception(f'Unknown direction: {self.direction}')
 
 
     def update(self, time_delta: float):
@@ -82,16 +94,4 @@ class Player(TexturedWalkingSprite):
 
 
     def are_controls_disabled(self) -> bool:
-        return not self._controls_disabled_counter.is_zero()
-
-
-    def disable_controls(self):
-        self._controls_disabled_counter.increase()
-
-
-    def restore_controls(self):
-        self._controls_disabled_counter.decrease()
-
-
-    def with_controls_disabled(self) -> ContextManager[None]:
-        return self._controls_disabled_counter.with_increased()
+        return get_game().overworld.is_frozen()

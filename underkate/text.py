@@ -112,11 +112,10 @@ class TextPage(AnimatedSprite):
 
 
 class DisplayedText(Sprite):
-    def __init__(self, pages: List[TextPage], game, on_finish: Callable = lambda: None):
+    def __init__(self, pages: List[TextPage], on_finish: Callable = lambda: None):
         # TODO: get rid of `game` as an argument (and property) and use get_game() instead
         self.pages = pages
         self.page_index = -1
-        self.game = game
         self._is_alive = True
         self.on_finish_callback = on_finish
 
@@ -126,7 +125,6 @@ class DisplayedText(Sprite):
         data = json.loads(serialized_data)
         return DisplayedText(
             pages = [TextPage.from_dict(d) for d in data['pages']],
-            game = get_game(),
         )
 
 
@@ -172,7 +170,7 @@ class DisplayedText(Sprite):
 
 
     def initialize(self):
-        self.game.player.disable_controls()
+        get_game().overworld.freeze()
         get_event_manager().subscribe('key:confirm', Subscriber(self.on_confirm))
         get_event_manager().subscribe('key:cancel', Subscriber(self.on_cancel))
         self.next()
@@ -183,7 +181,10 @@ class DisplayedText(Sprite):
 
 
     def finalize(self):
-        self.game.player.restore_controls()
+        get_event_manager().subscribe(
+            'end_of_cycle',
+            Subscriber(lambda *args: get_game().overworld.unfreeze()),
+        )
         self._is_alive = False
         self.on_finish_callback()
 

@@ -55,9 +55,12 @@ class SuspendedPythonScript:
 
 
 def load_python_script(path: Path):
-    spec = spec_from_file_location('<script:{str(path)}>', path)
+    spec = spec_from_file_location(f'<script:{str(path)}>', path)
+    if spec is None or spec.loader is None:
+        raise Exception(f'Failed to import script {str(path)}')
     module = module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # For some obscure reasons mypy doesn't seem to like this
+    spec.loader.exec_module(module)  # type: ignore
     return PythonScript(module, root=path.parent)
 
 

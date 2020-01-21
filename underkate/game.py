@@ -63,6 +63,9 @@ class Game:
         # Delegate the main update logic to the current game mode
         self.current_game_mode.update(time_delta)
 
+        # Finalize the update cycle
+        get_event_manager().raise_event('end_of_cycle', None)
+
 
     def process_events(self):
         for event in pg.event.get():

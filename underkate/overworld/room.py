@@ -1,5 +1,5 @@
 from underkate.script import Script, load_script
-from underkate.object import Object
+from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.player import Player
 from underkate.texture import BaseTexture
@@ -77,7 +77,6 @@ class Room:
             for trigger in triggers
         ]
         self.player = Player(player_position)
-        self.player.disable_controls()
         self.scripts = scripts
         self.path = path
         self.objects: WalList[Object] = WalList([])
@@ -123,6 +122,10 @@ class Room:
         self.objects.append(obj)
 
 
+    def run_script(self, script_name: str):
+        self.scripts[script_name]()
+
+
     def maybe_run_script(self, script_name: str):
         if script_name in self.scripts:
-            self.scripts[script_name]()
+            self.run_script(script_name)

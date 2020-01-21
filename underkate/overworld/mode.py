@@ -1,3 +1,4 @@
+from underkate.counter import Counter
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.game_mode import GameMode
 from underkate.overworld.load_room import load_room
@@ -20,6 +21,8 @@ class Overworld(GameMode):
     def __init__(self, game: 'Game'):
         super().__init__(game)
         self._room_loaded = False
+        self._frozen = Counter()
+        self.freeze()
         self.room: Room
         self._room_screen: pg.Surface
         self._run_room_loading_logic('start')
@@ -39,7 +42,7 @@ class Overworld(GameMode):
 
 
     def _finalize_room_loading(self, room_name: str):
-        self.room.player.restore_controls()
+        self.unfreeze()
         self._room_loaded = True
         self.room.maybe_run_script('on_load')
 
@@ -47,7 +50,7 @@ class Overworld(GameMode):
     def load_room(self, room_name: str):
         logger.debug('Loading room {}', room_name)
         self._room_ready = False
-        self.room.player.disable_controls()
+        self.freeze()
         self.spawn(RoomTransitionFadeIn(self.game.screen.get_size()).start_animation())
         get_event_manager().subscribe(
             'room_exit_animation_finished',
@@ -95,3 +98,15 @@ class Overworld(GameMode):
     def update(self, time_delta: float):
         self.room.update(time_delta)
         super().update(time_delta)
+
+
+    def freeze(self):
+        self._frozen.increase()
+
+
+    def unfreeze(self):
+        self._frozen.decrease()
+
+
+    def is_frozen(self) -> bool:
+        return not self._frozen.is_zero()
