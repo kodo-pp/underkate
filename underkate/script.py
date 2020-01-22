@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class Script:
     @abc.abstractmethod
-    def __call__(self):
+    def __call__(self, *args, **kwargs):
         ...
 
 
@@ -22,7 +22,7 @@ class RoomScript(Script):
         self.room_name = room_name
 
 
-    def __call__(self):
+    def __call__(self, *args, **kwargs):
         get_game().overworld.load_room(self.room_name)
 
 

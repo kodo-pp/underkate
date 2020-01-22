@@ -1,10 +1,12 @@
 from underkate.event_manager import get_event_manager
+from underkate.fight.enemy_battle import EnemyBattle
+from underkate.fight.mode import Fight
 from underkate.game_mode import GameMode
 from underkate.global_game import set_game
 from underkate.overworld.mode import Overworld
 from underkate.pending_callback_queue import get_pending_callback_queue
 
-from typing import Tuple
+from typing import Tuple, Optional
 
 import pygame as pg # type: ignore
 from loguru import logger
@@ -36,6 +38,7 @@ class Game:
 
         # Initialize game modes
         self.overworld = Overworld(self)
+        self.fight: Optional[Fight] = None
         self.current_game_mode: GameMode = self.overworld
 
 
@@ -65,6 +68,33 @@ class Game:
 
         # Finalize the update cycle
         get_event_manager().raise_event('end_of_cycle', None, silent=True)
+
+
+    def enter_fight(self, enemy_battle: EnemyBattle):
+        def hide_overworld():
+            self.overworld.freeze()
+            self.overworld.hide(show_fight_mode)
+
+        def show_fight_mode():
+            self.fight = Fight(enemy_battle)
+            self.fight.show(start_fight)
+            self.current_game_mode = self.fight
+
+        def start_fight():
+            get_event_manager().subscribe('fight_finished', Subscriber(hide_fight_mode))
+
+        def hide_fight_mode():
+            self.fight.hide(show_overworld)
+
+        def show_overworld():
+            self.fight = None
+            self.current_game_mode = self.overworld
+            self.overworld.show(unfreeze_overworld)
+
+        def unfreeze_overworld():
+            self.overworld.unfreeze()
+
+        hide_overworld()
 
 
     def process_events(self):
