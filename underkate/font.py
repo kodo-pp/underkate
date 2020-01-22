@@ -50,6 +50,7 @@ class Font:
         ';': 'semicolon',
         '?': 'question_mark',
         '~': 'tilde',
+        "'": 'apostrophe',
 
         '0': 'digit_0',
         '1': 'digit_1',

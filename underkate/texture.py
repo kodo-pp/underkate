@@ -5,6 +5,7 @@ import abc
 from pathlib import Path
 from typing import Union
 
+import pygame as pg
 from loguru import logger
 from memoization import cached  # type: ignore
 
@@ -12,7 +13,25 @@ from memoization import cached  # type: ignore
 class BaseTexture:
     @abc.abstractmethod
     def draw(self, surface: pygame.Surface, x: int, y: int):
-        pass
+        ...
+
+
+    def please_draw(self, surface: pygame.Surface):
+        self.draw(surface, self.get_width() // 2, self.get_height() // 2)
+
+
+    @abc.abstractmethod
+    def get_width(self):
+        ...
+
+
+    @abc.abstractmethod
+    def get_height(self):
+        ...
+
+
+    def get_rect(self):
+        return pg.Rect(0, 0, self.get_width(), self.get_height())
 
 
 class Texture(BaseTexture):
@@ -32,6 +51,14 @@ class Texture(BaseTexture):
         destination = self.image.get_rect()
         destination.center = (x, y)
         surface.blit(self.image, destination)
+
+
+    def get_width(self):
+        return self.image.get_width()
+
+
+    def get_height(self):
+        return self.image.get_height()
 
 
 @cached

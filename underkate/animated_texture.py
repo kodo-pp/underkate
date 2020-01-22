@@ -23,6 +23,14 @@ class AnimatedTexture(BaseTexture):
         self.frames[frame_num].draw(surface, x, y)
 
 
+    def get_width(self):
+        return self.frames[0].get_width()
+
+
+    def get_height(self):
+        return self.frames[0].get_height()
+
+
 def load_animated_texture(path: Union[Path, str], scale: int = 1) -> AnimatedTexture:
     if isinstance(path, str):
         path = Path(path)

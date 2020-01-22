@@ -4,10 +4,11 @@ from underkate.font import Font, load_font
 from underkate.global_game import get_game
 from underkate.pending_callback_queue import get_pending_callback_queue
 from underkate.sprite import Sprite
+from underkate.texture import BaseTexture
 
 import json
 from pathlib import Path
-from typing import List, Callable, Union
+from typing import List, Callable, Union, Optional
 
 import pygame as pg  # type: ignore
 
@@ -22,12 +23,14 @@ class TextPage(AnimatedSprite):
         font: Font,
         delay: float = 0.05,
         skippable: bool = True,
+        picture: Optional[BaseTexture] = None,
     ):
         super().__init__()
         self.text = text
         self.font = font
         self.delay = delay
         self.skippable = skippable
+        self.picture = picture
         self._force_finished = False
 
 
@@ -78,6 +81,20 @@ class TextPage(AnimatedSprite):
 
     def draw_frame(self, surface: pg.Surface, elapsed_time: float):
         surface.fill((60, 60, 60, 255))
+        if self.picture is None:
+            return self.draw_text_frame(surface, elapsed_time)
+        self.picture.please_draw(surface)
+        crop = pg.Rect(
+            self.picture.get_width(),
+            0,
+            surface.get_width() - self.picture.get_width(),
+            surface.get_height(),
+        )
+        subsurface = surface.subsurface(crop)
+        return self.draw_text_frame(subsurface, elapsed_time)
+
+
+    def draw_text_frame(self, surface: pg.Surface, elapsed_time: float):
         surface_width, surface_height = surface.get_size()
         glyph_width, glyph_height = self.font.glyph_size
         num_cols = surface_width // glyph_width
@@ -141,7 +158,7 @@ class DisplayedText(Sprite):
         if self.page_index >= len(self.pages):
             return
         width, height = surface.get_size()
-        rect = pg.Rect(0, 3 * height // 4, width, height // 4)
+        rect = pg.Rect(0, 450, width, 150)
         sub = surface.subsurface(rect)
         self.pages[self.page_index].draw(sub)
 
