@@ -80,6 +80,7 @@ class Room:
         self.scripts = scripts
         self.path = path
         self.objects: WalList[Object] = WalList([])
+        self.state: dict = {}
 
 
     def draw(self, surface: pg.Surface):

@@ -1,6 +1,6 @@
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.python_functions import display_text, sleep
+from underkate.python_functions import display_text, sleep, make_callback, wait_for_event
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 
@@ -53,7 +53,7 @@ async def main(*, root, script, **kwargs):
             picture = flate_smiling,
         ),
         TextPage(
-            "Just solve 'em all, and everything\ngonna be alright!",
+            "Just solve 'em all, and everything's\ngonna be alright!",
             font,
             picture = flate_smiling,
         ),
@@ -64,4 +64,11 @@ async def main(*, root, script, **kwargs):
         TextPage("Oh no, I have to go...", font, picture=flate_thinking),
     ])
     await display_text(script, txt)
+
+    animation = load_animated_once_texture(root / 'flate' / 'disappear')
+    get_game().overworld.room.state['flate_object'].texture = animation
+    event_id, callback = make_callback()
+    animation.on_finish = callback
+    await wait_for_event(script, event_id)
+    get_game().overworld.room.state['flate_object'].kill()
     get_game().overworld.unfreeze()

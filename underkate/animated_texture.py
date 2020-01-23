@@ -14,7 +14,7 @@ class AnimatedTexture(BaseTexture):
         self.fps = fps
 
 
-    def draw(self, surface: pygame.Surface, x, y, force_frame: Optional[int] = None):
+    def draw(self, surface: pygame.Surface, x: int, y: int, force_frame: Optional[int] = None):
         now = time.time()
         if force_frame is not None:
             frame_num = force_frame
