@@ -11,4 +11,4 @@ async def main(*, root, script, **kwargs):
     flate = Object(Vector(400, 150), texture=texture, is_passable=False, hitbox=Rect(-60, -30, 120, 70))
     get_game().overworld.room.add_object(flate)
     flate.on_interact = lambda: get_game().overworld.room.run_script('flate_interact')
-    get_game.overworld.room.state['flate_object'] = flate
+    get_game().overworld.room.state['flate_object'] = flate

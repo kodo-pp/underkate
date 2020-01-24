@@ -1,8 +1,12 @@
+from underkate.animated_once_texture import load_animated_once_texture
+from underkate.animated_texture import load_animated_texture
 from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.python_functions import display_text, sleep, make_callback, wait_for_event
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
+from underkate.vector import Vector
+from underkate.walking_npc import WalkingNpc
 
 from pathlib import Path
 from pygame import Rect
@@ -20,6 +24,7 @@ async def main(*, root, script, **kwargs):
     cariel_dissat   = load_texture(root / 'cariel' / 'face_dissatisfied.png', scale=2)
     cariel_neutral  = load_texture(root / 'cariel' / 'face_neutral.png', scale=2)
     cariel_smiling  = load_texture(root / 'cariel' / 'face_smiling.png', scale=2)
+    cariel_thinking = load_texture(root / 'cariel' / 'face_thinking.png', scale=2)
 
     font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
     txt = DisplayedText([
@@ -43,7 +48,12 @@ async def main(*, root, script, **kwargs):
             picture = flate_smiling,
         ),
         TextPage(
-            "Anyway, you are admitted here,\nto The Lyceum, right?\nWow, that's wonderful!",
+            "Anyway, you are admitted here,\nto The Lyceum, right?",
+            font,
+            picture = flate_smiling,
+        ),
+        TextPage(
+            "Wow, that's wonderful!",
             font,
             picture = flate_smiling,
         ),
@@ -71,4 +81,47 @@ async def main(*, root, script, **kwargs):
     animation.on_finish = callback
     await wait_for_event(script, event_id)
     get_game().overworld.room.state['flate_object'].kill()
+
+    cariel_overworld = WalkingNpc(
+        script = script,
+        pos = Vector(400, -170),
+        left = load_animated_texture(root / 'cariel' / 'left', scale=2),
+        right = load_animated_texture(root / 'cariel' / 'right', scale=2),
+        front = load_animated_texture(root / 'cariel' / 'front', scale=2),
+        back = load_animated_texture(root / 'cariel' / 'back', scale=2),
+        speed = 120.0,
+    )
+    get_game().overworld.room.spawn(cariel_overworld)
+    await cariel_overworld.walk_y(260)
+
+    txt = DisplayedText([
+        TextPage("Well... they're gone", font, picture=cariel_neutral),
+        TextPage("Excuse them, please, they are a\nbit strange, you see...", font, picture=cariel_neutral),
+        TextPage("...", font, picture=cariel_thinking),
+        TextPage(
+            """I'm Cariel, the one who helps
+newcomers to achive their goals here
+and protects them through their way
+in The Lyceum""",
+            font,
+            picture = cariel_smiling,
+        ),
+        TextPage("Don't be afraid, I will\ntake good care of you", font, picture=cariel_smiling),
+        TextPage("...", font, picture=cariel_thinking),
+        TextPage("Before we begin, you have to\nlearn some basic things", font, picture=cariel_neutral),
+        TextPage(
+            "First of all, while you are here,\ndeadlines and tasks may confront you",
+            font,
+            picture = cariel_neutral,
+        ),
+        TextPage(
+            "For example...",
+            font,
+            picture = cariel_neutral,
+        ),
+    ])
+    await display_text(script, txt)
+
+    cariel_overworld.kill()
+
     get_game().overworld.unfreeze()

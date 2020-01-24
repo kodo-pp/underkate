@@ -1,7 +1,8 @@
-from underkate.script import Script, load_script
 from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.player import Player
+from underkate.script import Script, load_script
+from underkate.sprite import Sprite
 from underkate.texture import BaseTexture
 from underkate.vector import Vector
 from underkate.wal_list import WalList
@@ -81,6 +82,7 @@ class Room:
         self.path = path
         self.objects: WalList[Object] = WalList([])
         self.state: dict = {}
+        self.sprites: WalList[Sprite] = WalList([])
 
 
     def draw(self, surface: pg.Surface):
@@ -89,6 +91,11 @@ class Room:
         with self.objects:
             for obj in self.objects:
                 obj.draw(surface)
+
+        with self.sprites:
+            for sprite in self.sprites:
+                sprite.draw(surface)
+
         self.player.draw(surface)
 
 
@@ -113,14 +120,23 @@ class Room:
         self.player.update(time_delta)
 
         self.objects.filter(lambda x: x.is_alive())
+        self.sprites.filter(lambda x: x.is_alive())
+
         with self.objects:
             for obj in self.objects:
                 obj.update()
 
+        with self.sprites:
+            for sprite in self.sprites:
+                sprite.update(time_delta)
+
 
     def add_object(self, obj: Object):
-        logger.debug('Room.add_object({})', obj)
         self.objects.append(obj)
+
+
+    def spawn(self, sprite: Sprite):
+        self.sprites.append(sprite)
 
 
     def run_script(self, script_name: str):
