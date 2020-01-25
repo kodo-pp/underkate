@@ -75,7 +75,7 @@ async def main(*, root, script, **kwargs):
     ])
     await display_text(script, txt)
 
-    animation = load_animated_once_texture(root / 'flate' / 'disappear')
+    animation = load_animated_once_texture(root / 'flate' / 'disappear', scale=2)
     get_game().overworld.room.state['flate_object'].texture = animation
     event_id, callback = make_callback()
     animation.on_finish = callback
@@ -100,7 +100,7 @@ async def main(*, root, script, **kwargs):
         TextPage("...", font, picture=cariel_thinking),
         TextPage(
             """I'm Cariel, the one who helps
-newcomers to achive their goals here
+newcomers to achieve their goals here
 and protects them through their way
 in The Lyceum""",
             font,
