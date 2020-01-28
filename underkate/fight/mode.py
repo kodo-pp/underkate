@@ -17,3 +17,7 @@ class Fight(GameMode):
     def update(self, time_delta: float):
         self.enemy_battle.maybe_run_script('update', time_delta)
         super().update(time_delta)
+
+
+    def run(self):
+        self.enemy_battle.run_script('run', time_delta)

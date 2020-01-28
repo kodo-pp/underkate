@@ -16,6 +16,15 @@ import pygame as pg  # type: ignore
 SerializedData = Union[str, bytes]
 
 
+def draw_text(text: str, font: Font, x: int, y: int, destination: pg.Surface):
+    glyph_width, glyph_height = font.glyph_size
+    for index_offset, char in enumerate(self.text):
+        glyph_name = font.get_glyph_name(char)
+        source_rect = font.get_glyph_rectangle(glyph_name)
+        destination_rect = pg.Rect(x + glyph_width * index_offset, y, glyph_width, glyph_height)
+        surface.blit(self.font.image, destination_rect, source_rect)
+
+
 class TextPage(AnimatedSprite):
     def __init__(
         self,

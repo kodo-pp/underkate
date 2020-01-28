@@ -6,23 +6,25 @@ from types import coroutine
 
 
 @coroutine
-def sleep(script, delay):
+def sleep(delay):
+    script = get_game().current_script
     get_pending_callback_queue().fire_after(delay, script)
     yield
 
 
 @coroutine
-def wait_for_event(script, event_id):
-    get_event_manager().subscribe(event_id, Subscriber(lambda *args: script()))
-    yield
+def wait_for_event(event_id):
+    script = get_game().current_script
+    get_event_manager().subscribe(event_id, Subscriber(lambda event, arg: script((event, arg))))
+    return yield
 
 
-async def display_text(script, text):
+async def display_text(text):
     get_game().current_game_mode.spawn(text)
     event_id = get_event_manager().unique_id()
     text.on_finish_callback = lambda: get_event_manager().raise_event(event_id, None)
     text.initialize()
-    await wait_for_event(script, event_id)
+    await wait_for_event(event_id)
 
 
 def make_callback():

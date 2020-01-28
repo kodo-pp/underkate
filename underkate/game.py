@@ -70,33 +70,6 @@ class Game:
         get_event_manager().raise_event('end_of_cycle', None, silent=True)
 
 
-    def enter_fight(self, enemy_battle: EnemyBattle):
-        def hide_overworld():
-            self.overworld.freeze()
-            self.overworld.hide(show_fight_mode)
-
-        def show_fight_mode():
-            self.fight = Fight(enemy_battle)
-            self.fight.show(start_fight)
-            self.current_game_mode = self.fight
-
-        def start_fight():
-            get_event_manager().subscribe('fight_finished', Subscriber(hide_fight_mode))
-
-        def hide_fight_mode():
-            self.fight.hide(show_overworld)
-
-        def show_overworld():
-            self.fight = None
-            self.current_game_mode = self.overworld
-            self.overworld.show(unfreeze_overworld)
-
-        def unfreeze_overworld():
-            self.overworld.unfreeze()
-
-        hide_overworld()
-
-
     def process_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:

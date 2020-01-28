@@ -1,5 +1,6 @@
 from underkate.animated_once_texture import load_animated_once_texture
 from underkate.animated_texture import load_animated_texture
+from underkate.fight.enemy_battle import load_enemy_battle_by_name
 from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.python_functions import display_text, sleep, make_callback, wait_for_event
@@ -121,6 +122,7 @@ in The Lyceum""",
         ),
     ])
     await display_text(script, txt)
+    await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'))
 
     cariel_overworld.kill()
 
