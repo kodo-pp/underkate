@@ -16,7 +16,7 @@ def sleep(delay):
 def wait_for_event(event_id):
     script = get_game().current_script
     get_event_manager().subscribe(event_id, Subscriber(lambda event, arg: script((event, arg))))
-    return yield
+    return (yield)
 
 
 async def display_text(text):

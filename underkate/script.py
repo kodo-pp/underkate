@@ -7,6 +7,8 @@ from types import CodeType
 from typing import List, Callable, Any, Coroutine, Union, TYPE_CHECKING
 from importlib.util import module_from_spec, spec_from_file_location
 
+from memoization import cached  # type: ignore
+
 if TYPE_CHECKING:
     from underkate.game import Game
 
@@ -27,17 +29,14 @@ class RoomScript(Script):
 
 
 class PythonScript(Script):
-    def __init__(self, module: Any, root: Path):
+    def __init__(self, module: Any, root: Path, function_name: str):
         self.module = module
         self.root = root
+        self.function_name = function_name
 
 
     def __call__(self, *args, **kwargs) -> 'SuspendedPythonScript':
-        # TODO: export in-game API to scripts
-        print(type(self.module))
-        print(repr(self.module))
-        print(dir(self.module))
-        return SuspendedPythonScript(self.module.main, self.root, args, kwargs)
+        return SuspendedPythonScript(getattr(self.module, self.function_name), self.root, args, kwargs)
 
 
 class SuspendedPythonScript:
@@ -48,29 +47,42 @@ class SuspendedPythonScript:
 
     def __call__(self, arg: Any = None) -> bool:
         try:
-            self.coro.send(arg)
-            return False
-        except StopIteration:
-            return True
+            get_game().push_current_script(self)
+            try:
+                self.coro.send(arg)
+                return False
+            except StopIteration:
+                return True
+        finally:
+            get_game().pop_current_script()
 
 
-def load_python_script(path: Path):
+@cached
+def _raw_load_python_script(path: Path):
     spec = spec_from_file_location(f'<script:{str(path)}>', path)
     if spec is None or spec.loader is None:
         raise Exception(f'Failed to import script {str(path)}')
     module = module_from_spec(spec)
     # For some obscure reasons mypy doesn't seem to like this
     spec.loader.exec_module(module)  # type: ignore
-    return PythonScript(module, root=path.parent)
+    return module
 
 
-def load_script(script_identifier: str, root: Path):
+def load_python_script(path: Path, function_name: str) -> PythonScript:
+    return PythonScript(_raw_load_python_script(path), root=path.parent, function_name=function_name)
+
+
+def load_script(script_identifier: str, root: Path) -> Script:
     # Script identifier must be in the form 'type::path'
     # TODO: verify this format compliance explicitly
     script_type, script_path = script_identifier.split('::', 1)
 
     if script_type == 'python':
-        return load_python_script(root / script_path)
+        left, at, right = script_path.partition('@')
+        if at == '':
+            return load_python_script(root / left, 'main')
+        else:
+            return load_python_script(root / right, left)
     if script_type == 'room':
         return RoomScript(script_path)
 

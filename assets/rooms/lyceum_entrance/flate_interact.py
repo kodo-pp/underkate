@@ -4,7 +4,7 @@ from underkate.fight.enemy_battle import load_enemy_battle_by_name
 from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.scriptlib.common import display_text, sleep, make_callback, wait_for_event
-from underkate.scriptlib.fight import
+from underkate.scriptlib.fight import fight
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.vector import Vector
@@ -34,8 +34,9 @@ async def main(*, root, script, **kwargs):
         TextPage("...", font, picture=flate_crying),
         TextPage("It ignores you but starts to cry harder", font),
     ])
-    await display_text(script, txt)
-    await sleep(script, 2)
+
+    await display_text(txt)
+    await sleep(2)
     txt = DisplayedText([
         TextPage("...", font, picture=flate_no_face),
         TextPage("Hey! It looks like you're new to\nthis place, aren't you?", font, picture=flate_smiling),
@@ -75,17 +76,16 @@ async def main(*, root, script, **kwargs):
         TextPage("Flate! You again?", font, picture=cariel_dissat),
         TextPage("Oh no, I have to go...", font, picture=flate_thinking),
     ])
-    await display_text(script, txt)
+    await display_text(txt)
 
     animation = load_animated_once_texture(root / 'flate' / 'disappear', scale=2)
     get_game().overworld.room.state['flate_object'].texture = animation
     event_id, callback = make_callback()
     animation.on_finish = callback
-    await wait_for_event(script, event_id)
+    await wait_for_event(event_id)
     get_game().overworld.room.state['flate_object'].kill()
 
     cariel_overworld = WalkingNpc(
-        script = script,
         pos = Vector(400, -170),
         left = load_animated_texture(root / 'cariel' / 'left', scale=2),
         right = load_animated_texture(root / 'cariel' / 'right', scale=2),
@@ -122,7 +122,7 @@ in The Lyceum""",
             picture = cariel_neutral,
         ),
     ])
-    await display_text(script, txt)
+    await display_text(txt)
     await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'))
 
     cariel_overworld.kill()

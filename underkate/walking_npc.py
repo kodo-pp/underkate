@@ -1,13 +1,12 @@
 from underkate.event_manager import get_event_manager, Subscriber
-from underkate.python_functions import wait_for_event
+from underkate.scriptlib.common import wait_for_event
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.vector import Vector
 
 
 class WalkingNpc(TexturedWalkingSprite):
-    def __init__(self, script, *, pos, left, right, front, back, speed):
+    def __init__(self, *, pos, left, right, front, back, speed):
         super().__init__(pos=pos, left=left, right=right, front=front, back=back, speed=speed)
-        self.script = script
         self._desired_position = None
         self._event_id = None
         self._is_alive = True
@@ -24,7 +23,7 @@ class WalkingNpc(TexturedWalkingSprite):
         self._desired_position = self.pos + Vector(0, delta)
         self.set_moving(0, 1)
         self._event_id = get_event_manager().unique_id()
-        await wait_for_event(self.script, self._event_id)
+        await wait_for_event(self._event_id)
 
 
     def update(self, time_delta):

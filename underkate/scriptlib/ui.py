@@ -1,7 +1,14 @@
 from underkate.font import load_font
-from underkate.scriptlib import wait_for_event
+from underkate.global_game import get_game
+from underkate.scriptlib.common import wait_for_event
 from underkate.sprite import Sprite
+from underkate.text import draw_text
 from underkate.texture import load_texture
+
+from abc import abstractmethod
+from pathlib import Path
+
+import pygame as pg  # type: ignore
 
 
 class Menu:
@@ -17,11 +24,12 @@ class Menu:
         self.fight_script.element = self
         while True:
             _, pygame_event = await wait_for_event('key:any')
+            key = pygame_event.key
             if key == pg.K_UP:
                 self.on_key_up()
             if key == pg.K_DOWN:
                 self.on_key_down()
-            if key in (pg.K_z, pg.K_ENTER, pg.K_SHIFT):
+            if key in (pg.K_z, pg.K_RETURN, pg.K_LSHIFT, pg.K_RSHIFT):
                 break
         choice = self.choices[self.index]
         self.fight_script.element = None
@@ -39,19 +47,11 @@ class Menu:
 
 
     def on_key_up(self):
-        if not self.is_alive():
-            return
         self.index = max(self.index - 1, 0)
 
 
     def on_key_down(self):
-        if not self.is_alive():
-            return
         self.index = min(self.index + 1, len(self.choices) - 1)
-
-
-    def is_alive(self):
-        return fight_script.current_game_mode is self
 
 
     @abstractmethod
@@ -66,3 +66,5 @@ class BulletBoard:
         self.brain = load_texture(Path('.') / 'assets' / 'textures' / 'brain.png')
         self.x = 4
         self.y = 4
+
+    # TODO

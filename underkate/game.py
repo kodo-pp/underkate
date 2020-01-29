@@ -5,8 +5,9 @@ from underkate.game_mode import GameMode
 from underkate.global_game import set_game
 from underkate.overworld.mode import Overworld
 from underkate.pending_callback_queue import get_pending_callback_queue
+from underkate.script import SuspendedPythonScript
 
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 import pygame as pg # type: ignore
 from loguru import logger
@@ -40,6 +41,21 @@ class Game:
         self.overworld = Overworld(self)
         self.fight: Optional[Fight] = None
         self.current_game_mode: GameMode = self.overworld
+
+        self._current_script_stack: List[SuspendedPythonScript] = []
+
+
+    @property
+    def current_script(self):
+        return self._current_script_stack[-1]
+
+
+    def push_current_script(self, script: SuspendedPythonScript):
+        self._current_script_stack.append(script)
+
+
+    def pop_current_script(self):
+        self._current_script_stack.pop()
 
 
     def __enter__(self) -> 'Game':

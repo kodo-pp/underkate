@@ -8,7 +8,7 @@ from underkate.vector import Vector
 from underkate.wal_list import WalList
 
 from pathlib import Path
-from typing import Tuple, List, Dict, NewType, Callable, TYPE_CHECKING
+from typing import Tuple, List, Mapping, NewType, Callable, Dict, TYPE_CHECKING
 
 import pygame as pg # type: ignore
 import yaml
@@ -67,7 +67,7 @@ class Room:
         pass_map: PassMap,
         triggers: List[Trigger],
         player_position: Vector,
-        scripts: Dict[str, Callable[[], None]],
+        scripts: Mapping[str, Callable[[], None]],
         path: Path,
     ):
         self.name = name

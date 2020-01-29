@@ -19,6 +19,10 @@ class EnemyBattle:
             self.scripts[script_name](*args, battle=self, **kwargs)
 
 
+    def run_script(self, script_name: str, *args, **kwargs):
+        self.scripts[script_name](*args, battle=self, **kwargs)
+
+
 def load_enemy_battle(path: Path) -> EnemyBattle:
     data: Any = yaml.safe_load((path / 'enemy.yml').read_bytes())
     scripts = {

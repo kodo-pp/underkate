@@ -1,22 +1,26 @@
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.font import load_font
-from underkate.text import draw_text
+from underkate.global_game import get_game
+from underkate.scriptlib.common import wait_for_event, display_text, make_callback
+from underkate.scriptlib.ui import Menu
+from underkate.text import DisplayedText, TextPage, draw_text
 from underkate.texture import load_texture
 from underkate.wal_list import WalList
-from underkate.scriptlib.common import wait_for_event
-from underkate.scriptlib.ui import Menu
+from underkate.fight.mode import Fight
 
 from abc import abstractmethod
+from pathlib import Path
 from typing import Optional
 
-import pygame as pg
+import pygame as pg  # type: ignore
 
 
 async def fight(battle):
-    # TODO: rewrite this as this won't work
-    event_id, callback = make_callback()
-    self.game.enter_fight(battle, callback)
-    await wait_for_event(script, event_id)
+    game = get_game()
+    game.current_game_mode = Fight(battle)
+    game.current_game_mode.run()
+    await wait_for_event('fight_finished')
+    game.current_game_mode = game.overworld
 
 
 class Action:
@@ -57,18 +61,23 @@ class DoNothing(Action):
         return 'Nothing'
 
 
-class MainMenu(Menu):
-    def get_choices():
-        # TODO: player inventory
-        return [UseWeapon(Weapon('logic', 'Logic')), Spare(), DoNothing()]
+class SimpleMenu(Menu):
+    def __init__(self, fight_script, choices):
+        super().__init__(fight_script)
+        self.choices = choices
+
+
+    def get_choices(self):
+        return self.choices
 
 
 class Enemy:
-    def __init__(self, hp, damage_by_weapon, attack):
+    def __init__(self, hp, damage_by_weapon, attack, name):
         self.initial_hp = hp
         self.hp = hp
         self.damage_by_weapon = damage_by_weapon
         self.attack = attack
+        self.name = name
 
 
     def hit(self, damage):
@@ -80,7 +89,7 @@ class FightScript:
         self.battle = battle
         self.textures = {
             texture_name: load_texture(battle.root / texture_filename)
-            for texture_name, texture_filename in battle.data.getdefault('textures', {}).items()
+            for texture_name, texture_filename in battle.data.get('textures', {}).items()
         }
         #self.phrases = battle.data['phrases']
         self.sprites = WalList([])
@@ -90,7 +99,8 @@ class FightScript:
         hp = battle.data['hp']
         damage_by_weapon = battle.data.get('damage_by_weapon', {})
         attack = battle.data['attack']
-        self.enemy = Enemy(hp=hp, damage_by_weapon=damage_by_weapon, attack=attack)
+        name = battle.data['name']
+        self.enemy = Enemy(hp=hp, damage_by_weapon=damage_by_weapon, attack=attack, name=name)
         self._has_spared = True
 
 
@@ -114,17 +124,61 @@ class FightScript:
                 sprite.update(time_delta)
 
 
+    def get_choices(self):
+        return [UseWeapon(Weapon('logic', 'Logic')), Spare(), DoNothing()]
+
+
     def get_main_menu(self):
-        return MainMenu(self)
+        return SimpleMenu(self, self.get_choices())
+
+
+    async def spare(self):
+        font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
+        if self.can_spare():
+            txt = DisplayedText([
+                TextPage(f'You spared {self.enemy.name}', font),
+            ])
+            await display_text(txt)
+            self._has_spared = True
+        else:
+            txt = DisplayedText([
+                TextPage(f'{self.enemy.name} doesn\'t want to\nquit fighting with you', font),
+            ])
+            await display_text(txt)
+
+
+    async def use_weapon(self, weapon):
+        font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
+        damage = self.enemy.damage_by_weapon.get(weapon.name, 0)
+        self.enemy.hit(damage)
+
+        if damage == 0:
+            txt = DisplayedText([
+                TextPage("It wasn't effective", font),
+            ])
+        else:
+            txt = DisplayedText([
+                TextPage(f'Damage: {damage}', font),
+            ])
+            await display_text(txt)
+
+        if self.enemy.hp <= 0:
+            txt = DisplayedText([
+                TextPage('The enemy has been killed', font)
+            ])
+            await display_text(txt)
 
 
     def get_action_for_choice(self, choice):
+        async def nothing():
+            pass
+
         if isinstance(choice, UseWeapon):
             return lambda: self.use_weapon(choice.weapon)
         if isinstance(choice, Spare):
             return self.spare
         if isinstance(choice, DoNothing):
-            return lambda: None
+            return nothing
 
 
     def can_spare(self):
@@ -133,7 +187,6 @@ class FightScript:
 
     async def perform_attack(self):
         await sleep(5)
-
 
 
     async def process_enemy_attack(self):
@@ -151,7 +204,8 @@ class FightScript:
         while True:
             menu = self.get_main_menu()
             choice = await menu.choose()
-            self.get_action_for_choice(choice)()
+            await self.get_action_for_choice(choice)()
             if self.has_battle_finished():
                 break
             await self.process_enemy_attack()
+        get_event_manager().raise_event('fight_finished')
