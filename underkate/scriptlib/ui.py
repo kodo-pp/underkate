@@ -1,3 +1,7 @@
+from underkate.font import load_font
+from underkate.scriptlib import wait_for_event
+from underkate.sprite import Sprite
+from underkate.texture import load_texture
 
 
 class Menu:
@@ -12,7 +16,16 @@ class Menu:
         self.pointer_texture = load_texture(Path('.') / 'assets' / 'fight' / 'pointer.png', scale=2)
         self.fight_script.element = self
         while True:
-            event, key = await
+            _, pygame_event = await wait_for_event('key:any')
+            if key == pg.K_UP:
+                self.on_key_up()
+            if key == pg.K_DOWN:
+                self.on_key_down()
+            if key in (pg.K_z, pg.K_ENTER, pg.K_SHIFT):
+                break
+        choice = self.choices[self.index]
+        self.fight_script.element = None
+        return choice
 
 
     def draw(self, destination):
@@ -29,14 +42,12 @@ class Menu:
         if not self.is_alive():
             return
         self.index = max(self.index - 1, 0)
-        get_event_manager().subscribe('key:up', Subscriber(lambda *args: self.on_key_up()))
 
 
     def on_key_down(self):
         if not self.is_alive():
             return
         self.index = min(self.index + 1, len(self.choices) - 1)
-        get_event_manager().subscribe('key:down', Subscriber(lambda *args: self.on_key_down()))
 
 
     def is_alive(self):
@@ -48,7 +59,10 @@ class Menu:
         ...
 
 
-    def on_choice_made(self, choice):
-        get_event_manager().raise_event('choice_made', choice)
-
-
+class BulletBoard:
+    def __init__(self, fight_script):
+        self.fight_script = fight_script
+        self.board_texture = load_texture(Path('.') / 'assets' / 'textures' / 'bullet_board.png')
+        self.brain = load_texture(Path('.') / 'assets' / 'textures' / 'brain.png')
+        self.x = 4
+        self.y = 4

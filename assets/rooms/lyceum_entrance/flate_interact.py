@@ -3,7 +3,8 @@ from underkate.animated_texture import load_animated_texture
 from underkate.fight.enemy_battle import load_enemy_battle_by_name
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.python_functions import display_text, sleep, make_callback, wait_for_event
+from underkate.scriptlib.common import display_text, sleep, make_callback, wait_for_event
+from underkate.scriptlib.fight import
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.vector import Vector

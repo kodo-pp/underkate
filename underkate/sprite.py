@@ -2,7 +2,7 @@ from underkate.vector import Vector
 
 import abc
 
-import pygame as pg # type: ignore
+import pygame as pg  # type: ignore
 
 
 # Not using pygame's sprite because it has inconvenient API for my purpose

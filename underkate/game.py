@@ -75,12 +75,15 @@ class Game:
             if event.type == pg.QUIT:
                 raise GameExited()
             if event.type == pg.KEYDOWN:
+                # Process all keys
+                get_event_manager().raise_event('key:any', event)
+
                 # Process special keys
                 if event.key in (pg.K_z, pg.K_RETURN):
                     get_event_manager().raise_event('key:confirm', event)
-                elif event.key in (pg.K_x, pg.K_LSHIFT, pg.K_RSHIFT):
+                if event.key in (pg.K_x, pg.K_LSHIFT, pg.K_RSHIFT):
                     get_event_manager().raise_event('key:cancel', event)
-                elif event.key in (pg.K_c, pg.K_LCTRL, pg.K_RCTRL):
+                if event.key in (pg.K_c, pg.K_LCTRL, pg.K_RCTRL):
                     get_event_manager().raise_event('key:menu', event)
 
 

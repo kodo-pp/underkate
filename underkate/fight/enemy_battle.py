@@ -20,7 +20,7 @@ class EnemyBattle:
 
 
 def load_enemy_battle(path: Path) -> EnemyBattle:
-    data: Any = yaml.safe_load(path.read_bytes())
+    data: Any = yaml.safe_load((path / 'enemy.yml').read_bytes())
     scripts = {
         key: load_script(script_identifier, path)
         for key, script_identifier in data['scripts'].items()

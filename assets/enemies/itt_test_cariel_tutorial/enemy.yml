@@ -1,0 +1,3 @@
+scripts:
+    run: python::run.py
+    draw: python::draw.py

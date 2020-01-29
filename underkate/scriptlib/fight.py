@@ -4,9 +4,12 @@ from underkate.text import draw_text
 from underkate.texture import load_texture
 from underkate.wal_list import WalList
 from underkate.scriptlib.common import wait_for_event
+from underkate.scriptlib.ui import Menu
 
 from abc import abstractmethod
 from typing import Optional
+
+import pygame as pg
 
 
 async def fight(battle):
@@ -14,58 +17,6 @@ async def fight(battle):
     event_id, callback = make_callback()
     self.game.enter_fight(battle, callback)
     await wait_for_event(script, event_id)
-
-
-class Menu:
-    def __init__(self, fight_script):
-        self.fight_script = fight_script
-
-
-    async def choose(self):
-        self.index = 0
-        self.font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
-        self.choices = self.get_choices()
-        self.pointer_texture = load_texture(Path('.') / 'assets' / 'fight' / 'pointer.png', scale=2)
-        self.fight_script.element = self
-        while True:
-            event, key = await
-
-
-    def draw(self, destination):
-        for i, choice in enumerate(self.choices):
-            draw_text(str(choice), font = self.font, x = 200, y = 300 + 40 * i, destination = destination)
-        self.pointer_texture.draw(destination, x = 160, y = 300 + 40 * self.index)
-
-
-    def update(self, time_delta):
-        pass
-
-
-    def on_key_up(self):
-        if not self.is_alive():
-            return
-        self.index = max(self.index - 1, 0)
-        get_event_manager().subscribe('key:up', Subscriber(lambda *args: self.on_key_up()))
-
-
-    def on_key_down(self):
-        if not self.is_alive():
-            return
-        self.index = min(self.index + 1, len(self.choices) - 1)
-        get_event_manager().subscribe('key:down', Subscriber(lambda *args: self.on_key_down()))
-
-
-    def is_alive(self):
-        return fight_script.current_game_mode is self
-
-
-    @abstractmethod
-    def get_choices(self):
-        ...
-
-
-    def on_choice_made(self, choice):
-        get_event_manager().raise_event('choice_made', choice)
 
 
 class Action:
@@ -112,21 +63,40 @@ class MainMenu(Menu):
         return [UseWeapon(Weapon('logic', 'Logic')), Spare(), DoNothing()]
 
 
+class Enemy:
+    def __init__(self, hp, damage_by_weapon, attack):
+        self.initial_hp = hp
+        self.hp = hp
+        self.damage_by_weapon = damage_by_weapon
+        self.attack = attack
+
+
+    def hit(self, damage):
+        self.hp -= damage
+
+
 class FightScript:
     def __init__(self, battle):
         self.battle = battle
         self.textures = {
-            texture_filename: load_texture(battle.root / '')
-            for texture_filename in battle.data.getdefault('textures', [])
+            texture_name: load_texture(battle.root / texture_filename)
+            for texture_name, texture_filename in battle.data.getdefault('textures', {}).items()
         }
-        self.phrases = battle.data['phrases']
+        #self.phrases = battle.data['phrases']
         self.sprites = WalList([])
-        self.current_screen = MainMenu(self)
+        self.element = None
         self.state = {}
+
+        hp = battle.data['hp']
+        damage_by_weapon = battle.data.get('damage_by_weapon', {})
+        attack = battle.data['attack']
+        self.enemy = Enemy(hp=hp, damage_by_weapon=damage_by_weapon, attack=attack)
+        self._has_spared = True
 
 
     def draw(self, destination):
-        self.current_screen.draw(destination)
+        if self.element is not None:
+            self.element.draw(destination)
         with self.sprites:
             for sprite in self.sprites:
                 sprite.draw(destination)
@@ -137,7 +107,51 @@ class FightScript:
 
 
     def update(self, time_delta):
-        self.current_screen.update(time_delta)
+        if self.element is not None:
+            self.element.update(time_delta)
         with self.sprites:
             for sprite in self.sprites:
                 sprite.update(time_delta)
+
+
+    def get_main_menu(self):
+        return MainMenu(self)
+
+
+    def get_action_for_choice(self, choice):
+        if isinstance(choice, UseWeapon):
+            return lambda: self.use_weapon(choice.weapon)
+        if isinstance(choice, Spare):
+            return self.spare
+        if isinstance(choice, DoNothing):
+            return lambda: None
+
+
+    def can_spare(self):
+        return False
+
+
+    async def perform_attack(self):
+        await sleep(5)
+
+
+
+    async def process_enemy_attack(self):
+        bullet_board = self.get_bullet_board()
+        self.element = bullet_board
+        await self.perform_attack(bullet_board)
+        self.element = None
+
+
+    def has_battle_finished(self):
+        return self.enemy.hp <= 0 or self._has_spared
+
+
+    async def run(self):
+        while True:
+            menu = self.get_main_menu()
+            choice = await menu.choose()
+            self.get_action_for_choice(choice)()
+            if self.has_battle_finished():
+                break
+            await self.process_enemy_attack()
