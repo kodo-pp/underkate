@@ -35,8 +35,8 @@ async def main(*, root, script, **kwargs):
         TextPage("It ignores you but starts to cry harder", font),
     ])
 
-    #await display_text(txt)
-    #await sleep(2)
+    await display_text(txt)
+    await sleep(2)
     txt = DisplayedText([
         TextPage("...", font, picture=flate_no_face),
         TextPage("Hey! It looks like you're new to\nthis place, aren't you?", font, picture=flate_smiling),
@@ -76,7 +76,7 @@ async def main(*, root, script, **kwargs):
         TextPage("Flate! You again?", font, picture=cariel_dissat),
         TextPage("Oh no, I have to go...", font, picture=flate_thinking),
     ])
-    #await display_text(txt)
+    await display_text(txt)
 
     animation = load_animated_once_texture(root / 'flate' / 'disappear', scale=2)
     get_game().overworld.room.state['flate_object'].texture = animation
@@ -122,7 +122,7 @@ in The Lyceum""",
             picture = cariel_neutral,
         ),
     ])
-    #await display_text(txt)
+    await display_text(txt)
     async def on_before_finish():
         cariel_overworld.kill()
     await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'), on_before_finish)
