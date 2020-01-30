@@ -38,8 +38,8 @@ class Menu:
 
     def draw(self, destination):
         for i, choice in enumerate(self.choices):
-            draw_text(str(choice), font = self.font, x = 200, y = 300 + 40 * i, destination = destination)
-        self.pointer_texture.draw(destination, x = 160, y = 300 + 40 * self.index)
+            draw_text(str(choice), font = self.font, x = 200, y = 400 + 40 * i, destination = destination)
+        self.pointer_texture.draw(destination, x = 160, y = 408 + 40 * self.index)
 
 
     def update(self, time_delta):

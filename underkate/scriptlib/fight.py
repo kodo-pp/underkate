@@ -98,11 +98,19 @@ class Enemy:
         self.hp -= damage
 
 
+def _load_texture(root, spec):
+    filename, _, scale_str = spec.partition('/')
+    if _ != '':
+        scale = int(scale_str)
+        return load_texture(root / filename, scale)
+    return load_texture(root / filename)
+
+
 class FightScript:
     def __init__(self, battle):
         self.battle = battle
         self.textures = {
-            texture_name: load_texture(battle.root / texture_filename)
+            texture_name: _load_texture(battle.root, texture_filename)
             for texture_name, texture_filename in battle.data.get('textures', {}).items()
         }
         #self.phrases = battle.data['phrases']

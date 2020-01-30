@@ -16,7 +16,6 @@ class Sprite:
         pass
 
 
-    @abc.abstractmethod
     def update(self, time_delta: float):
         pass
 

@@ -1,9 +1,11 @@
-scripts:
-    run: python::run@run.py
-    draw: python::draw@run.py
+name: IT Theory test
 hp: 5
 attack: 2
 phrases: {}
 damage_by_weapon:
     itt_tutorial_answer_correctly: 391
-name: IT Theory test
+textures:
+    itt_test: itt_test.png/4
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py

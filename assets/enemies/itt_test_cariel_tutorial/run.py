@@ -1,8 +1,12 @@
 from underkate.event_manager import get_event_manager
 from underkate.font import load_font
+from underkate.global_game import get_game
 from underkate.scriptlib.common import display_text
 from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon
 from underkate.text import DisplayedText, TextPage
+from underkate.texture import load_texture
+from underkate.textured_sprite import TexturedSprite
+from underkate.vector import Vector
 
 from pathlib import Path
 
@@ -17,6 +21,8 @@ class Script(FightScript):
 
 
     async def run(self):
+        itt_test = TexturedSprite(Vector(400, 200), self.textures['itt_test'])
+        get_game().current_game_mode.spawn(itt_test)
         font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
         txt = DisplayedText([
             TextPage("IT Theory test attacks you", font),
