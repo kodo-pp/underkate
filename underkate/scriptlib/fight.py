@@ -1,12 +1,13 @@
 from underkate.event_manager import get_event_manager, Subscriber
+from underkate.fight.mode import Fight
 from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback
+from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.ui import Menu
 from underkate.text import DisplayedText, TextPage, draw_text
 from underkate.texture import load_texture
 from underkate.wal_list import WalList
-from underkate.fight.mode import Fight
 
 from abc import abstractmethod
 from pathlib import Path
@@ -15,12 +16,25 @@ from typing import Optional
 import pygame as pg  # type: ignore
 
 
-async def fight(battle):
+async def _play_transition_animation():
+    event_id, callback = make_callback()
+    animation = FightEnterAnimation((800, 600), 0.4, callback)
+    get_game().overworld.spawn(animation)
+    animation.start_animation()
+    await wait_for_event(event_id)
+
+
+async def fight(battle, on_before_finish):
     game = get_game()
+    await _play_transition_animation()
     game.current_game_mode = Fight(battle)
     game.current_game_mode.run()
+    await game.current_game_mode.async_show()
     await wait_for_event('fight_finished')
+    await game.current_game_mode.async_hide()
+    await on_before_finish()
     game.current_game_mode = game.overworld
+    await game.current_game_mode.async_show()
 
 
 class Action:

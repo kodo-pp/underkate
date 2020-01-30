@@ -1,5 +1,6 @@
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
+from underkate.scriptlib.common import wait_for_event, make_callback
 from underkate.sprite import Sprite
 from underkate.wal_list import WalList
 
@@ -49,3 +50,15 @@ class GameMode:
             'room_exit_animation_finished',
             Subscriber(lambda event_id, arg: on_finish()),
         )
+
+
+    async def async_show(self):
+        event_id, callback = make_callback()
+        self.show(callback)
+        await wait_for_event(event_id)
+
+
+    async def async_hide(self):
+        event_id, callback = make_callback()
+        self.hide(callback)
+        await wait_for_event(event_id)
