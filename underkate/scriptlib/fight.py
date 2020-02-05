@@ -90,6 +90,58 @@ class SimpleMenu(Menu):
         return self.choices
 
 
+class HitAnimation:
+    class Animator(Sprite):
+        def __init__(self, sprite):
+            self.sprite = sprite
+            self.orig_pos = sprite.pos
+            self.elapsed_time = 0.0
+
+
+        async def animate(self):
+            get_game().current_game_mode.spawn(self)
+            await wait_for_event('hit_animation_finished')
+            self.sprite.pos = self.orig_pos
+
+
+        def calculate_new_pos(self):
+            tanh3 = math.tanh(3)
+            t = self.elapsed_time / self.length
+            k = 0.5 * (tanh3 - math.tanh(6*t - 4)) * math.sin(80*t) / tanh3
+            offset = self.half_amplitude * k
+            return self.orig_pos + offset
+
+
+        def draw(self, destination):
+            pass
+
+
+        def update(self, time_delta):
+            self.elapsed_time += time_delta
+            new_pos = self.calculate_new_pos()
+            self.sprite.pos = new_pos
+
+
+        def is_alive(self):
+            return self.elapsed_time < self.length
+
+
+        def on_kill(self):
+            get_event_manager().raise_event('hit_animation_finished')
+
+
+        length = 0.8
+        half_amplitude = Vector(20.0, 3.0)
+
+
+    def __init__(self, sprite):
+        self.animator = HitAnimation.Animator(sprite)
+
+
+    async def animate(self):
+        await self.animator.animate()
+
+
 class Particle(TexturedSprite):
     def __init__(self, pos, texture, clip_rect, bottom, lifetime, momentum):
         super().__init__(pos, texture.clipped(clip_rect))
@@ -163,7 +215,7 @@ class DisappearAnimation:
 
 
     def random_lifetime(self):
-        return self.random_between(0.8, self.max_lifetime)
+        return self.random_between(0.2, self.max_lifetime)
 
 
     def random_bottom(self):
@@ -183,7 +235,7 @@ class DisappearAnimation:
 
 
     block_size = 5
-    max_lifetime = 1.8
+    max_lifetime = 1.2
 
 
 class Enemy:
@@ -313,6 +365,8 @@ class FightScript:
         damage = self.enemy.damage_by_weapon.get(weapon.name, 0)
         await self.enemy.hit(damage)
 
+        await HitAnimation(self.enemy.sprite).animate()
+
         if damage == 0:
             txt = DisplayedText([
                 TextPage("It wasn't effective", font),
@@ -325,7 +379,7 @@ class FightScript:
 
         if self.enemy.hp <= 0:
             txt = DisplayedText([
-                TextPage('The enemy has been killed', font)
+                TextPage(f'{self.enemy.name} has been killed', font)
             ])
             await self.enemy.on_disappear()
             await sleep(1.0)
