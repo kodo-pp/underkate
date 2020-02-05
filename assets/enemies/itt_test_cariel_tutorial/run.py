@@ -21,12 +21,16 @@ class Script(FightScript):
 
 
     async def run(self):
+        cariel_dissat   = load_texture(self.battle.root / 'cariel' / 'face_dissatisfied.png', scale=2)
+        cariel_neutral  = load_texture(self.battle.root / 'cariel' / 'face_neutral.png', scale=2)
+        cariel_smiling  = load_texture(self.battle.root / 'cariel' / 'face_smiling.png', scale=2)
+        cariel_thinking = load_texture(self.battle.root / 'cariel' / 'face_thinking.png', scale=2)
         itt_test = TexturedSprite(Vector(400, 200), self.textures['itt_test'])
         get_game().current_game_mode.spawn(itt_test)
         font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
         txt = DisplayedText([
             TextPage("IT Theory test attacks you", font),
-            TextPage("... for example, right now", font),
+            TextPage("... for example, right now", font, picture=cariel_neutral),
             TextPage("But don't be afraid! Many of the tasks\nare simple, and...", font),
             TextPage("it might be not too difficult... to solve...", font),
             TextPage("...", font),
