@@ -11,6 +11,9 @@ from underkate.vector import Vector
 from pathlib import Path
 
 
+DEBUG_SKIP = True
+
+
 class Script(FightScript):
     def can_spare(self):
         return True
@@ -27,8 +30,6 @@ class Script(FightScript):
         cariel_thinking = load_texture(self.battle.root / 'cariel' / 'face_thinking.png', scale=2)
         cariel_shouting = load_texture(self.battle.root / 'cariel' / 'face_shouting.png', scale=2)
         cariel_begging  = load_texture(self.battle.root / 'cariel' / 'face_begging.png', scale=2)
-        itt_test = TexturedSprite(Vector(400, 200), self.textures['itt_test'])
-        get_game().current_game_mode.spawn(itt_test)
         font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
         txt = DisplayedText([
             TextPage("IT Theory test attacks you", font),
@@ -47,7 +48,8 @@ class Script(FightScript):
             TextPage("I just don't want you to hurt anyone", font, picture=cariel_smiling),
             TextPage("Alright?", font, picture=cariel_begging),
         ])
-        await display_text(txt)
+        if not DEBUG_SKIP:
+            await display_text(txt)
         menu = self.get_main_menu()
         choice = await menu.choose()
         await self.get_action_for_choice(choice)()

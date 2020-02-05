@@ -2,13 +2,18 @@ from underkate.event_manager import get_event_manager, Subscriber
 from underkate.fight.mode import Fight
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.scriptlib.common import wait_for_event, display_text, make_callback
+from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.ui import Menu
+from underkate.sprite import Sprite
 from underkate.text import DisplayedText, TextPage, draw_text
 from underkate.texture import load_texture
+from underkate.textured_sprite import TexturedSprite
+from underkate.vector import Vector
 from underkate.wal_list import WalList
 
+import math
+import random as rd
 from abc import abstractmethod
 from pathlib import Path
 from typing import Optional
@@ -85,17 +90,131 @@ class SimpleMenu(Menu):
         return self.choices
 
 
+class Particle(TexturedSprite):
+    def __init__(self, pos, texture, clip_rect, bottom, lifetime, momentum):
+        super().__init__(pos, texture.clipped(clip_rect))
+        self.bottom = bottom
+        self.lifetime = lifetime
+        self.momentum = momentum
+        self.total_time = 0.0
+
+
+    def update(self, time_delta):
+        self.total_time += time_delta
+        if not self.is_alive():
+            return
+        self.momentum.y += self.gravity * time_delta
+        self.pos += self.momentum * time_delta
+        self.pos.y = min(self.bottom, self.pos.y)
+
+
+    def is_alive(self):
+        return self.total_time < self.lifetime
+
+
+    gravity = 1000.0
+
+
+class DisappearAnimation:
+    def __init__(self, texture, pos):
+        self.rect = texture.get_rect()
+        self.rect.center = pos.ints()
+        self.texture = texture
+
+
+    async def animate(self):
+        width, height = self.rect.size
+        x_count = (width + self.block_size - 1) // self.block_size
+        y_count = (height + self.block_size - 1) // self.block_size
+        for x in range(x_count):
+            for y in range(y_count):
+                particle = self.make_particle(x, y)
+                get_game().current_game_mode.spawn(particle)
+
+        await sleep(self.max_lifetime)
+
+
+    @staticmethod
+    def random_between(low, high):
+        span = high - low
+        return rd.random() * span + low
+
+
+    def get_pos(self, x, y):
+        pos = Vector(*self.rect.topleft) + Vector(x, y) * self.block_size
+        return pos
+
+
+    def get_clip(self, x, y):
+        clip_rect = self.rect.copy()
+        clip_rect.width = self.block_size
+        clip_rect.height = self.block_size
+        clip_rect.topleft = (x * self.block_size, y * self.block_size)
+        return clip_rect
+
+
+    def random_momentum(self):
+        speed = self.random_between(250.0, 300.0)
+        angle_range = math.pi / 12.0
+        angle = self.random_between(math.pi / 2.0 - angle_range, math.pi / 2.0 + angle_range)
+        direction = Vector(math.cos(angle), -math.sin(angle))
+        momentum = direction * speed
+        return momentum
+
+
+    def random_lifetime(self):
+        return self.random_between(0.8, self.max_lifetime)
+
+
+    def random_bottom(self):
+        return self.rect.bottom + self.random_between(-10.0, 10.0)
+
+
+    def make_particle(self, x, y):
+        particle = Particle(
+            texture = self.texture,
+            pos = self.get_pos(x, y),
+            clip_rect = self.get_clip(x, y),
+            bottom = self.random_bottom(),
+            lifetime = self.random_lifetime(),
+            momentum = self.random_momentum(),
+        )
+        return particle
+
+
+    block_size = 5
+    max_lifetime = 1.8
+
+
 class Enemy:
-    def __init__(self, hp, damage_by_weapon, attack, name):
+    def __init__(self, hp, damage_by_weapon, attack, name, normal_texture, wounded_texture, pos):
         self.initial_hp = hp
         self.hp = hp
         self.damage_by_weapon = damage_by_weapon
         self.attack = attack
         self.name = name
+        self.normal_texture = normal_texture
+        self.wounded_texture = wounded_texture
+
+        self.sprite = TexturedSprite(pos, normal_texture)
+        get_game().current_game_mode.spawn(self.sprite)
 
 
-    def hit(self, damage):
+    async def on_kill(self):
+        self.sprite.texture = self.wounded_texture
+
+
+    async def on_disappear(self):
+        pos = self.sprite.pos
+        self.sprite.kill()
+        disappear_animation = DisappearAnimation(self.wounded_texture, pos)
+        await disappear_animation.animate()
+
+
+    async def hit(self, damage):
         self.hp -= damage
+        if self.hp <= 0:
+            await self.on_kill()
 
 
 def _load_texture(root, spec):
@@ -122,8 +241,28 @@ class FightScript:
         damage_by_weapon = battle.data.get('damage_by_weapon', {})
         attack = battle.data['attack']
         name = battle.data['name']
-        self.enemy = Enemy(hp=hp, damage_by_weapon=damage_by_weapon, attack=attack, name=name)
-        self._has_spared = True
+        self.enemy = Enemy(
+            hp = hp,
+            damage_by_weapon = damage_by_weapon,
+            attack = attack,
+            name = name,
+            normal_texture = self.get_enemy_normal_texture(),
+            wounded_texture = self.get_enemy_wounded_texture(),
+            pos = self.get_enemy_pos(),
+        )
+        self._has_spared = False
+
+
+    def get_enemy_normal_texture(self):
+        return self.textures['enemy_normal']
+
+
+    def get_enemy_wounded_texture(self):
+        return self.textures['enemy_wounded']
+
+
+    def get_enemy_pos(self):
+        return Vector(400, 200)
 
 
     def draw(self, destination):
@@ -172,7 +311,7 @@ class FightScript:
     async def use_weapon(self, weapon):
         font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
         damage = self.enemy.damage_by_weapon.get(weapon.name, 0)
-        self.enemy.hit(damage)
+        await self.enemy.hit(damage)
 
         if damage == 0:
             txt = DisplayedText([
@@ -188,6 +327,8 @@ class FightScript:
             txt = DisplayedText([
                 TextPage('The enemy has been killed', font)
             ])
+            await self.enemy.on_disappear()
+            await sleep(1.0)
             await display_text(txt)
 
 

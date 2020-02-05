@@ -42,6 +42,10 @@ class AnimatedOnceTexture(BaseTexture):
         return self.frames[0].get_height()
 
 
+    def clipped(self):
+        raise NotImplementedError()
+
+
 def load_animated_once_texture(path: Union[Path, str], scale: int = 1) -> AnimatedOnceTexture:
     if isinstance(path, str):
         path = Path(path)

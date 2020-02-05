@@ -5,7 +5,8 @@ phrases: {}
 damage_by_weapon:
     itt_tutorial_answer_correctly: 391
 textures:
-    itt_test: itt_test.png/4
+    enemy_normal: itt_test.png/4
+    enemy_wounded: itt_test_wounded.png/4
 scripts:
     run: python::run@run.py
     draw: python::draw@run.py
