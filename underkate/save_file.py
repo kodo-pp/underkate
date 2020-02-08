@@ -35,7 +35,7 @@ def load(game: 'Game'):
         game.overworld = Overworld(game, data['overworld']['room'], Vector(*data['overworld']['player_pos']))
         set_state(data['state'])
     except FileNotFoundError:
-        logger.info('File does not exist, loading empty save')
+        logger.info('File does not exist, loading an empty save')
     except json.decoder.JSONDecodeError:
         logger.error('Save file is corrupt. Loading an empty save, but not overwriting the old file')
     game.current_game_mode = game.overworld
