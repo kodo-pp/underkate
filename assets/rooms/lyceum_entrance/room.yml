@@ -5,8 +5,12 @@ triggers:
     -   rect: [318, 573, 163, 19]
         events:
             enter: room::lyceum_pre
+    -   rect: [325, 1, 159, 14]
+        events:
+            enter: room::lyceum_hall
 initial_positions:
     lyceum_pre: [400, 532]
+    lyceum_hall: [400, 83]
 scripts:
     on_load: python::spawn_flate.py
     flate_interact: python::flate_interact.py

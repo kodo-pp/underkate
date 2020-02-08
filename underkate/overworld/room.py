@@ -1,3 +1,5 @@
+from underkate.event_manager import get_event_manager, Subscriber
+from underkate.global_game import get_game
 from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.player import Player
@@ -83,6 +85,7 @@ class Room:
         self.objects: WalList[Object] = WalList([])
         self.state: dict = {}
         self.sprites: WalList[Sprite] = WalList([])
+        get_event_manager().subscribe('key:confirm', Subscriber(self.on_interact))
 
 
     def draw(self, surface: pg.Surface):
@@ -129,6 +132,17 @@ class Room:
         with self.sprites:
             for sprite in self.sprites:
                 sprite.update(time_delta)
+
+
+    def on_interact(self, *args):
+        if get_game().overworld.room is not self:
+            return
+        if not get_game().overworld.is_frozen():
+            affected_rect = get_game().overworld.room.player.get_extended_hitbox()
+            for watcher in self.trigger_event_watchers:
+                if affected_rect.colliderect(watcher.trigger.rect):
+                    watcher.pass_event(Event('interact'))
+        get_event_manager().subscribe('key:confirm', Subscriber(self.on_interact))
 
 
     def add_object(self, obj: Object):

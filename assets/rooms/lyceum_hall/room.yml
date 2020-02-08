@@ -1,0 +1,23 @@
+name: lyceum_hall
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [553, 589, 130, 10]
+      events:
+        enter: room::lyceum_entrance
+    - rect: [320, 224, 90, 29]
+      events:
+        interact: python::door.py
+    - rect: [829, 233, 89, 25]
+      events:
+        interact: python::door.py
+    - rect: [52, 217, 85, 34]
+      events:
+        interact: python::canteen.py
+    - rect: [582, 231, 93, 29]
+      events:
+        interact: python::emblem.py
+
+initial_positions:
+    lyceum_entrance: [619, 493]
+scripts: {}
