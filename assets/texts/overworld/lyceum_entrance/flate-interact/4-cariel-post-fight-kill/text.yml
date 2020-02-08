@@ -1,0 +1,28 @@
+pictures:
+    bothered: cariel/face_bothered.png//2
+    neutral: cariel/face_neutral.png//2
+    smiling: cariel/face_smiling.png//2
+    thinking: cariel/face_thinking.png//2
+    thinking_r: cariel/face_thinking_r.png//2
+
+pages:
+    - text: "That's right. You answered correctly"
+      picture: bothered
+
+    - text: "..."
+      picture: bothered
+
+    - text: "You didn't listen to me, did you?"
+      picture: bothered
+
+    - text: "..."
+      picture: thinking
+
+    - text: "..."
+      picture: thinking_r
+
+    - text: "Well..."
+      picture: neutral
+
+    - text: "At least you are a really good problem solver, I suppose."
+      picture: smiling

@@ -4,6 +4,10 @@ from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.vector import Vector
 
 
+def sign(x):
+    return -1 if x < 0 else 1
+
+
 class WalkingNpc(TexturedWalkingSprite):
     def __init__(self, *, pos, left, right, front, back, speed):
         super().__init__(pos=pos, left=left, right=right, front=front, back=back, speed=speed)
@@ -14,14 +18,14 @@ class WalkingNpc(TexturedWalkingSprite):
 
     async def walk_x(self, delta):
         self._desired_position = self.pos + Vector(delta, 0)
-        self.set_moving(1, 0)
+        self.set_moving(sign(delta), 0)
         self._event_id = get_event_manager().unique_id()
         await wait_for_event(self._event_id)
 
 
     async def walk_y(self, delta):
         self._desired_position = self.pos + Vector(0, delta)
-        self.set_moving(0, 1)
+        self.set_moving(0, sign(delta))
         self._event_id = get_event_manager().unique_id()
         await wait_for_event(self._event_id)
 

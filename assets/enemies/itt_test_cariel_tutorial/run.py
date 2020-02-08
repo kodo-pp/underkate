@@ -4,6 +4,7 @@ from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
 from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon
+from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
@@ -31,6 +32,16 @@ class Script(FightScript):
         choice = await menu.choose()
         await self.get_action_for_choice(choice)()
         get_event_manager().raise_event('fight_finished')
+
+
+    async def on_kill(self):
+        get_state()['itt_test_tutorial'] = 'dead'
+        get_state()['pacifist_route_possible'] = False
+
+
+    async def on_spare(self):
+        get_state()['itt_test_tutorial'] = 'spared'
+        get_state()['genocide_route_possible'] = False
 
 
 async def run(*, enemy_battle, **kwargs):

@@ -29,7 +29,11 @@ async def _play_transition_animation():
     await wait_for_event(event_id)
 
 
-async def fight(battle, on_before_finish):
+async def async_none():
+    pass
+
+
+async def fight(battle, on_before_finish=async_none):
     game = get_game()
     await _play_transition_animation()
     game.current_game_mode = Fight(battle)
@@ -358,6 +362,19 @@ class FightScript:
                 TextPage(f'{self.enemy.name} doesn\'t want to\nquit fighting with you', font),
             ])
             await display_text(txt)
+        await self.on_spare()
+
+
+    async def on_spare(self):
+        pass
+
+
+    async def on_hit(self, killed):
+        pass
+
+
+    async def on_kill(self):
+        pass
 
 
     async def use_weapon(self, weapon):
@@ -377,6 +394,8 @@ class FightScript:
             ])
             await display_text(txt)
 
+        await self.on_hit(self.enemy.hp <= 0)
+
         if self.enemy.hp <= 0:
             txt = DisplayedText([
                 TextPage(f'{self.enemy.name} has been killed', font)
@@ -384,6 +403,7 @@ class FightScript:
             await self.enemy.on_disappear()
             await sleep(1.0)
             await display_text(txt)
+            await self.on_kill()
 
 
     def get_action_for_choice(self, choice):

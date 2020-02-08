@@ -6,6 +6,7 @@ from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text, sleep, make_callback, wait_for_event
 from underkate.scriptlib.fight import fight
+from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.vector import Vector
@@ -48,8 +49,15 @@ async def main(*, root, script, **kwargs):
 
     if not DEBUG_SKIP:
         await display_text(load_text('overworld/lyceum_entrance/flate-interact/3-cariel-pre-fight'))
-    async def on_before_finish():
-        cariel_overworld.kill()
-    await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'), on_before_finish)
+    await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'))
+
+    if not DEBUG_SKIP:
+        if get_state().get('itt_test_tutorial', 'unmet') == 'dead':
+            await display_text(load_text('overworld/lyceum_entrance/flate-interact/4-cariel-post-fight-kill'))
+        else:
+            await display_text(load_text('overworld/lyceum_entrance/flate-interact/4-cariel-post-fight-spare'))
+
+    await cariel_overworld.walk_y(-260)
+    cariel_overworld.kill()
 
     get_game().overworld.unfreeze()

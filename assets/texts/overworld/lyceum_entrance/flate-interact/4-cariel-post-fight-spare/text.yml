@@ -1,0 +1,30 @@
+pictures:
+    surprised: cariel/face_surprised.png//2
+    neutral: cariel/face_neutral.png//2
+    smiling: cariel/face_smiling.png//2
+    thinking: cariel/face_thinking.png//2
+
+pages:
+    - text: "Oh, really?"
+      picture: surprised
+
+    - text: "Is it that you can't solve even such a simple task or..."
+      picture: surprised
+
+    - text: "..."
+      picture: thinking
+
+    - text: "Wow, I'm impressed"
+      picture: neutral
+
+    - text: "You willingly failed to tackle that problem only to make me happy"
+      picture: smiling
+
+    - text: "I greatly appreciate that"
+      picture: smiling
+
+    - text: "Hope you will do a good job here)"
+      picture: smiling
+
+    - text: "Hehe)"
+      picture: smiling
