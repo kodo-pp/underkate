@@ -1,0 +1,10 @@
+pictures:
+    f_crying: flate/face_crying.png//2
+
+pages:
+    - text: "You say hello to Flate"
+    
+    - text: "..."
+      picture: f_crying
+
+    - text: "It ignores you, but starts to cry harder"

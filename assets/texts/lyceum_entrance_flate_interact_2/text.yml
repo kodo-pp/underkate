@@ -1,0 +1,68 @@
+pictures:
+    f_no_face: flate/no_face.png//2
+    f_smiling: flate/face_smiling.png//2
+    f_thinking: flate/face_thinking.png//2
+    f_evil: flate/face_evil.png//2
+    c_dissat: cariel/face_dissatisfied.png//2
+
+pages:
+    - text: "..."
+      picture: f_no_face
+    
+    - text: "Hey! It looks like you're new to this place, aren't you?"
+      picture: f_smiling
+
+    - text: "Well, then..."
+      picture: f_thinking
+
+    - text: "THAT'S YOUR PROBLEM!"
+      picture: f_evil
+      delay: 0.15
+      skippable: False
+
+    - text: "WHAT A PITY NOBODY GONNA HELP YOU!!!"
+      picture: f_evil
+      delay: 0.15
+      skippable: False
+    
+    - text: "..."
+      picture: f_thinking
+
+    - text: "Ah, just kidding"
+      picture: f_smiling
+
+    - text: "I'm Flate and I really LOVE scaring strangers!"
+      picture: f_smiling
+    
+    - text: "That's my absolutely beloved hobby))"
+      picture: f_smiling
+
+    - text: "Anyway, you're admitted here, right?"
+      picture: f_smiling
+
+    - text: "Wow, that's wonderful!"
+      picture: f_smiling
+
+    - text: "You know what to do, right?"
+      picture: f_smiling
+
+    - text: "Various deadlines and tasks will confront you"
+      picture: f_smiling
+
+    - text: "Just solve 'em all, and everything's gonna be alright!"
+      picture: f_smiling
+
+    - text: "Mwu-ha~"
+      picture: f_evil
+
+    - text: "..."
+      picture: f_thinking
+
+    - text: "Oh, sorry, force of habit. Forget it!"
+      picture: f_smiling
+
+    - text: "Flate! You again?"
+      picture: c_dissat
+
+    - text: "Oh no, I have to go..."
+      picture: f_thinking

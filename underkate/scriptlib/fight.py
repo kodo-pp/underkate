@@ -270,7 +270,7 @@ class Enemy:
 
 
 def _load_texture(root, spec):
-    filename, _, scale_str = spec.partition('/')
+    filename, _, scale_str = spec.partition('//')
     if _ != '':
         scale = int(scale_str)
         return load_texture(root / filename, scale)

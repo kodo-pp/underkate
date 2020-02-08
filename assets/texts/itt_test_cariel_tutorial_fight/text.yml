@@ -1,0 +1,51 @@
+pictures:
+    begging: cariel/face_begging.png//2
+    neutral: cariel/face_neutral.png//2
+    shouting: cariel/face_shouting.png//2
+    smiling: cariel/face_smiling.png//2
+    thinking: cariel/face_thinking.png//2
+
+pages:
+    - text: "IT Theory test attacks you"
+
+    - text: "... for example, right now"
+      picture: neutral
+
+    - text: "But don't be afraid! Many of the tasks are simple, and..."
+      picture: smiling
+
+    - text: "it might be not too difficult... to solve..."
+      picture: neutral
+
+    - text: "..."
+      picture: thinking
+
+    - text: "Forgive me, please. I'm a bit worried about that"
+      picture: neutral
+      
+    - text: "Teachers commit themselves into designing these problems and tasks"
+      picture: neutral
+
+    - text: "They try very hard to put the deadlines into your schedule"
+      picture: neutral
+
+    - text: "And what is most important is that..."
+      picture: neutral
+
+    - text: "THE POWER OF THEIR SOULS LIES IN THESE PROBLEMS"
+      picture: shouting
+      
+    - text: "..."
+      picture: thinking
+
+    - text: "So please..."
+      picture: begging
+
+    - text: "Don't solve them that easily"
+      picture: begging
+
+    - text: "I just don't want you to hurt anyone"
+      picture: smiling
+
+    - text: "Alright?"
+      picture: begging
