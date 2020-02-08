@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import List, Callable, Union, Optional
 
 import pygame as pg  # type: ignore
+from memoization import cached  # type: ignore
 
 
 SerializedData = Union[str, bytes]
@@ -23,6 +24,26 @@ def draw_text(text: str, font: Font, x: int, y: int, destination: pg.Surface):
         source_rect = font.get_glyph_rectangle(glyph_name)
         destination_rect = pg.Rect(x + glyph_width * index_offset, y, glyph_width, glyph_height)
         destination.blit(font.image, destination_rect, source_rect)
+
+
+@cached(max_size=64)
+def _wrap_text(text: str, width: int):
+    words = text.split()
+    output: List[str] = []
+    current_width = 0
+    for word in words:
+        should_output_space = bool(output)
+        new_width = current_width + len(word) + (1 if should_output_space else 0)
+        if new_width > width:
+            output.append('\n')
+            output.append(word)
+            current_width = len(word)
+        else:
+            if should_output_space:
+                output.append(' ')
+            output.append(word)
+            current_width = new_width
+    return ''.join(output)
 
 
 class TextPage(AnimatedSprite):
@@ -112,10 +133,11 @@ class TextPage(AnimatedSprite):
         index = 0
         x, y = 0, 0
         current_position = self.get_current_position()
-        limit = min(current_position, len(self.text))
+        text = _wrap_text(self.text, num_cols)
+        limit = min(current_position, len(text))
         while y < num_rows and index < limit:
             while x < num_cols and index < limit:
-                char = self.text[index]
+                char = text[index]
                 index += 1
                 if char == '\n':
                     break
@@ -124,6 +146,13 @@ class TextPage(AnimatedSprite):
                 destination_rect = pg.Rect(x * glyph_width, y * glyph_height, glyph_width, glyph_height)
                 surface.blit(self.font.image, destination_rect, source_rect)
                 x += 1
+            if index < limit and char != '\n' and text[index] == '\n':
+                # Example: tralala blablabla|\n, where | denotes the column limit
+                # In this case, the line should not be broken twice (both because of reaching the
+                # column limit and because of \n), so the line is broken once and \n is ignored.
+                # However, multiple consecutive \n's must be handled correctly, hence it is checked
+                # that char != \n
+                index += 1  # ignore \n
             x = 0
             y += 1
 
