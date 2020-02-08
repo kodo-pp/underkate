@@ -7,16 +7,16 @@ triggers:
         enter: room::lyceum_entrance
     - rect: [320, 224, 90, 29]
       events:
-        interact: python::door.py
+        interact: text::overworld/lyceum_hall/door
     - rect: [829, 233, 89, 25]
       events:
-        interact: python::door.py
+        interact: text::overworld/lyceum_hall/door
     - rect: [52, 217, 85, 34]
       events:
-        interact: python::canteen.py
+        interact: text::overworld/lyceum_hall/canteen
     - rect: [582, 231, 93, 29]
       events:
-        interact: python::emblem.py
+        interact: text::overworld/lyceum_hall/emblem
 
 initial_positions:
     lyceum_entrance: [619, 493]

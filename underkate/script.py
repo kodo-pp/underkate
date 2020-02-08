@@ -1,4 +1,6 @@
 from underkate.global_game import get_game
+from underkate.load_text import load_text
+from underkate.scriptlib.common import display_text
 
 import abc
 import copy
@@ -57,6 +59,21 @@ class SuspendedPythonScript:
             get_game().pop_current_script()
 
 
+class TextScript(Script):
+    def __init__(self, text_name: str):
+        self.text_name = text_name
+
+
+    async def _run(self, *args, **kwargs):
+        get_game().overworld.freeze()
+        await display_text(load_text(self.text_name))
+        get_game().overworld.unfreeze()
+
+
+    def __call__(self, *args, **kwargs) -> SuspendedPythonScript:
+        return SuspendedPythonScript(func=self._run, root=Path('.'), args=(), kwargs={})
+
+
 @cached
 def _raw_load_python_script(path: Path):
     spec = spec_from_file_location(f'<script:{str(path)}>', path)
@@ -85,5 +102,7 @@ def load_script(script_identifier: str, root: Path) -> Script:
             return load_python_script(root / right, left)
     if script_type == 'room':
         return RoomScript(script_path)
+    if script_type == 'text':
+        return TextScript(script_path)
 
     raise Exception(f'Invalid script type: "{script_type}"')
