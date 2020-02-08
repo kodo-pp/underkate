@@ -11,17 +11,13 @@ from pathlib import Path
 import pygame as pg  # type: ignore
 
 
-class Menu:
-    def __init__(self, fight_script):
-        self.fight_script = fight_script
-
-
+class BaseMenu:
     async def choose(self):
         self.index = 0
         self.font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
         self.choices = self.get_choices()
         self.pointer_texture = load_texture(Path('.') / 'assets' / 'fight' / 'pointer.png', scale=2)
-        self.fight_script.element = self
+        self.start_displaying()
         while True:
             _, pygame_event = await wait_for_event('key:any')
             key = pygame_event.key
@@ -32,7 +28,7 @@ class Menu:
             if key in (pg.K_z, pg.K_RETURN, pg.K_LSHIFT, pg.K_RSHIFT):
                 break
         choice = self.choices[self.index]
-        self.fight_script.element = None
+        self.stop_displaying()
         return choice
 
 
@@ -57,6 +53,29 @@ class Menu:
     @abstractmethod
     def get_choices(self):
         ...
+
+
+    @abstractmethod
+    def start_displaying(self):
+        ...
+
+
+    @abstractmethod
+    def stop_displaying(self):
+        ...
+
+
+class Menu(BaseMenu):
+    def __init__(self, fight_script):
+        self.fight_script = fight_script
+
+
+    def start_displaying(self):
+        self.fight_script.element = self
+
+
+    def stop_displaying(self):
+        self.fight_script.element = None
 
 
 class BulletBoard:
