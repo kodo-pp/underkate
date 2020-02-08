@@ -23,10 +23,10 @@ async def main(*, root, script, **kwargs):
     get_game().overworld.freeze()
 
     if not DEBUG_SKIP:
-        await display_text(load_text('lyceum_entrance_flate_interact_1'))
+        await display_text(load_text('overworld/lyceum_entrance/flate-interact/1-crying'))
         await sleep(2)
     if not DEBUG_SKIP:
-        await display_text(load_text('lyceum_entrance_flate_interact_2'))
+        await display_text(load_text('overworld/lyceum_entrance/flate-interact/2-flate-speech'))
 
     animation = load_animated_once_texture(root / 'flate' / 'disappear', scale=2)
     get_game().overworld.room.state['flate_object'].texture = animation
@@ -47,7 +47,7 @@ async def main(*, root, script, **kwargs):
     await cariel_overworld.walk_y(260)
 
     if not DEBUG_SKIP:
-        await display_text(load_text('lyceum_entrance_flate_interact_3'))
+        await display_text(load_text('overworld/lyceum_entrance/flate-interact/3-cariel-pre-fight'))
     async def on_before_finish():
         cariel_overworld.kill()
     await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'), on_before_finish)

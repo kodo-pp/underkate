@@ -26,7 +26,7 @@ class Script(FightScript):
 
     async def run(self):
         if not DEBUG_SKIP:
-            await display_text(load_text('itt_test_cariel_tutorial_fight'))
+            await display_text(load_text('fight/pre-lyceum/itt_test_cariel_tutorial'))
         menu = self.get_main_menu()
         choice = await menu.choose()
         await self.get_action_for_choice(choice)()
