@@ -8,7 +8,7 @@ from underkate.sprite import Sprite
 from underkate.vector import Vector
 
 from pathlib import Path
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 import pygame as pg  # type: ignore
 from loguru import logger
@@ -18,23 +18,23 @@ if TYPE_CHECKING:
 
 
 class Overworld(GameMode):
-    def __init__(self, game: 'Game'):
+    def __init__(self, game: 'Game', start_room: str = 'start', player_pos: Optional[Vector] = None):
         super().__init__(game)
         self._room_loaded = False
         self._frozen = Counter()
         self.freeze()
         self.room: Room
         self._room_screen: pg.Surface
-        self._run_room_loading_logic('start')
+        self._run_room_loading_logic(start_room, player_pos)
 
 
-    def _run_room_loading_logic(self, room_name: str):
+    def _run_room_loading_logic(self, room_name: str, player_pos: Optional[Vector] = None):
         if self._room_loaded:
             prev_room_name = self.room.name
         else:
             prev_room_name = 'default'
 
-        self.room = load_room(Path('.') / 'assets' / 'rooms' / room_name, prev_room_name)
+        self.room = load_room(Path('.') / 'assets' / 'rooms' / room_name, prev_room_name, player_pos)
         self._room_screen = pg.Surface(self.room.get_size())
         self.spawn(RoomTransitionFadeOut(self.game.screen.get_size()).start_animation())
         subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading(room_name))
@@ -110,3 +110,11 @@ class Overworld(GameMode):
 
     def is_frozen(self) -> bool:
         return not self._frozen.is_zero()
+
+
+    def to_dict(self) -> dict:
+        data: dict = {}
+        data['room'] = self.room.name
+        data['player_pos'] = self.room.player.pos.ints()
+        return data
+

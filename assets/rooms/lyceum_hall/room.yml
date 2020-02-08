@@ -21,3 +21,6 @@ triggers:
 initial_positions:
     lyceum_entrance: [619, 493]
 scripts: {}
+save_point:
+    pos: [787, 452]
+    script: text::overworld/lyceum_hall/save

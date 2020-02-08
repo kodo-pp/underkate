@@ -8,3 +8,8 @@ _state: State = {}
 def get_state() -> State:
     global _state
     return _state
+
+
+def set_state(state: State):
+    global _state
+    _state = state

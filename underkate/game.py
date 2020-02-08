@@ -3,6 +3,7 @@ from underkate.fight.enemy_battle import EnemyBattle
 from underkate.fight.mode import Fight
 from underkate.game_mode import GameMode
 from underkate.global_game import set_game
+from underkate.main_menu.mode import MainMenuMode
 from underkate.overworld.mode import Overworld
 from underkate.pending_callback_queue import get_pending_callback_queue
 from underkate.script import SuspendedPythonScript
@@ -22,6 +23,9 @@ class Game:
         # Initialize the global `game` object
         set_game(self)
 
+        # Initialize coroutine support in scripts
+        self._current_script_stack: List[SuspendedPythonScript] = []
+
         # Save parameters
         self.window_size = window_size
         self.target_fps = target_fps
@@ -40,9 +44,9 @@ class Game:
         # Initialize game modes
         self.overworld = Overworld(self)
         self.fight: Optional[Fight] = None
-        self.current_game_mode: GameMode = self.overworld
+        #self.current_game_mode: GameMode = self.overworld
+        self.current_game_mode: GameMode = MainMenuMode(self)
 
-        self._current_script_stack: List[SuspendedPythonScript] = []
 
 
     @property

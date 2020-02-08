@@ -1,0 +1,10 @@
+pictures: {}
+pages:
+    - text: "It looks like a floppy disk"
+    - text: "But actually it's a memory stick"
+    - text: "A USB memory stick"
+    - text: "..."
+    - text: "Well, maybe it's not a USB one"
+    - text: "Probably, it's a micro-USB memory stick"
+    - text: "..."
+    - text: "It seems that while you were reading this, it saved your progress"

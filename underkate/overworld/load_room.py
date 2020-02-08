@@ -1,11 +1,14 @@
+from underkate import save_file
+from underkate.global_game import get_game
+from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.room import Room, Trigger, Event
-from underkate.script import load_script
+from underkate.script import load_script, SimpleScript
 from underkate.texture import Texture, load_texture
 from underkate.vector import Vector
 
 from pathlib import Path
-from typing import Union, List, Dict, Callable, Tuple, Any, Generator, cast
+from typing import Union, List, Dict, Callable, Tuple, Any, Generator, cast, Optional
 
 import pygame as pg  # type: ignore
 import yaml
@@ -86,7 +89,7 @@ def _get_trigger(trigger_description: dict, root: Path):
     return Trigger(hitbox, event_handlers)
 
 
-def load_room(path: Union[Path, str], prev_room_name: str) -> Room:
+def load_room(path: Union[Path, str], prev_room_name: str, player_position: Optional[Vector]) -> Room:
     if isinstance(path, str):
         path = Path(path)
     data = _load_room_data(path)
@@ -101,12 +104,31 @@ def load_room(path: Union[Path, str], prev_room_name: str) -> Room:
         for script_name, script_identifier in data_scripts.items()
     }
 
-    initial_positions = cast(Dict[str, List[int]], data['initial_positions'])
-    if prev_room_name in initial_positions:
-        x, y = initial_positions[prev_room_name]
+    if player_position is None:
+        initial_positions = cast(Dict[str, List[int]], data['initial_positions'])
+        if prev_room_name in initial_positions:
+            x, y = initial_positions[prev_room_name]
+        else:
+            x, y = initial_positions['default']
+        player_position = Vector(x, y)
+
+    save_point_info = data.get('save_point', None)
+    save_point: Optional[Object]
+    if save_point_info is not None:
+        save_point = Object(
+            pos = Vector(*save_point_info['pos']),
+            texture = load_texture(Path('.') / 'assets' / 'textures' / 'save.png', scale=2),
+            is_passable = False,
+            hitbox = pg.Rect(-20, -20, 40, 40),
+        )
+
+        save_text_displayer = load_script(save_point_info['script'], root=path)
+        def saver(**kwargs):
+            save_text_displayer()
+            save_file.save(get_game())
+        save_point.on_interact = saver
     else:
-        x, y = initial_positions['default']
-    player_position = Vector(x, y)
+        save_point = None
 
     return Room(
         name = room_name,
@@ -116,4 +138,5 @@ def load_room(path: Union[Path, str], prev_room_name: str) -> Room:
         scripts = scripts,
         player_position = player_position,
         path = path,
+        save_point = save_point,
     )

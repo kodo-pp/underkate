@@ -10,7 +10,7 @@ from underkate.vector import Vector
 from underkate.wal_list import WalList
 
 from pathlib import Path
-from typing import Tuple, List, Mapping, NewType, Callable, Dict, TYPE_CHECKING
+from typing import Tuple, List, Mapping, NewType, Callable, Dict, Optional, TYPE_CHECKING
 
 import pygame as pg # type: ignore
 import yaml
@@ -71,6 +71,7 @@ class Room:
         player_position: Vector,
         scripts: Mapping[str, Callable[[], None]],
         path: Path,
+        save_point: Optional[Object],
     ):
         self.name = name
         self.background = background
@@ -85,6 +86,9 @@ class Room:
         self.objects: WalList[Object] = WalList([])
         self.state: dict = {}
         self.sprites: WalList[Sprite] = WalList([])
+        self.save_point = save_point
+        if save_point is not None:
+            self.add_object(save_point)
         get_event_manager().subscribe('key:confirm', Subscriber(self.on_interact))
 
 

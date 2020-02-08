@@ -59,6 +59,15 @@ class SuspendedPythonScript:
             get_game().pop_current_script()
 
 
+class SimpleScript(Script):
+    def __init__(self, func: Callable):
+        self.func = func
+
+
+    def __call__(self, *args, **kwargs) -> SuspendedPythonScript:
+        return SuspendedPythonScript(func=self.func, root=Path('.'), args=(), kwargs={})
+
+
 class TextScript(Script):
     def __init__(self, text_name: str):
         self.text_name = text_name
