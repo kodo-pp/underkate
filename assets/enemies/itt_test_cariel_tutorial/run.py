@@ -22,7 +22,7 @@ class Script(FightScript):
 
 
     def get_choices(self):
-        return [UseWeapon(Weapon('itt_tutorial_answer_correctly', 'Answer correctly')), Spare(), Spare()]
+        return [UseWeapon(Weapon('itt_tutorial_answer_correctly', 'Answer correctly')), Spare()]
 
 
     async def run(self):
