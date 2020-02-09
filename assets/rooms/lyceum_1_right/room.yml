@@ -17,4 +17,5 @@ triggers:
 
 initial_positions:
     lyceum_hall: [85, 383]
-scripts: {}
+scripts:
+    on_load: python::spawn_grumpylook.py
