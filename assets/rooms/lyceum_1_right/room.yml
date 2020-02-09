@@ -1,0 +1,20 @@
+name: lyceum_1_right
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [0, 263, 15, 229]
+      events:
+        enter: room::lyceum_hall
+    - rect: [84, 233, 95, 21]
+      events:
+        interact: text::overworld/lyceum_1_right/stairs
+    - rect: [447, 237, 88, 19]
+      events:
+        interact: text::overworld/lyceum_1_right/door
+    - rect: [749, 250, 32, 244]
+      events:
+        interact: text::overworld/lyceum_1_right/window
+
+initial_positions:
+    lyceum_hall: [85, 383]
+scripts: {}
