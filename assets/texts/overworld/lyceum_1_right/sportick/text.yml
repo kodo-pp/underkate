@@ -1,0 +1,11 @@
+pictures:
+    neutral: sportick/face_neutral.png//2
+    thinking: sportick/face_thinking.png//2
+    hehe: sportick/face_hehe.png//2
+pages:
+    - text: "Did you want anything?"
+      picture: neutral
+    - text: "No?"
+      picture: thinking
+    - text: "Then see you later!"
+      picture: hehe
