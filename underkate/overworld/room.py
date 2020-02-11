@@ -164,3 +164,12 @@ class Room:
     def maybe_run_script(self, script_name: str):
         if script_name in self.scripts:
             self.run_script(script_name)
+
+
+    def kill(self):
+        with self.sprites:
+            for sprite in self.sprites:
+                sprite.kill()
+        with self.objects:
+            for obj in self.objects:
+                obj.kill()

@@ -31,6 +31,7 @@ class Overworld(GameMode):
     def _run_room_loading_logic(self, room_name: str, player_pos: Optional[Vector] = None):
         if self._room_loaded:
             prev_room_name = self.room.name
+            self.room.kill()
         else:
             prev_room_name = 'default'
 
