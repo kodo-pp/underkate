@@ -4,7 +4,7 @@ from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.room import Room, Trigger, Event
 from underkate.script import load_script, SimpleScript
-from underkate.texture import Texture, load_texture
+from underkate.texture import Texture, load_texture, BaseTexture
 from underkate.vector import Vector
 
 from pathlib import Path
@@ -12,6 +12,7 @@ from typing import Union, List, Dict, Callable, Tuple, Any, Generator, cast, Opt
 
 import pygame as pg  # type: ignore
 import yaml
+from loguru import logger
 
 
 class RoomError(Exception):
@@ -89,6 +90,12 @@ def _get_trigger(trigger_description: dict, root: Path):
     return Trigger(hitbox, event_handlers)
 
 
+def make_hitbox(texture: BaseTexture) -> pg.Rect:
+    r = texture.get_rect()
+    r.center = (0, 0)
+    return r
+
+
 def load_room(path: Union[Path, str], prev_room_name: str, player_position: Optional[Vector]) -> Room:
     if isinstance(path, str):
         path = Path(path)
@@ -130,7 +137,7 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
     else:
         save_point = None
 
-    return Room(
+    room = Room(
         name = room_name,
         background = background,
         pass_map = pass_map,
@@ -140,3 +147,28 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
         path = path,
         save_point = save_point,
     )
+
+    object_descriptors = data.get('objects', [])
+    for obj_desc in object_descriptors:
+        pos = Vector(*obj_desc['pos'])
+        texture = load_texture(path / obj_desc['texture'])
+        is_passable = obj_desc.get('is_passable', False)
+        if 'rect' in obj_desc:
+            if 'hitbox' in obj_desc:
+                raise Exception('Both rect and hitbox cannot be specified')
+            rect = pg.Rect(obj_desc['rect'])
+            hitbox = rect.copy()
+            hitbox.center = (0, 0)
+            pos = Vector(*rect.center)
+        elif 'hitbox' in obj_desc:
+            hitbox = obj_desc['hitbox']
+        else:
+            hitbox = make_hitbox(texture)
+
+        obj = Object(pos=pos, texture=texture, is_passable=is_passable, hitbox=hitbox)
+        if 'on_interact' in obj_desc:
+            obj.on_interact = load_script(obj_desc['on_interact'], root=path)
+
+        logger.debug('Adding object: {}', obj)
+        room.add_object(obj)
+    return room

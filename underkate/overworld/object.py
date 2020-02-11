@@ -32,6 +32,10 @@ class Object(Sprite):
         self.on_interact: Callable[[], None] = lambda: None
 
 
+    def __repr__(self) -> str:
+        return f'Object(pos: {self.pos.ints()}, texture: {self.texture}, passable: {self.is_passable}, hitbox: {self.hitbox}, alive: {self._is_alive})'
+
+
     def update(self):
         pass
 

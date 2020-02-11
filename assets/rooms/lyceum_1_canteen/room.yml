@@ -1,0 +1,30 @@
+name: lyceum_1_canteen
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [780, 260, 19, 233]
+      events:
+        enter: room::lyceum_hall
+
+initial_positions:
+    lyceum_hall: [706, 388]
+scripts: {}
+objects:
+    - pos: [487, 283]
+      texture: grumpylook/overworld.png
+      on_interact: text::overworld/lyceum_1_canteen/grumpylook
+    - pos: [0, 0]
+      texture: empty.png
+      rect: [56, 376, 360, 64]
+    - pos: [0, 0]
+      texture: empty.png
+      rect: [86, 236, 59, 54]
+      on_interact: text::overworld/lyceum_1_canteen/vendors/1
+    - pos: [0, 0]
+      texture: empty.png
+      rect: [212, 230, 64, 59]
+      on_interact: text::overworld/lyceum_1_canteen/vendors/2
+    - pos: [0, 0]
+      texture: empty.png
+      rect: [337, 227, 62, 59]
+      on_interact: text::overworld/lyceum_1_canteen/vendors/3

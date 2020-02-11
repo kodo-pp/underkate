@@ -8,6 +8,9 @@ triggers:
     - rect: [1178, 262, 21, 231]
       events:
         enter: room::lyceum_1_right
+    - rect: [0, 258, 13, 236]
+      events:
+        enter: room::lyceum_1_canteen
     - rect: [320, 224, 90, 29]
       events:
         interact: text::overworld/lyceum_hall/door
@@ -24,6 +27,7 @@ triggers:
 initial_positions:
     lyceum_entrance: [619, 493]
     lyceum_1_right: [1107, 376]
+    lyceum_1_canteen: [85, 383]
 scripts: {}
 save_point:
     pos: [787, 452]
