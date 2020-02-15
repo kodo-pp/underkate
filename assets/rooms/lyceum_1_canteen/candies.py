@@ -6,29 +6,12 @@ from underkate.sprite import BaseSprite
 
 
 class ShopMenu(OverworldMenu):
-    def __init__(self):
-        super().__init__()
-        self.__is_alive = True
-
-
-    def start_displaying(self):
-        get_game().overworld.spawn(self)
-
-
-    def stop_displaying(self):
-        self.kill()
-
-
-    def is_alive(self):
-        return self.__is_alive
-
-
-    def kill(self):
-        self.__is_alive = False
-
-
     def get_choices(self):
         return ['Yes', 'No']
+
+
+    def get_title(self):
+        return ['Buy a candy for 3 coins?']
 
 
 async def main(*args, **kwargs):

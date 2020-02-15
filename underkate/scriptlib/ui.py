@@ -33,8 +33,16 @@ class BaseMenu(BaseSprite):
         return choice
 
 
+    def get_title(self):
+        return ['']
+
+
     def get_coords_for_line(self, index):
         return (200, 400 + 40 * index)
+
+
+    def get_coords_for_title(self, index):
+        return (170, 350 + 40 * index)
 
 
     def get_coords_for_pointer(self, index):
@@ -52,6 +60,9 @@ class BaseMenu(BaseSprite):
 
     def draw(self, destination):
         pg.draw.rect(destination, self.get_fill_color(), self.get_rect())
+        for i, title_line in enumerate(self.get_title()):
+            x, y = self.get_coords_for_title(i)
+            draw_text(title_line, font=self.font, x=x, y=y, destination=destination)
         for i, choice in enumerate(self.choices):
             x, y = self.get_coords_for_line(i)
             draw_text(str(choice), font=self.font, x=x, y=y, destination=destination)
@@ -87,12 +98,37 @@ class BaseMenu(BaseSprite):
 
 
 class OverworldMenu(BaseMenu):
+    def __init__(self):
+        super().__init__()
+        self.__is_alive = True
+
+
+    def start_displaying(self):
+        get_game().overworld.spawn(self)
+
+
+    def stop_displaying(self):
+        self.kill()
+
+
+    def is_alive(self):
+        return self.__is_alive
+
+
+    def kill(self):
+        self.__is_alive = False
+
+
     def get_rect(self):
-        return pg.Rect(250, 150, 300, 250)
+        return pg.Rect(150, 150, 500, 250)
+
+
+    def get_coords_for_title(self, index):
+        return (160, 180 + 40 * index)
 
 
     def get_coords_for_line(self, index):
-        return (300, 200 + 40 * index)
+        return (200, 220 + 40 * (index + len(self.get_title()) - 1))
 
 
 class Menu(BaseMenu):
