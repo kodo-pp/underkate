@@ -113,18 +113,21 @@ def load_python_script(path: Path, function_name: str) -> PythonScript:
     return PythonScript(_raw_load_python_script(path), root=path.parent, function_name=function_name)
 
 
-def load_dynamic_script(selector_code: str, root: Path) -> DynamicScript:
-    # Mypy doesn't like the lack of return statement, which is hidden under "exec"
-    selector_code = '\n'.join([
-        'def selector():',
+def make_function_from_code(code: str) -> Callable:
+    code = '\n'.join([
+        'def __func():',
         '    game = get_game()',
         '    room = game.overworld.room',
         '    state = get_state()',
-        *['    ' + line for line in selector_code.split('\n')],
+        *['    ' + line for line in code.split('\n')],
     ])
     local_vars: dict = {}
-    exec(selector_code, globals(), local_vars)
-    selector = local_vars['selector']
+    exec(code, globals(), local_vars)
+    return local_vars['__func']
+
+
+def load_dynamic_script(selector_code: str, root: Path) -> DynamicScript:
+    selector = make_function_from_code(selector_code)
     return DynamicScript(selector, root)
 
 
