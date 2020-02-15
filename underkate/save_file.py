@@ -18,7 +18,7 @@ SAVE_PATH = Path.home() / '.underkate' / 'save_file.json'
 DEFAULTS = {
     'itt_test_tutorial': 'unmet',
     'pacifist_route_possible': True,
-    'genocide_route_possible': False,
+    'genocide_route_possible': True,
     'grumpylook_met': True,
     'player_inventory': [
         {
