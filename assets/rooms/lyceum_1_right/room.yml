@@ -1,6 +1,7 @@
 name: lyceum_1_right
 background: bg.png
 pass_map: pass.png
+
 triggers:
     - rect: [0, 263, 15, 229]
       events:
@@ -15,7 +16,11 @@ triggers:
       events:
         interact: text::overworld/lyceum_1_right/window
 
+objects:
+    - pos: [486, 293]
+      texture: sportick/overworld.png//2
+      hitbox: [-40, -90, 80, 180]
+      on_interact: text::overworld/lyceum_1_right/sportick
+
 initial_positions:
     lyceum_hall: [85, 383]
-scripts:
-    on_load: python::spawn.py

@@ -1,0 +1,10 @@
+pictures:
+    sad: grumpylook/face_sad.png//2
+
+pages:
+    - text: "hi.."
+      picture: sad
+    - text: "my name is grumpylook"
+      picture: sad
+    - text: "im feeling so sad, can u please bring me some food from the canteen?"
+      picture: sad
