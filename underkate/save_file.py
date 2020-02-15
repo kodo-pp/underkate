@@ -32,8 +32,8 @@ def load(game: 'Game'):
     try:
         with SAVE_PATH.open('r') as f:
             data = json.load(f)
-        game.overworld = Overworld(game, data['overworld']['room'], Vector(*data['overworld']['player_pos']))
         set_state(data['state'])
+        game.overworld = Overworld(game, data['overworld']['room'], Vector(*data['overworld']['player_pos']))
     except FileNotFoundError:
         logger.info('File does not exist, loading an empty save')
     except json.decoder.JSONDecodeError:
