@@ -3,7 +3,7 @@ from underkate.global_game import get_game
 from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.room import Room, Trigger, Event
-from underkate.script import load_script, SimpleScript
+from underkate.script import load_script, SimpleScript, make_function_from_code
 from underkate.texture import Texture, load_texture, BaseTexture
 from underkate.vector import Vector
 
@@ -150,6 +150,10 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
 
     object_descriptors = data.get('objects', [])
     for obj_desc in object_descriptors:
+        if 'if' in obj_desc:
+            condition = make_function_from_code(obj_desc['if'])
+            if not condition():
+                continue
         pos = Vector(*obj_desc['pos'])
         texture = load_texture(path / obj_desc['texture'])
         is_passable = obj_desc.get('is_passable', False)

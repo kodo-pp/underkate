@@ -35,6 +35,8 @@ objects:
     - pos: [0, 0]
       texture: grumpylook/overworld.png
       rect: [1115, 262, 31, 230]
+      if: |
+          return not state.get('grumpylook_met', False)
       on_interact: |
             dynamic::
             if not state.get('grumpylook_met', False):
