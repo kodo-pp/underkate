@@ -155,7 +155,11 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
             if not condition():
                 continue
         pos = Vector(*obj_desc['pos'])
-        texture = load_texture(path / obj_desc['texture'])
+        texture_name, _, texture_scale_str = obj_desc['texture'].partition('//')
+        if _ == '':
+            texture = load_texture(path / texture_name)
+        else:
+            texture = load_texture(path / texture_name, scale=int(texture_scale_str))
         is_passable = obj_desc.get('is_passable', False)
         if 'rect' in obj_desc:
             if 'hitbox' in obj_desc:
@@ -165,7 +169,7 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
             hitbox.center = (0, 0)
             pos = Vector(*rect.center)
         elif 'hitbox' in obj_desc:
-            hitbox = obj_desc['hitbox']
+            hitbox = pg.Rect(*obj_desc['hitbox'])
         else:
             hitbox = make_hitbox(texture)
 
