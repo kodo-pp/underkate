@@ -165,10 +165,12 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
         else:
             hitbox = make_hitbox(texture)
 
+        obj_name = obj_desc.get('name', None)
+
         obj = Object(pos=pos, texture=texture, is_passable=is_passable, hitbox=hitbox)
         if 'on_interact' in obj_desc:
             obj.on_interact = load_script(obj_desc['on_interact'], root=path)
 
         logger.debug('Adding object: {}', obj)
-        room.add_object(obj)
+        room.add_object(obj, obj_name)
     return room

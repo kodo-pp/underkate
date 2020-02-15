@@ -84,6 +84,7 @@ class Room:
         self.scripts = scripts
         self.path = path
         self.objects: WalList[Object] = WalList([])
+        self.named_objects: Dict[str, Object] = {}
         self.state: dict = {}
         self.sprites: WalList[Sprite] = WalList([])
         self.save_point = save_point
@@ -127,6 +128,11 @@ class Room:
         self.player.update(time_delta)
 
         self.objects.filter(lambda x: x.is_alive())
+        self.named_objects = {
+            name: obj
+            for name, obj in self.named_objects.items()
+            if obj.is_alive()
+        }
         self.sprites.filter(lambda x: x.is_alive())
 
         with self.objects:
@@ -136,6 +142,8 @@ class Room:
         with self.sprites:
             for sprite in self.sprites:
                 sprite.update(time_delta)
+
+        self.maybe_run_script('update')
 
 
     def on_interact(self, *args):
@@ -149,8 +157,10 @@ class Room:
         get_event_manager().subscribe('key:confirm', Subscriber(self.on_interact))
 
 
-    def add_object(self, obj: Object):
+    def add_object(self, obj: Object, name: Optional[str] = None):
         self.objects.append(obj)
+        if name is not None:
+            self.named_objects[name] = obj
 
 
     def spawn(self, sprite: Sprite):

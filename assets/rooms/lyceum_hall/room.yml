@@ -29,6 +29,7 @@ objects:
       texture: grumpylook/overworld.png
       rect: [1115, 262, 31, 230]
       on_interact: text::overworld/lyceum_hall/grumpylook/first_met
+      name: "grumpylook"
 
 
 initial_positions:
@@ -36,7 +37,8 @@ initial_positions:
     lyceum_1_right: [1107, 376]
     lyceum_1_canteen: [85, 383]
 
-scripts: {}
+scripts:
+    update: python::update_grumpylook.py
 
 save_point:
     pos: [787, 452]
