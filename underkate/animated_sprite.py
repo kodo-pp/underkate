@@ -1,4 +1,4 @@
-from underkate.sprite import Sprite
+from underkate.sprite import BaseSprite
 
 import abc
 import time
@@ -6,8 +6,9 @@ import time
 import pygame as pg  # type: ignore
 
 
-class AnimatedSprite(Sprite):
+class AnimatedSprite(BaseSprite):
     def __init__(self):
+        super().__init__()
         self._start_time: float = 0.0
         self._has_started = False
 

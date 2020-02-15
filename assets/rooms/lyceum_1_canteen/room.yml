@@ -19,7 +19,7 @@ objects:
     - pos: [0, 0]
       texture: empty.png
       rect: [86, 236, 59, 54]
-      on_interact: text::overworld/lyceum_1_canteen/vendors/1
+      on_interact: python::candies.py
     - pos: [0, 0]
       texture: empty.png
       rect: [212, 230, 64, 59]

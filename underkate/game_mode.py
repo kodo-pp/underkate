@@ -1,7 +1,7 @@
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
 from underkate.scriptlib.common import wait_for_event, make_callback
-from underkate.sprite import Sprite
+from underkate.sprite import BaseSprite
 from underkate.wal_list import WalList
 
 import abc
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class GameMode:
     def __init__(self, game: 'Game'):
         self.game = game
-        self.sprites: WalList[Sprite] = WalList([])
+        self.sprites: WalList[BaseSprite] = WalList([])
 
 
     def draw(self, destination: pg.Surface):
@@ -32,7 +32,7 @@ class GameMode:
         self.sprites.filter(lambda x: x.is_alive(), deleter = lambda x: x.on_kill())
 
 
-    def spawn(self, sprite: Sprite):
+    def spawn(self, sprite: BaseSprite):
         self.sprites.append(sprite)
 
 

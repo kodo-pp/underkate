@@ -1,7 +1,7 @@
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.scriptlib.common import wait_for_event
-from underkate.sprite import Sprite
+from underkate.scriptlib.common import wait_for_event, next_frame
+from underkate.sprite import BaseSprite
 from underkate.text import draw_text
 from underkate.texture import load_texture
 
@@ -11,7 +11,7 @@ from pathlib import Path
 import pygame as pg  # type: ignore
 
 
-class BaseMenu:
+class BaseMenu(BaseSprite):
     async def choose(self):
         self.index = 0
         self.font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
@@ -29,13 +29,34 @@ class BaseMenu:
                 break
         choice = self.choices[self.index]
         self.stop_displaying()
+        await next_frame()
         return choice
 
 
+    def get_coords_for_line(self, index):
+        return (200, 400 + 40 * index)
+
+
+    def get_coords_for_pointer(self, index):
+        x, y = self.get_coords_for_line(index)
+        return (x - 30, y + 10)
+
+
+    def get_rect(self):
+        return pg.Rect(140, 380, 200, 40 * len(self.get_choices()) + 20)
+
+
+    def get_fill_color(self):
+        return (0, 0, 0)
+
+
     def draw(self, destination):
+        pg.draw.rect(destination, self.get_fill_color(), self.get_rect())
         for i, choice in enumerate(self.choices):
-            draw_text(str(choice), font = self.font, x = 200, y = 400 + 40 * i, destination = destination)
-        self.pointer_texture.draw(destination, x = 160, y = 408 + 40 * self.index)
+            x, y = self.get_coords_for_line(i)
+            draw_text(str(choice), font=self.font, x=x, y=y, destination=destination)
+        x, y = self.get_coords_for_pointer(self.index)
+        self.pointer_texture.draw(destination, x=x, y=y)
 
 
     def update(self, time_delta):
@@ -63,6 +84,15 @@ class BaseMenu:
     @abstractmethod
     def stop_displaying(self):
         ...
+
+
+class OverworldMenu(BaseMenu):
+    def get_rect(self):
+        return pg.Rect(250, 150, 300, 250)
+
+
+    def get_coords_for_line(self, index):
+        return (300, 200 + 40 * index)
 
 
 class Menu(BaseMenu):

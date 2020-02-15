@@ -5,12 +5,7 @@ import abc
 import pygame as pg  # type: ignore
 
 
-# Not using pygame's sprite because it has inconvenient API for my purpose
-class Sprite:
-    def __init__(self, pos: Vector):
-        self.pos = pos
-
-
+class BaseSprite:
     @abc.abstractmethod
     def draw(self, surface: pg.Surface):
         pass
@@ -30,3 +25,8 @@ class Sprite:
 
     def on_kill(self):
         pass
+
+
+class Sprite(BaseSprite):
+    def __init__(self, pos: Vector):
+        self.pos = pos

@@ -19,6 +19,10 @@ def wait_for_event(event_id):
     return (yield)
 
 
+async def next_frame():
+    await wait_for_event('end_of_cycle')
+
+
 async def display_text(text):
     get_game().current_game_mode.spawn(text)
     event_id = get_event_manager().unique_id()

@@ -1,4 +1,5 @@
 pictures: {}
 pages:
     - text: "Some candies are lying on this table"
-    - text: "You can't take them because I haven't written the necessary code yet"
+    - text: "They are for sale for 3 coins each"
+    - text: "Buy one?"

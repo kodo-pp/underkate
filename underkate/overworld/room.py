@@ -4,7 +4,7 @@ from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.player import Player
 from underkate.script import Script, load_script
-from underkate.sprite import Sprite
+from underkate.sprite import BaseSprite
 from underkate.texture import BaseTexture
 from underkate.vector import Vector
 from underkate.wal_list import WalList
@@ -86,7 +86,7 @@ class Room:
         self.objects: WalList[Object] = WalList([])
         self.named_objects: Dict[str, Object] = {}
         self.state: dict = {}
-        self.sprites: WalList[Sprite] = WalList([])
+        self.sprites: WalList[BaseSprite] = WalList([])
         self.save_point = save_point
         if save_point is not None:
             self.add_object(save_point)
@@ -163,7 +163,7 @@ class Room:
             self.named_objects[name] = obj
 
 
-    def spawn(self, sprite: Sprite):
+    def spawn(self, sprite: BaseSprite):
         self.sprites.append(sprite)
 
 
