@@ -20,11 +20,21 @@ DEFAULTS = {
     'pacifist_route_possible': True,
     'genocide_route_possible': False,
     'grumpylook_met': True,
-    'player_inventory': [{
-        'type': 'weapon',
-        'name': 'logic',
-        'pretty_name': 'Use logic',
-    }],
+    'player_inventory': [
+        {
+            'type': 'weapon',
+            'name': 'logic',
+            'pretty_name': 'Use logic',
+            'pretty_name2': 'logic',
+        },
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+    ],
     'player_money': 5,
 }
 
@@ -43,11 +53,12 @@ def save(game: 'Game'):
 
 def load(game: 'Game'):
     logger.info('Loading file {}', SAVE_PATH)
+    state: dict = {}
+    state.update(DEFAULTS)
+    set_state(state)
     try:
         with SAVE_PATH.open('r') as f:
             data = json.load(f)
-        state: dict = {}
-        state.update(DEFAULTS)
         state.update(data['state'])
         set_state(state)
         game.overworld = Overworld(game, data['overworld']['room'], Vector(*data['overworld']['player_pos']))

@@ -1,0 +1,4 @@
+pictures: {}
+
+pages:
+    - text: "You bought {item}"

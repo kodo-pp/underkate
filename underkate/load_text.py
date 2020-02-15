@@ -3,7 +3,7 @@ from underkate.texture import load_texture, BaseTexture
 from underkate.font import load_font
 
 from pathlib import Path
-from typing import Union, List
+from typing import Union, List, Dict
 
 import yaml
 
@@ -16,7 +16,7 @@ def _load_texture(root: Path, spec: str) -> BaseTexture:
     return load_texture(root / filename)
 
 
-def load_text(name: str):
+def load_text(name: str, fmt: Dict[str, str] = {}):
     path = Path('.') / 'assets' / 'texts' / name
 
     with open(path / 'text.yml') as f:
@@ -38,6 +38,6 @@ def load_text(name: str):
             picture = None
         else:
             picture = pictures[picture_name]
-        text = page['text']
+        text = page['text'].format(**fmt)
         pages.append(TextPage(text, font=font, delay=delay, skippable=skippable, picture=picture))
     return DisplayedText(pages)
