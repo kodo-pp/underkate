@@ -15,6 +15,20 @@ if TYPE_CHECKING:
 SAVE_PATH = Path.home() / '.underkate' / 'save_file.json'
 
 
+DEFAULTS = {
+    'itt_test_tutorial': 'unmet',
+    'pacifist_route_possible': True,
+    'genocide_route_possible': False,
+    'grumpylook_met': True,
+    'player_inventory': [{
+        'type': 'weapon',
+        'name': 'logic',
+        'pretty_name': 'Use logic',
+    }],
+    'player_money': 5,
+}
+
+
 def save(game: 'Game'):
     SAVE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
@@ -32,7 +46,10 @@ def load(game: 'Game'):
     try:
         with SAVE_PATH.open('r') as f:
             data = json.load(f)
-        set_state(data['state'])
+        state: dict = {}
+        state.update(DEFAULTS)
+        state.update(data['state'])
+        set_state(state)
         game.overworld = Overworld(game, data['overworld']['room'], Vector(*data['overworld']['player_pos']))
     except FileNotFoundError:
         logger.info('File does not exist, loading an empty save')
