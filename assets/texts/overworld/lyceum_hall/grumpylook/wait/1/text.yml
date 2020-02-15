@@ -1,0 +1,6 @@
+pictures:
+    sad: grumpylook/face_sad.png//2
+
+pages:
+    - text: "wait..."
+      picture: sad

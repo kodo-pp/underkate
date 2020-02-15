@@ -1,0 +1,12 @@
+pictures:
+    sad: grumpylook/face_sad.png//2
+
+pages:
+    - text: "i didn't mean to bother you with this"
+      picture: sad
+      
+    - text: "im so sorry..."
+      picture: sad
+
+    - text: "i'd better go and get some food myself..."
+      picture: sad

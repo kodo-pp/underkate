@@ -1,6 +1,7 @@
 from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
+from underkate.state import get_state
 
 import abc
 import copy
@@ -83,6 +84,20 @@ class TextScript(Script):
         return SuspendedPythonScript(func=self._run, root=Path('.'), args=(), kwargs={})
 
 
+class DynamicScript(Script):
+    def __init__(self, selector: Callable[[], Union[List[str], str]], root: Path):
+        self.selector = selector
+        self.root = root
+
+
+    def __call__(self, *args, **kwargs) -> Any:
+        scripts = self.selector()
+        if isinstance(scripts, str):
+            scripts = [scripts]
+        for script_name in scripts:
+            load_script(script_name, self.root)(*args, **kwargs)
+
+
 @cached
 def _raw_load_python_script(path: Path):
     spec = spec_from_file_location(f'<script:{str(path)}>', path)
@@ -96,6 +111,21 @@ def _raw_load_python_script(path: Path):
 
 def load_python_script(path: Path, function_name: str) -> PythonScript:
     return PythonScript(_raw_load_python_script(path), root=path.parent, function_name=function_name)
+
+
+def load_dynamic_script(selector_code: str, root: Path) -> DynamicScript:
+    # Mypy doesn't like the lack of return statement, which is hidden under "exec"
+    selector_code = '\n'.join([
+        'def selector():',
+        '    game = get_game()',
+        '    room = game.overworld.room',
+        '    state = get_state()',
+        *['    ' + line for line in selector_code.split('\n')],
+    ])
+    local_vars: dict = {}
+    exec(selector_code, globals(), local_vars)
+    selector = local_vars['selector']
+    return DynamicScript(selector, root)
 
 
 def load_script(script_identifier: str, root: Path) -> Script:
@@ -113,5 +143,7 @@ def load_script(script_identifier: str, root: Path) -> Script:
         return RoomScript(script_path)
     if script_type == 'text':
         return TextScript(script_path)
+    if script_type == 'dynamic':
+        return load_dynamic_script(script_path, root)
 
     raise Exception(f'Invalid script type: "{script_type}"')

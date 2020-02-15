@@ -23,12 +23,23 @@ triggers:
     - rect: [582, 231, 93, 29]
       events:
         interact: text::overworld/lyceum_hall/emblem
+    - rect: [131, 256, 41, 240]
+      events:
+        enter: |
+            dynamic::
+            if room.state.get('grumpylook_talked', False):
+                return 'python::go_to_canteen.py'
+            return []
 
 objects:
     - pos: [0, 0]
       texture: grumpylook/overworld.png
       rect: [1115, 262, 31, 230]
-      on_interact: text::overworld/lyceum_hall/grumpylook/first_met
+      on_interact: |
+            dynamic::
+            if not state.get('grumpylook_met', False):
+                room.state['grumpylook_talked'] = True
+            return 'text::overworld/lyceum_hall/grumpylook/first_met'
       name: "grumpylook"
 
 
