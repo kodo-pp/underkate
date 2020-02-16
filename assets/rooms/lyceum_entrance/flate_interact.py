@@ -52,7 +52,7 @@ async def main(*, root, script, **kwargs):
     await fight(load_enemy_battle_by_name('itt_test_cariel_tutorial'))
 
     if not DEBUG_SKIP:
-        if get_state().get('itt_test_tutorial', 'unmet') == 'dead':
+        if get_state()['itt_test_tutorial'] == 'dead':
             await display_text(load_text('overworld/lyceum_entrance/flate-interact/4-cariel-post-fight-kill'))
         else:
             await display_text(load_text('overworld/lyceum_entrance/flate-interact/4-cariel-post-fight-spare'))
