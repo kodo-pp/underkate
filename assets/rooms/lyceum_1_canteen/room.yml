@@ -5,6 +5,9 @@ triggers:
     - rect: [780, 260, 19, 233]
       events:
         enter: room::lyceum_hall
+    - rect: [628, 148, 93, 112]
+      events:
+        interact: text::overworld/lyceum_1_canteen/stairs
 
 initial_positions:
     lyceum_hall: [706, 388]
