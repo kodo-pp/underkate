@@ -36,6 +36,7 @@ DEFAULTS = {
         None,
     ],
     'player_money': 5,
+    'lyceum_staircase_unlocked': False,
 }
 
 

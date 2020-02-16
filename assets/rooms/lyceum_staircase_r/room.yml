@@ -13,4 +13,10 @@ initial_positions:
     lyceum_1_right: [422, 1285]
     lyceum_2_right: [53, 1049]
 scripts: {}
-objects: []
+objects:
+    - pos: [0, 0]
+      rect: [331, 829, 182, 155]
+      texture: fence.png
+      on_interact: text::overworld/lyceum_staircase_r/fence
+      if: |
+          return not state['lyceum_staircase_unlocked']
