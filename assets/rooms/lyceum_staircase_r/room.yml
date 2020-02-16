@@ -1,0 +1,12 @@
+name: lyceum_staircase_r
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [330, 1337, 184, 15]
+      events:
+        enter: room::lyceum_1_right
+
+initial_positions:
+    lyceum_1_right: [422, 1285]
+scripts: {}
+objects: []

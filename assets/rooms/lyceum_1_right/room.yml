@@ -6,6 +6,9 @@ triggers:
     - rect: [0, 263, 15, 229]
       events:
         enter: room::lyceum_hall
+    - rect: [82, 260, 97, 8]
+      events:
+        enter: room::lyceum_staircase_r
     - rect: [447, 237, 88, 19]
       events:
         interact: text::overworld/lyceum_1_right/door
@@ -21,3 +24,4 @@ objects:
 
 initial_positions:
     lyceum_hall: [85, 383]
+    lyceum_staircase_r: [128, 301]
