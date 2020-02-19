@@ -1,3 +1,5 @@
+from underkate.wal_list import WalList
+
 from collections import namedtuple
 from typing import Any, Callable, Dict, Hashable, List, Tuple
 
@@ -14,9 +16,11 @@ class Subscriber:
         self.is_persistent = is_persistent
 
 
+# TODO: rewrite locking and _write_queue using WalList
 class EventManager:
     def __init__(self):
         self.subscribers: Dict[EventId, List[Subscriber]] = {}
+        self.any_subscribers: WalList[Subscriber] = WalList([])
         self._counter = 0
         self._lock_level = 0
         self._write_queue: List[Tuple[EventId, Subscriber]] = []
@@ -49,6 +53,11 @@ class EventManager:
                 self.subscribers.setdefault(event_id, []).append(subscriber)
 
 
+    def subscribe_to_any_event(self, subscriber: Subscriber):
+        logger.debug('EventMabager: subscribe to any')
+        self.any_subscribers.append(subscriber)
+
+
     def raise_event(self, event_id: EventId, argument: Any = None, silent: bool = False):
         if not silent:
             logger.debug('EventManager: raise_event: `{}` with argument `{}`', event_id, argument)
@@ -64,6 +73,10 @@ class EventManager:
                 self.subscribers.pop(event_id, None)
         for sub in subscribers:
             sub.handler(event_id, argument)
+
+        for sub in self.any_subscribers:
+            sub.handler(event_id, argument)
+        self.any_subscribers.filter(lambda sub: sub.is_persistent)
 
 
     def _is_locked(self) -> bool:

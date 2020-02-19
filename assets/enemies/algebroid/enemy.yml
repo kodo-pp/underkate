@@ -1,0 +1,12 @@
+name: Algebroid
+hp: 15
+attack: 4
+phrases:
+damage_by_weapon:
+    logic: 6
+textures:
+    enemy_normal: algebroid.png//4
+    enemy_wounded: algebroid_wounded.png//4
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py

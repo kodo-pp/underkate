@@ -6,6 +6,13 @@ triggers:
     - rect: [633, 260, 97, 10]
       events:
         enter: room::lyceum_staircase_r
+    - rect: [481, 261, 85, 232]
+      events:
+        enter: |
+            dynamic::
+            if state['lyceum_2_right_fights']['algebroid']:
+                return []
+            return 'fight::fight_algebroid@fights.py'
 
 initial_positions:
     lyceum_staircase_r: [684, 315]

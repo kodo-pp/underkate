@@ -1,11 +1,15 @@
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.scriptlib.common import wait_for_event, next_frame
+from underkate.scriptlib.common import wait_for_event, next_frame, wait_for_event_by_filter
 from underkate.sprite import BaseSprite
 from underkate.text import draw_text
 from underkate.texture import load_texture
+from underkate.textured_sprite import TexturedSprite
+from underkate.util import clamp
+from underkate.vector import Vector, MappingFunction, Mappings
 
 from abc import abstractmethod
+from copy import copy
 from pathlib import Path
 
 import pygame as pg  # type: ignore
@@ -131,9 +135,10 @@ class OverworldMenu(BaseMenu):
         return (200, 220 + 40 * (index + len(self.get_title()) - 1))
 
 
-class Menu(BaseMenu):
-    def __init__(self, fight_script):
+class FightMixin:
+    def __init__(self, fight_script, *args, **kwargs):
         self.fight_script = fight_script
+        super().__init__(*args, **kwargs)
 
 
     def start_displaying(self):
@@ -144,12 +149,83 @@ class Menu(BaseMenu):
         self.fight_script.element = None
 
 
-class BulletBoard:
-    def __init__(self, fight_script):
-        self.fight_script = fight_script
-        self.board_texture = load_texture(Path('.') / 'assets' / 'textures' / 'bullet_board.png')
-        self.brain = load_texture(Path('.') / 'assets' / 'textures' / 'brain.png')
-        self.x = 4
-        self.y = 4
+class Menu(FightMixin, BaseMenu):
+    pass
 
-    # TODO
+
+
+class MovementState:
+    def __init__(self, coords: Vector, movement_length: float, mapping: MappingFunction):
+        self.old_coords = copy(coords)
+        self.new_coords = copy(coords)
+        self.movement_length = movement_length
+        self.elapsed_time: float = 0.0
+        self.mapping = mapping
+
+
+    def update(self, time_delta: float):
+        self.elapsed_time += time_delta
+
+
+    def get_current_coords(self) -> Vector:
+        k = clamp(self.elapsed_time / self.movement_length, 0.0, 1.0)
+        return self.old_coords.interpolated(self.new_coords, k, self.mapping)
+
+
+    def move_to(self, new_coords: Vector):
+        self.old_coords = self.new_coords
+        self.new_coords = new_coords
+        self.elapsed_time = 0.0
+
+
+class BulletBoard(FightMixin, BaseSprite):
+    def __init__(self, fight_script):
+        super().__init__(fight_script)
+        self.board_texture = load_texture(Path('.') / 'assets' / 'fight' / 'bullet_board.png')
+        self.heart_texture = load_texture(Path('.') / 'assets' / 'fight' / 'heart.png')
+        self.row = 4
+        self.col = 4
+        self.movement_state = MovementState(
+            coords = self.get_coords_at(self.x, self.y),
+            length = 0.3,
+            mapping = Mappings.ease_out,
+        )
+
+
+    async def run(self, duration: float):
+        time_up_event = get_event_manager().unique_id()
+        notify_after(duration, time_up_event)
+        while True:
+            event, _ = await wait_for_event_by_filter(
+                lambda event, arg: (event in [time_up_event, 'key:any'])
+            )
+            if event == time_up_event:
+                break
+            # TODO: Stopped here
+
+
+    def draw(self, destination):
+        center_x, center_y = self.center.ints()
+        self.board_texture.draw(destination, center_x, center_y)
+        coords = self.get_current_coords()
+        x, y = coords.ints()
+        self.heart_texture.draw(destination, x, y)
+
+
+    def get_current_coords(self) -> Vector:
+        return self.movement_state.get_current_coords()
+
+
+    def get_coords_at(self, row: int, col: int) -> Vector:
+        top_left_x = self.center.x - self.col_width * self.cols / 2.0
+        top_left_y = self.center.y - self.row_height * self.rows / 2.0
+        requested_x = top_left_x + self.col_width * col
+        requested_y = top_left_y + self.row_height * row
+        return Vector(requested_x, requested_y)
+
+
+    center = Vector(400, 300)
+    rows = 10
+    cols = 10
+    col_width = 40
+    row_height = 40

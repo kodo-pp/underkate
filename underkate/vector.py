@@ -1,4 +1,16 @@
-from typing import Tuple
+from typing import Tuple, Callable
+
+
+MappingFunction = Callable[[float], float]
+
+
+class Mappings:
+    def linear(x: float) -> float:
+        return x
+
+
+    def ease_out(x: float) -> float:
+        return -x**2 + 2*x
 
 
 class Vector:
@@ -25,6 +37,16 @@ class Vector:
 
     def __truediv__(self, k: float) -> 'Vector':
         return self * (1.0 / k)
+
+
+    def interpolated(
+        self,
+        p: 'Vector',
+        k: float,
+        mapping: MappingFunction = Mappings.linear
+    ) -> 'Vector':
+        mapped_k = mapping(k)
+        return self * (1.0 - mapped_k) + p * mapped_k
 
 
     def __neg__(self) -> 'Vector':
