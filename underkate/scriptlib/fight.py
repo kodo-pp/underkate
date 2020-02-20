@@ -396,7 +396,7 @@ class FightScript:
             txt = DisplayedText([
                 TextPage(f'Damage: {damage}', font),
             ])
-            await display_text(txt)
+        await display_text(txt)
 
         await self.on_hit(self.enemy.hp <= 0)
 
