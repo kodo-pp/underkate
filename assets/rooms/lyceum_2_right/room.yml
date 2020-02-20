@@ -12,7 +12,7 @@ triggers:
             dynamic::
             if state['lyceum_2_right_fights']['algebroid']:
                 return []
-            return 'fight::fight_algebroid@fights.py'
+            return 'python::fight_algebroid@fights.py'
 
 initial_positions:
     lyceum_staircase_r: [684, 315]

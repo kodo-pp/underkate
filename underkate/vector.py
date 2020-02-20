@@ -5,10 +5,12 @@ MappingFunction = Callable[[float], float]
 
 
 class Mappings:
+    @staticmethod
     def linear(x: float) -> float:
         return x
 
 
+    @staticmethod
     def ease_out(x: float) -> float:
         return -x**2 + 2*x
 
@@ -37,6 +39,10 @@ class Vector:
 
     def __truediv__(self, k: float) -> 'Vector':
         return self * (1.0 / k)
+
+
+    def __repr__(self) -> str:
+        return f'Vector({self.x}, {self.y})'
 
 
     def interpolated(

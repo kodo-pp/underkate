@@ -1,6 +1,7 @@
+from underkate.event_manager import get_event_manager
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.scriptlib.common import wait_for_event, next_frame, wait_for_event_by_filter
+from underkate.scriptlib.common import wait_for_event, next_frame, wait_for_event_by_filter, notify_after
 from underkate.sprite import BaseSprite
 from underkate.text import draw_text
 from underkate.texture import load_texture
@@ -173,7 +174,7 @@ class MovementState:
 
 
     def move_to(self, new_coords: Vector):
-        self.old_coords = self.new_coords
+        self.old_coords = self.get_current_coords()
         self.new_coords = new_coords
         self.elapsed_time = 0.0
 
@@ -186,28 +187,48 @@ class BulletBoard(FightMixin, BaseSprite):
         self.row = 4
         self.col = 4
         self.movement_state = MovementState(
-            coords = self.get_coords_at(self.x, self.y),
-            length = 0.3,
+            coords = self.get_coords_at(self.row, self.col),
+            movement_length = 0.15,
             mapping = Mappings.ease_out,
         )
+
+
+    def update(self, time_delta: float):
+        self.movement_state.update(time_delta)
 
 
     async def run(self, duration: float):
         time_up_event = get_event_manager().unique_id()
         notify_after(duration, time_up_event)
         while True:
-            event, _ = await wait_for_event_by_filter(
+            event, arg = await wait_for_event_by_filter(
                 lambda event, arg: (event in [time_up_event, 'key:any'])
             )
             if event == time_up_event:
                 break
-            # TODO: Stopped here
+
+            assert event == 'key:any'
+            if arg.key == pg.K_UP:
+                self.move(0, -1)
+            elif arg.key == pg.K_DOWN:
+                self.move(0, 1)
+            elif arg.key == pg.K_LEFT:
+                self.move(-1, 0)
+            elif arg.key == pg.K_RIGHT:
+                self.move(1, 0)
+
+
+    def move(self, dx, dy):
+        self.row = clamp(self.row + dy, 0, self.rows)
+        self.col = clamp(self.col + dx, 0, self.cols)
+        self.movement_state.move_to(self.get_coords_at(self.row, self.col))
 
 
     def draw(self, destination):
         center_x, center_y = self.center.ints()
         self.board_texture.draw(destination, center_x, center_y)
         coords = self.get_current_coords()
+        print(f'BulletBoard: draw: coords = {coords}')
         x, y = coords.ints()
         self.heart_texture.draw(destination, x, y)
 
@@ -221,7 +242,7 @@ class BulletBoard(FightMixin, BaseSprite):
         top_left_y = self.center.y - self.row_height * self.rows / 2.0
         requested_x = top_left_x + self.col_width * col
         requested_y = top_left_y + self.row_height * row
-        return Vector(requested_x, requested_y)
+        return Vector(requested_x + self.col_width / 2, requested_y + self.row_height / 2)
 
 
     center = Vector(400, 300)

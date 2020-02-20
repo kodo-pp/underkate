@@ -4,7 +4,7 @@ from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
-from underkate.scriptlib.ui import Menu
+from underkate.scriptlib.ui import Menu, BulletBoard
 from underkate.sprite import Sprite
 from underkate.text import DisplayedText, TextPage, draw_text
 from underkate.texture import load_texture
@@ -243,7 +243,7 @@ class DisappearAnimation:
 
 
 class Enemy:
-    def __init__(self, hp, damage_by_weapon, attack, name, normal_texture, wounded_texture, pos):
+    def __init__(self, hp, damage_by_weapon, attack, name, normal_texture, wounded_texture, pos, fight_script):
         self.initial_hp = hp
         self.hp = hp
         self.damage_by_weapon = damage_by_weapon
@@ -253,7 +253,7 @@ class Enemy:
         self.wounded_texture = wounded_texture
 
         self.sprite = TexturedSprite(pos, normal_texture)
-        get_game().current_game_mode.spawn(self.sprite)
+        fight_script.spawn(self.sprite)
 
 
     async def on_kill(self):
@@ -305,8 +305,10 @@ class FightScript:
             normal_texture = self.get_enemy_normal_texture(),
             wounded_texture = self.get_enemy_wounded_texture(),
             pos = self.get_enemy_pos(),
+            fight_script = self,
         )
         self._has_spared = False
+        self.bullet_board = None
 
 
     def get_enemy_normal_texture(self):
@@ -322,11 +324,11 @@ class FightScript:
 
 
     def draw(self, destination):
-        if self.element is not None:
-            self.element.draw(destination)
         with self.sprites:
             for sprite in self.sprites:
                 sprite.draw(destination)
+        if self.element is not None:
+            self.element.draw(destination)
 
 
     def spawn(self, sprite):
@@ -337,6 +339,8 @@ class FightScript:
         if self.element is not None:
             self.element.update(time_delta)
         with self.sprites:
+            if self.bullet_board is not None:
+                self.bullet_board.update(time_delta)
             for sprite in self.sprites:
                 sprite.update(time_delta)
 
@@ -422,8 +426,13 @@ class FightScript:
         return False
 
 
-    async def perform_attack(self):
-        await sleep(5)
+    async def perform_attack(self, bullet_board):
+        #self.bullet_board = BulletBoard(self)
+        await bullet_board.run(duration=5.0)
+
+
+    def get_bullet_board(self):
+        return BulletBoard(self)
 
 
     async def process_enemy_attack(self):

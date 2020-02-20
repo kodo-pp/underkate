@@ -18,25 +18,14 @@ class Script(FightScript):
 
 
     def get_choices(self):
-        return [UseWeapon(Weapon('itt_tutorial_answer_correctly', 'Answer correctly')), Spare()]
-
-
-    async def run(self):
-        if not DEBUG_SKIP:
-            await display_text(load_text('fight/pre-lyceum/itt_test_cariel_tutorial'))
-        menu = self.get_main_menu()
-        choice = await menu.choose()
-        await self.get_action_for_choice(choice)()
-        get_event_manager().raise_event('fight_finished')
+        return [UseWeapon(Weapon('Test weapon', 'Test weapon')), Spare()]
 
 
     async def on_kill(self):
-        get_state()['itt_test_tutorial'] = 'dead'
         get_state()['pacifist_route_possible'] = False
 
 
     async def on_spare(self):
-        get_state()['itt_test_tutorial'] = 'spared'
         get_state()['genocide_route_possible'] = False
 
 
@@ -49,3 +38,8 @@ async def run(*, enemy_battle, **kwargs):
 async def draw(*, destination, **kwargs):
     global fs
     fs.draw(destination)
+
+
+async def update(*, time_delta, **kwargs):
+    global fs
+    fs.update(time_delta)

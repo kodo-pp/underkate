@@ -19,22 +19,9 @@ class Subscriber:
 # TODO: rewrite locking and _write_queue using WalList
 class EventManager:
     def __init__(self):
-        self.subscribers: Dict[EventId, List[Subscriber]] = {}
+        self.subscribers: Dict[EventId, WalList[Subscriber]] = {}
         self.any_subscribers: WalList[Subscriber] = WalList([])
         self._counter = 0
-        self._lock_level = 0
-        self._write_queue: List[Tuple[EventId, Subscriber]] = []
-
-
-    def __enter__(self):
-        self._lock_level += 1
-        return self
-
-
-    def __exit__(self, *args):
-        self._lock_level -= 1
-        if self._lock_level == 0:
-            self._finalize_lock()
 
 
     def unique_id(self) -> EventId:
@@ -46,11 +33,9 @@ class EventManager:
 
     def subscribe(self, event_id: EventId, subscriber: Subscriber):
         logger.debug('EventManager: subscribe: `{}`', event_id)
-        if self._is_locked():
-            self._write_queue.append((event_id, subscriber))
-        else:
-            with self:
-                self.subscribers.setdefault(event_id, []).append(subscriber)
+        ls = self.subscribers.setdefault(event_id, WalList([]))
+        with ls:
+            ls.append(subscriber)
 
 
     def subscribe_to_any_event(self, subscriber: Subscriber):
@@ -61,33 +46,19 @@ class EventManager:
     def raise_event(self, event_id: EventId, argument: Any = None, silent: bool = False):
         if not silent:
             logger.debug('EventManager: raise_event: `{}` with argument `{}`', event_id, argument)
-        if self._is_locked():
-            # TODO: nested raise_event()
-            raise NotImplementedError()
-        with self:
-            subscribers = self.subscribers.get(event_id, [])
-            remaining_subscribers = [sub for sub in subscribers if sub.is_persistent]
-            if remaining_subscribers:
-                self.subscribers[event_id] = remaining_subscribers
-            else:
-                self.subscribers.pop(event_id, None)
-        for sub in subscribers:
-            sub.handler(event_id, argument)
 
-        for sub in self.any_subscribers:
-            sub.handler(event_id, argument)
-        self.any_subscribers.filter(lambda sub: sub.is_persistent)
+        subscribers = self.subscribers.get(event_id, WalList([]))
+        with subscribers:
+            for sub in subscribers:
+                sub.handler(event_id, argument)
+            subscribers.filter(lambda x: x.is_persistent, now=True)
+        if len(subscribers) == 0:
+            self.subscribers.pop(event_id, None)
 
-
-    def _is_locked(self) -> bool:
-        return self._lock_level > 0
-
-
-    def _finalize_lock(self):
-        assert not self._is_locked()
-        for event_id, subscriber in self._write_queue:
-            self.subscribers.setdefault(event_id, []).append(subscriber)
-        self._write_queue = []
+        with self.any_subscribers:
+            for sub in self.any_subscribers:
+                sub.handler(event_id, argument)
+            self.any_subscribers.filter(lambda sub: sub.is_persistent, now=True)
 
 
 _event_manager = EventManager()

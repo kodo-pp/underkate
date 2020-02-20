@@ -37,6 +37,11 @@ DEFAULTS = {
     ],
     'player_money': 5,
     'lyceum_staircase_unlocked': False,
+    'lyceum_2_right_fights': {
+        'algebroid': False,
+        'geoma': False,
+        'literallia': False,
+    },
 }
 
 

@@ -99,12 +99,19 @@ class WalList(Generic[T]):
     def filter(
         self,
         predicate: Callable[[T], bool],
-        deleter: Optional[Callable[[T], None]] = None
+        deleter: Optional[Callable[[T], None]] = None,
+        now: bool = False,
     ):
+        operation: Operation
         if deleter is None:
-            self._apply_or_defer(Filter(predicate))
+            operation = Filter(predicate)
         else:
-            self._apply_or_defer(FilterWithDeleter(predicate, deleter))
+            operation = FilterWithDeleter(predicate, deleter)
+
+        if now:
+            self._apply(operation)
+        else:
+            self._apply_or_defer(operation)
 
 
     def _apply_wal(self):

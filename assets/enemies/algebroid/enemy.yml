@@ -10,3 +10,4 @@ textures:
 scripts:
     run: python::run@run.py
     draw: python::draw@run.py
+    update: python::update@run.py
