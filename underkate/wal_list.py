@@ -57,13 +57,11 @@ class WalList(Generic[T]):
 
 
     def __enter__(self):
-        #print('==================================== LOCK')
         self._lock_counter.increase()
         return self
 
 
     def __exit__(self, *args):
-        #print('==================================== UNLOCK')
         self._lock_counter.decrease()
         if not self.is_locked():
             self._apply_wal()

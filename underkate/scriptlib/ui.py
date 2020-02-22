@@ -228,7 +228,6 @@ class BulletBoard(FightMixin, BaseSprite):
         center_x, center_y = self.center.ints()
         self.board_texture.draw(destination, center_x, center_y)
         coords = self.get_current_coords()
-        print(f'BulletBoard: draw: coords = {coords}')
         x, y = coords.ints()
         self.heart_texture.draw(destination, x, y)
 
