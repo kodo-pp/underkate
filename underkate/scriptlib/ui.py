@@ -8,10 +8,12 @@ from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
 from underkate.util import clamp
 from underkate.vector import Vector, MappingFunction, Mappings
+from underkate.wal_list import WalList
 
 from abc import abstractmethod
 from copy import copy
 from pathlib import Path
+from typing import Tuple
 
 import pygame as pg  # type: ignore
 
@@ -191,10 +193,19 @@ class BulletBoard(FightMixin, BaseSprite):
             movement_length = 0.15,
             mapping = Mappings.ease_out,
         )
+        self.sprites = WalList([])
+
+
+    def spawn(self, sprite):
+        self.sprites.append(sprite)
 
 
     def update(self, time_delta: float):
         self.movement_state.update(time_delta)
+        with self.sprites:
+            for x in self.sprites:
+                x.update(time_delta)
+        self.sprites.filter(lambda x: x.is_alive())
 
 
     async def run(self, duration: float):
@@ -218,18 +229,25 @@ class BulletBoard(FightMixin, BaseSprite):
                 self.move(1, 0)
 
 
-    def move(self, dx, dy):
+    def move(self, dx: int, dy: int):
         self.row = clamp(self.row + dy, 0, self.rows)
         self.col = clamp(self.col + dx, 0, self.cols)
         self.movement_state.move_to(self.get_coords_at(self.row, self.col))
 
 
-    def draw(self, destination):
+    def draw(self, destination: pg.Surface):
         center_x, center_y = self.center.ints()
         self.board_texture.draw(destination, center_x, center_y)
         coords = self.get_current_coords()
         x, y = coords.ints()
+
+        prev_clip = destination.get_clip()
+        destination.set_clip(self.get_rect())
         self.heart_texture.draw(destination, x, y)
+        with self.sprites:
+            for sprite in self.sprites:
+                sprite.draw(destination)
+        destination.set_clip(prev_clip)
 
 
     def get_current_coords(self) -> Vector:
@@ -242,6 +260,24 @@ class BulletBoard(FightMixin, BaseSprite):
         requested_x = top_left_x + self.col_width * col
         requested_y = top_left_y + self.row_height * row
         return Vector(requested_x + self.col_width / 2, requested_y + self.row_height / 2)
+
+
+    def get_rect(self) -> pg.Rect:
+        rect = pg.Rect(0, 0, self.cols * self.col_width, self.rows * self.row_height)
+        rect.center = self.center.ints()
+        return rect
+
+
+    def coords_to_cell(self, coords: Vector) -> Tuple[int, int]:
+        origin = self.get_coords_at(0, 0)
+        offset = coords - origin
+        x, y = offset.ints()
+        return x // self.col_width, y // self.row_height
+
+
+    def maybe_hit_player(self, damage):
+        # TODO: write the hit logic with decreasing HP and visual indication
+        pass
 
 
     center = Vector(400, 300)

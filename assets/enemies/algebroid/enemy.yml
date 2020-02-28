@@ -7,6 +7,7 @@ damage_by_weapon:
 textures:
     enemy_normal: algebroid.png//4
     enemy_wounded: algebroid_wounded.png//4
+    equation_bullet: equation_bullet.png//2
 scripts:
     run: python::run@run.py
     draw: python::draw@run.py

@@ -1,12 +1,14 @@
 from underkate.event_manager import get_event_manager, Subscriber
+from underkate.fight.enemy_battle import EnemyBattle
 from underkate.fight.mode import Fight
 from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.ui import Menu, BulletBoard
-from underkate.sprite import Sprite
+from underkate.sprite import Sprite, BaseSprite
 from underkate.text import DisplayedText, TextPage, draw_text
+from underkate.texture import BaseTexture
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
 from underkate.vector import Vector
@@ -16,7 +18,8 @@ import math
 import random as rd
 from abc import abstractmethod
 from pathlib import Path
-from typing import Optional
+from types import coroutine
+from typing import Optional, Protocol, Dict
 
 import pygame as pg  # type: ignore
 
@@ -243,11 +246,21 @@ class DisappearAnimation:
 
 
 class Enemy:
-    def __init__(self, hp, damage_by_weapon, attack, name, normal_texture, wounded_texture, pos, fight_script):
+    def __init__(
+        self,
+        hp: int,
+        damage_by_weapon: Dict[str, int],
+        #attack: int,
+        name: str,
+        normal_texture: BaseTexture,
+        wounded_texture: BaseTexture,
+        pos: Vector,
+        fight_script: 'FightScript'
+    ):
         self.initial_hp = hp
         self.hp = hp
         self.damage_by_weapon = damage_by_weapon
-        self.attack = attack
+        #self.attack = attack
         self.name = name
         self.normal_texture = normal_texture
         self.wounded_texture = wounded_texture
@@ -281,49 +294,63 @@ def _load_texture(root, spec):
     return load_texture(root / filename)
 
 
+class Drawable(Protocol):
+    def draw(self, destination: pg.Surface):
+        ...
+
+
+class Updatable(Protocol):
+    def update(self, time_delta: float):
+        ...
+
+
+class ElementProtocol(Drawable, Updatable, Protocol):
+    pass
+
+
 class FightScript:
-    def __init__(self, battle):
+    def __init__(self, battle: EnemyBattle):
         self.battle = battle
         self.textures = {
             texture_name: _load_texture(battle.root, texture_filename)
             for texture_name, texture_filename in battle.data.get('textures', {}).items()
         }
         #self.phrases = battle.data['phrases']
-        self.sprites = WalList([])
-        self.element = None
-        self.state = {}
+        self.sprites: WalList[BaseSprite] = WalList([])
+        self.element: Optional[ElementProtocol] = None
+        self.state: dict = {}
 
-        hp = battle.data['hp']
-        damage_by_weapon = battle.data.get('damage_by_weapon', {})
-        attack = battle.data['attack']
-        name = battle.data['name']
+        hp: int = battle.data['hp']
+        damage_by_weapon: Dict[str, int] = battle.data.get('damage_by_weapon', {})
+        name: str = battle.data['name']
         self.enemy = Enemy(
             hp = hp,
             damage_by_weapon = damage_by_weapon,
-            attack = attack,
+            #attack = attack,
             name = name,
             normal_texture = self.get_enemy_normal_texture(),
             wounded_texture = self.get_enemy_wounded_texture(),
             pos = self.get_enemy_pos(),
             fight_script = self,
         )
-        self._has_spared = False
-        self.bullet_board = None
+        self._has_spared: bool = False
+        self.bullet_board: Optional['BulletBoard'] = None
+        self._bullet_spawner: Optional['BulletSpawner'] = None
 
 
-    def get_enemy_normal_texture(self):
+    def get_enemy_normal_texture(self) -> BaseTexture:
         return self.textures['enemy_normal']
 
 
-    def get_enemy_wounded_texture(self):
+    def get_enemy_wounded_texture(self) -> BaseTexture:
         return self.textures['enemy_wounded']
 
 
-    def get_enemy_pos(self):
+    def get_enemy_pos(self) -> Vector:
         return Vector(400, 200)
 
 
-    def draw(self, destination):
+    def draw(self, destination: pg.Surface):
         with self.sprites:
             for sprite in self.sprites:
                 sprite.draw(destination)
@@ -331,13 +358,20 @@ class FightScript:
             self.element.draw(destination)
 
 
-    def spawn(self, sprite):
+    def spawn(self, sprite: BaseSprite):
         self.sprites.append(sprite)
 
 
-    def update(self, time_delta):
+    @abstractmethod
+    def create_bullet_spawner(self) -> 'BulletSpawner':
+        pass
+
+
+    def update(self, time_delta: float):
         if self.element is not None:
             self.element.update(time_delta)
+        if self._bullet_spawner is not None:
+            self._bullet_spawner.update(time_delta)
         with self.sprites:
             if self.bullet_board is not None:
                 self.bullet_board.update(time_delta)
@@ -428,7 +462,9 @@ class FightScript:
 
     async def perform_attack(self, bullet_board):
         #self.bullet_board = BulletBoard(self)
+        self._bullet_spawner = self.create_bullet_spawner()
         await bullet_board.run(duration=5.0)
+        self._bullet_spawner = None
 
 
     def get_bullet_board(self):
@@ -436,10 +472,11 @@ class FightScript:
 
 
     async def process_enemy_attack(self):
-        bullet_board = self.get_bullet_board()
-        self.element = bullet_board
-        await self.perform_attack(bullet_board)
+        self.bullet_board = self.get_bullet_board()
+        self.element = self.bullet_board
+        await self.perform_attack(self.bullet_board)
         self.element = None
+        self.bullet_board = None
 
 
     def has_battle_finished(self):
@@ -455,3 +492,72 @@ class FightScript:
                 break
             await self.process_enemy_attack()
         get_event_manager().raise_event('fight_finished')
+
+
+class Bullet(TexturedSprite):
+    def __init__(self, bullet_board, texture, row, col, speed, damage):
+        super().__init__(bullet_board.get_coords_at(row, col), texture)
+        self.bullet_board = bullet_board
+        self.speed = speed
+        self.damage = damage
+
+
+    @abstractmethod
+    def does_hit_at(self, row, col):
+        ...
+
+
+    def update(self, time_delta):
+        self.pos += self.speed * time_delta
+        if self.does_hit_at(self.bullet_board.row, self.bullet_board.col):
+            self.bullet_board.maybe_hit_player(self.damage)
+
+
+class BulletSpawner:
+    class TerminateCoroutine(BaseException):
+        pass
+
+
+    def __init__(self, bullet_board):
+        self.bullet_board = bullet_board
+        self._remaining_wait_time = 0.0
+        self._flow = self._run_wrapper()
+        self._flow.send(None)
+
+
+    async def run(self):
+        pass
+
+
+    async def _run_wrapper(self):
+        try:
+            await self.run()
+        except BulletSpawner.TerminateCoroutine:
+            pass
+
+
+    def spawn(self, bullet):
+        self.bullet_board.spawn(bullet)
+
+
+    @coroutine
+    def sleep_for(self, delay: float):
+        self._remaining_sleep_time = delay
+        has_timed_out = yield
+        if has_timed_out:
+            raise BulletSpawner.TerminateCoroutine()
+
+
+    def update(self, time_delta):
+        if self._remaining_sleep_time > 0.0:
+            self._remaining_sleep_time -= time_delta
+            if self._remaining_sleep_time <= 0.0:
+                self._remaining_sleep_time = 0.0
+                self._flow.send(False)
+
+
+    def on_kill(self):
+        try:
+            self._flow.send(True)
+        except StopIteration:
+            pass
