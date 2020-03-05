@@ -163,7 +163,6 @@ class Menu(FightMixin, BaseMenu):
     pass
 
 
-
 class MovementState:
     def __init__(self, coords: Vector, movement_length: float, mapping: MappingFunction):
         self.old_coords = copy(coords)
