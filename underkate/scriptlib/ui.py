@@ -15,10 +15,13 @@ import time
 from abc import abstractmethod
 from copy import copy
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Optional, TYPE_CHECKING
 
 import pygame as pg  # type: ignore
 from loguru import logger
+
+if TYPE_CHECKING:
+    from underkate.scriptlib.fight import FightScript
 
 
 class BaseMenu(BaseSprite):
@@ -142,17 +145,18 @@ class OverworldMenu(BaseMenu):
 
 
 class FightMixin:
-    def __init__(self, fight_script, *args, **kwargs):
+    def __init__(self, fight_script: 'FightScript', *args, **kwargs):
         self.fight_script = fight_script
-        super().__init__(*args, **kwargs)
+        # Mypy swears a lot about the next line without any obvious reason
+        super().__init__(*args, **kwargs)  # type: ignore
 
 
     def start_displaying(self):
-        self.fight_script.element = self
+        self.fight_script.elements.append(self)
 
 
     def stop_displaying(self):
-        self.fight_script.element = None
+        self.fight_script.elements.filter(lambda x: x is not self)
 
 
 class Menu(FightMixin, BaseMenu):
@@ -185,7 +189,7 @@ class MovementState:
 
 
 class BulletBoard(FightMixin, BaseSprite):
-    def __init__(self, fight_script):
+    def __init__(self, fight_script: 'FightScript'):
         super().__init__(fight_script)
         self.board_texture = load_texture(Path('.') / 'assets' / 'fight' / 'bullet_board.png')
         self.heart_texture = load_texture(Path('.') / 'assets' / 'fight' / 'heart.png')
@@ -197,11 +201,11 @@ class BulletBoard(FightMixin, BaseSprite):
             movement_length = 0.15,
             mapping = Mappings.ease_out,
         )
-        self.sprites = WalList([])
-        self._last_time_player_hit = None
+        self.sprites: WalList[BaseSprite] = WalList([])
+        self._last_time_player_hit: Optional[float] = None
 
 
-    def spawn(self, sprite):
+    def spawn(self, sprite: BaseSprite):
         self.sprites.append(sprite)
 
 

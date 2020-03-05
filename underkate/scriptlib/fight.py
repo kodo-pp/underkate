@@ -317,7 +317,7 @@ class FightScript:
         }
         #self.phrases = battle.data['phrases']
         self.sprites: WalList[BaseSprite] = WalList([])
-        self.element: Optional[ElementProtocol] = None
+        self.elements: WalList[ElementProtocol] = WalList([])
         self.state: dict = {}
 
         hp: int = battle.data['hp']
@@ -354,8 +354,9 @@ class FightScript:
         with self.sprites:
             for sprite in self.sprites:
                 sprite.draw(destination)
-        if self.element is not None:
-            self.element.draw(destination)
+        with self.elements:
+            for element in self.elements:
+                element.draw(destination)
 
 
     def spawn(self, sprite: BaseSprite):
@@ -368,8 +369,9 @@ class FightScript:
 
 
     def update(self, time_delta: float):
-        if self.element is not None:
-            self.element.update(time_delta)
+        with self.elements:
+            for element in self.elements:
+                element.update(time_delta)
         if self._bullet_spawner is not None:
             self._bullet_spawner.update(time_delta)
         with self.sprites:
@@ -471,9 +473,9 @@ class FightScript:
 
     async def process_enemy_attack(self):
         self.bullet_board = self.get_bullet_board()
-        self.element = self.bullet_board
+        self.elements.append(self.bullet_board)
         await self.perform_attack(self.bullet_board)
-        self.element = None
+        self.elements.filter(lambda x: x is not self.bullet_board)
         self.bullet_board = None
 
 
