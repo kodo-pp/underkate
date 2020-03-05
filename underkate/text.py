@@ -17,7 +17,10 @@ from memoization import cached  # type: ignore
 SerializedData = Union[str, bytes]
 
 
-def draw_text(text: str, font: Font, x: int, y: int, destination: pg.Surface):
+def draw_text(text: str, *, font: Optional[Font] = None, x: int, y: int, destination: pg.Surface):
+    if font is None:
+        font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
+
     glyph_width, glyph_height = font.glyph_size
     for index_offset, char in enumerate(text):
         glyph_name = font.get_glyph_name(char)

@@ -350,6 +350,13 @@ class FightHpIndicator(FightMixin):
                 pg.Rect(rect.left + filled_width, rect.top, rect.width - filled_width, rect.height),
             )
 
+        draw_text(
+            f'HP: {self.get_current_hp()}',
+            x = rect.right + 10,
+            y = rect.top + 4,
+            destination = destination,
+        )
+
 
     def update(self, time_delta: float):
         pass
