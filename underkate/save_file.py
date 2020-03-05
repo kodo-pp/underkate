@@ -35,6 +35,7 @@ DEFAULTS = {
         None,
         None,
     ],
+    'player_hp': 20,
     'player_money': 5,
     'lyceum_staircase_unlocked': False,
     'lyceum_2_right_fights': {

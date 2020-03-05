@@ -3,6 +3,7 @@ from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.scriptlib.common import wait_for_event, next_frame, wait_for_event_by_filter, notify_after
 from underkate.sprite import BaseSprite
+from underkate.state import get_state
 from underkate.text import draw_text
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
@@ -10,12 +11,14 @@ from underkate.util import clamp
 from underkate.vector import Vector, MappingFunction, Mappings
 from underkate.wal_list import WalList
 
+import time
 from abc import abstractmethod
 from copy import copy
 from pathlib import Path
 from typing import Tuple
 
 import pygame as pg  # type: ignore
+from loguru import logger
 
 
 class BaseMenu(BaseSprite):
@@ -186,6 +189,7 @@ class BulletBoard(FightMixin, BaseSprite):
         super().__init__(fight_script)
         self.board_texture = load_texture(Path('.') / 'assets' / 'fight' / 'bullet_board.png')
         self.heart_texture = load_texture(Path('.') / 'assets' / 'fight' / 'heart.png')
+        self.hit_heart_texture = load_texture(Path('.') / 'assets' / 'fight' / 'hit_heart.png')
         self.row = 4
         self.col = 4
         self.movement_state = MovementState(
@@ -194,6 +198,7 @@ class BulletBoard(FightMixin, BaseSprite):
             mapping = Mappings.ease_out,
         )
         self.sprites = WalList([])
+        self._last_time_player_hit = None
 
 
     def spawn(self, sprite):
@@ -243,7 +248,12 @@ class BulletBoard(FightMixin, BaseSprite):
 
         prev_clip = destination.get_clip()
         destination.set_clip(self.get_rect())
-        self.heart_texture.draw(destination, x, y)
+
+        if self._can_hit_player():
+            self.heart_texture.draw(destination, x, y)
+        else:
+            self.hit_heart_texture.draw(destination, x, y)
+
         with self.sprites:
             for sprite in self.sprites:
                 sprite.draw(destination)
@@ -280,10 +290,32 @@ class BulletBoard(FightMixin, BaseSprite):
         return x // self.col_width, y // self.row_height
 
 
+    def get_player_invulnerability_period(self) -> float:
+        # TODO: test if this value is optimal
+        # TODO: calculate it dynamically depending on the game state
+        return 1.0
+
+
+    def _can_hit_player(self) -> bool:
+        now = time.monotonic()
+        return (
+            self._last_time_player_hit is None
+            or self._last_time_player_hit + self.get_player_invulnerability_period() < now
+        )
+
+
     def maybe_hit_player(self, damage):
-        # TODO: write the hit logic with decreasing HP and visual indication
-        print('hit')
-        pass
+        if not self._can_hit_player():
+            return
+        now = time.monotonic()
+        self._last_time_player_hit = now
+        state = get_state()
+        state['player_hp'] = max(0, state['player_hp'] - damage)
+        logger.debug('Player was hit, {} hp left', state['player_hp'])
+        if state['player_hp'] == 0:
+            logger.info('Player died')
+            # TODO: show game over screen
+            exit()
 
 
     center = Vector(400, 300)
