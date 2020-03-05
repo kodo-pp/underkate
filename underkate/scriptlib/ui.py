@@ -326,3 +326,38 @@ class BulletBoard(FightMixin, BaseSprite):
     cols = 10
     col_width = 40
     row_height = 40
+
+
+class FightHpIndicator(FightMixin):
+    def __init__(self, fight_script: 'FightScript', rect: pg.Rect):
+        super().__init__(fight_script)
+        self.rect = rect
+
+
+    def draw(self, destination: pg.Surface):
+        hp_part = self.get_current_hp() / self.get_max_hp()
+        filled_width = int(round(self.rect.width * hp_part))
+        rect = self.rect
+        pg.draw.rect(
+            destination,
+            (0, 255, 255),
+            pg.Rect(rect.left, rect.top, filled_width, rect.height),
+        )
+        if rect.width > filled_width:
+            pg.draw.rect(
+                destination,
+                (128, 128, 128),
+                pg.Rect(rect.left + filled_width, rect.top, rect.width - filled_width, rect.height),
+            )
+
+
+    def update(self, time_delta: float):
+        pass
+
+
+    def get_current_hp(self):
+        return get_state()['player_hp']
+
+
+    def get_max_hp(self):
+        return get_state()['player_max_hp']

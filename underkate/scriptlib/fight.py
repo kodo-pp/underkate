@@ -5,7 +5,7 @@ from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
-from underkate.scriptlib.ui import Menu, BulletBoard
+from underkate.scriptlib.ui import Menu, BulletBoard, FightHpIndicator
 from underkate.sprite import Sprite, BaseSprite
 from underkate.text import DisplayedText, TextPage, draw_text
 from underkate.texture import BaseTexture
@@ -317,7 +317,9 @@ class FightScript:
         }
         #self.phrases = battle.data['phrases']
         self.sprites: WalList[BaseSprite] = WalList([])
-        self.elements: WalList[ElementProtocol] = WalList([])
+        self.elements: WalList[ElementProtocol] = WalList([
+            FightHpIndicator(self, pg.Rect(350, 550, 100, 30))
+        ])
         self.state: dict = {}
 
         hp: int = battle.data['hp']
