@@ -373,8 +373,6 @@ class FightScript:
         if self._bullet_spawner is not None:
             self._bullet_spawner.update(time_delta)
         with self.sprites:
-            if self.bullet_board is not None:
-                self.bullet_board.update(time_delta)
             for sprite in self.sprites:
                 sprite.update(time_delta)
 
@@ -495,7 +493,15 @@ class FightScript:
 
 
 class Bullet(TexturedSprite):
-    def __init__(self, bullet_board, texture, row, col, speed, damage):
+    def __init__(
+        self,
+        bullet_board: BulletBoard,
+        texture: BaseTexture,
+        row: int,
+        col: int,
+        speed: Vector,
+        damage: int
+    ):
         super().__init__(bullet_board.get_coords_at(row, col), texture)
         self.bullet_board = bullet_board
         self.speed = speed
@@ -503,14 +509,32 @@ class Bullet(TexturedSprite):
 
 
     @abstractmethod
-    def does_hit_at(self, row, col):
+    def does_hit_at(self, row: int, col: int):
         ...
 
 
-    def update(self, time_delta):
+    def update(self, time_delta: float):
         self.pos += self.speed * time_delta
         if self.does_hit_at(self.bullet_board.row, self.bullet_board.col):
             self.bullet_board.maybe_hit_player(self.damage)
+
+
+
+class RectangularBullet(Bullet):
+    @abstractmethod
+    def get_hitbox(self) -> pg.Rect:
+        ...
+
+
+    def get_rect(self) -> pg.Rect:
+        x, y = self.pos.ints()
+        return self.get_hitbox().move(x, y)
+
+
+    def does_hit_at(self, row: int, col: int):
+        cell_rect = self.bullet_board.get_rect_at(row, col)
+        return bool(self.get_rect().colliderect(cell_rect))
+
 
 
 class BulletSpawner:

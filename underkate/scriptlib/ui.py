@@ -255,11 +255,16 @@ class BulletBoard(FightMixin, BaseSprite):
 
 
     def get_coords_at(self, row: int, col: int) -> Vector:
+        x, y = self.get_rect_at(row, col).center
+        return Vector(x, y)
+
+
+    def get_rect_at(self, row: int, col: int) -> pg.Rect:
         top_left_x = self.center.x - self.col_width * self.cols / 2.0
         top_left_y = self.center.y - self.row_height * self.rows / 2.0
         requested_x = top_left_x + self.col_width * col
         requested_y = top_left_y + self.row_height * row
-        return Vector(requested_x + self.col_width / 2, requested_y + self.row_height / 2)
+        return pg.Rect(requested_x, requested_y, self.col_width, self.row_height)
 
 
     def get_rect(self) -> pg.Rect:
@@ -277,6 +282,7 @@ class BulletBoard(FightMixin, BaseSprite):
 
     def maybe_hit_player(self, damage):
         # TODO: write the hit logic with decreasing HP and visual indication
+        print('hit')
         pass
 
 
