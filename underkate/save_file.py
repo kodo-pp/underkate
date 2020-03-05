@@ -19,7 +19,7 @@ DEFAULTS = {
     'itt_test_tutorial': 'unmet',
     'pacifist_route_possible': True,
     'genocide_route_possible': True,
-    'grumpylook_met': True,
+    'grumpylook_met': False,
     'player_inventory': [
         {
             'type': 'weapon',
