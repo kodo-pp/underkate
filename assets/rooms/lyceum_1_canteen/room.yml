@@ -16,6 +16,8 @@ objects:
     - pos: [487, 283]
       texture: grumpylook/overworld.png
       on_interact: text::overworld/lyceum_1_canteen/grumpylook
+      if: |
+          return state['grumpylook_met']
     - pos: [0, 0]
       texture: empty.png
       rect: [56, 376, 360, 64]
