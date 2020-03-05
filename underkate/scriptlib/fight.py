@@ -513,13 +513,13 @@ class Bullet(TexturedSprite):
 
 
     @abstractmethod
-    def does_hit_at(self, row: int, col: int):
+    def does_hit_at(self, pos: Vector):
         ...
 
 
     def update(self, time_delta: float):
         self.pos += self.speed * time_delta
-        if self.does_hit_at(self.bullet_board.row, self.bullet_board.col):
+        if self.does_hit_at(self.bullet_board.get_current_coords()):
             self.bullet_board.maybe_hit_player(self.damage)
 
 
@@ -535,9 +535,8 @@ class RectangularBullet(Bullet):
         return self.get_hitbox().move(x, y)
 
 
-    def does_hit_at(self, row: int, col: int):
-        cell_rect = self.bullet_board.get_rect_at(row, col)
-        return bool(self.get_rect().colliderect(cell_rect))
+    def does_hit_at(self, pos: Vector):
+        return bool(self.get_rect().collidepoint(pos.ints()))
 
 
 
