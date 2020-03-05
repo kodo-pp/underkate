@@ -379,6 +379,7 @@ class FightScript:
         with self.sprites:
             for sprite in self.sprites:
                 sprite.update(time_delta)
+        self.sprites.filter(lambda x: x.is_alive())
 
 
     def get_choices(self):

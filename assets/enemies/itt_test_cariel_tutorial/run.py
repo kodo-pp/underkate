@@ -53,3 +53,8 @@ async def run(*, enemy_battle, **kwargs):
 async def draw(*, destination, **kwargs):
     global fs
     fs.draw(destination)
+
+
+async def update(*, time_delta, **kwargs):
+    global fs
+    fs.update(time_delta)
