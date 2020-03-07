@@ -123,6 +123,7 @@ def load_python_script(path: Path, function_name: str) -> PythonScript:
 def make_function_from_code(code: str) -> Callable:
     code = '\n'.join([
         'def __func():',
+        '    from underkate.state import get_state',
         '    game = get_game()',
         '    room = game.overworld.room',
         '    state = get_state()',

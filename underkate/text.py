@@ -4,6 +4,7 @@ from underkate.font import Font, load_font
 from underkate.global_game import get_game
 from underkate.sprite import Sprite
 from underkate.texture import BaseTexture
+from underkate.vector import Vector
 
 import json
 from pathlib import Path
@@ -181,7 +182,7 @@ class TextPage(AnimatedSprite):
 
 class DisplayedText(Sprite):
     def __init__(self, pages: List[TextPage], on_finish: Callable = lambda: None):
-        super().__init__()
+        super().__init__(Vector(0, 0))
         # TODO: get rid of `game` as an argument (and property) and use get_game() instead
         self.pages = pages
         self.page_index = -1

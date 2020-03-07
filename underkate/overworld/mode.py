@@ -48,7 +48,7 @@ class Overworld(GameMode):
         )
         self._room_screen = pg.Surface(self.room.get_size())
         self.spawn(RoomTransitionFadeOut(self.game.screen.get_size()).start_animation())
-        subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading)
+        subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading())
         get_event_manager().subscribe('room_enter_animation_finished', subscriber)
 
 
