@@ -7,7 +7,7 @@ from underkate.global_game import get_game
 from underkate.items.weapon import Weapon
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
-from underkate.scriptlib.ui import Menu, BulletBoard, FightHpIndicator
+from underkate.scriptlib.ui import Menu, BulletBoard, FightHpIndicator, EnemyHpIndicator
 from underkate.sprite import Sprite, BaseSprite
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import BaseTexture
@@ -284,6 +284,7 @@ class Enemy:
     async def hit(self, damage):
         self.hp -= damage
         if self.hp <= 0:
+            self.hp = 0
             await self.on_kill()
 
 
@@ -311,21 +312,22 @@ class ElementProtocol(Drawable, Updatable, Protocol):
 
 class FightScript:
     def __init__(self, battle: EnemyBattle):
+        # TODO: Rewrite this code since it is absolutely unmantainable.
+        # Some objects start using FightScript before it is fully constructed,
+        # which leads to a complete nightmare with undefined attributes,
+        # which aren't catchable by mypy.
         self.battle = battle
         self.textures = {
             texture_name: _load_texture(battle.root, texture_filename)
             for texture_name, texture_filename in battle.data.get('textures', {}).items()
         }
-        #self.phrases = battle.data['phrases']
-        self.sprites: WalList[BaseSprite] = WalList([])
-        self.elements: WalList[ElementProtocol] = WalList([
-            FightHpIndicator(self, pg.Rect(350, 550, 100, 30))
-        ])
         self.state: dict = {}
 
         hp: int = battle.data['hp']
         damage_by_weapon: Dict[str, int] = battle.data.get('damage_by_weapon', {})
         name: str = battle.data['name']
+
+        self.sprites: WalList[BaseSprite] = WalList([])
         self.enemy = Enemy(
             hp = hp,
             damage_by_weapon = damage_by_weapon,
@@ -339,6 +341,10 @@ class FightScript:
         self._has_spared: bool = False
         self.bullet_board: Optional['BulletBoard'] = None
         self._bullet_spawner: Optional['BulletSpawner'] = None
+        self.elements: WalList[ElementProtocol] = WalList([
+            FightHpIndicator(self, pg.Rect(350, 550, 100, 30)),
+            EnemyHpIndicator(self.enemy, self, pg.Rect(300, 15, 200, 30)),
+        ])
 
 
     def get_enemy_normal_texture(self) -> BaseTexture:

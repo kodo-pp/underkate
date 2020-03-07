@@ -22,7 +22,7 @@ import pygame as pg  # type: ignore
 from loguru import logger
 
 if TYPE_CHECKING:
-    from underkate.scriptlib.fight import FightScript
+    from underkate.scriptlib.fight import FightScript, Enemy
 
 
 class BaseMenu(BaseSprite):
@@ -339,15 +339,16 @@ class FightHpIndicator(FightMixin):
         hp_part = self.get_current_hp() / self.get_max_hp()
         filled_width = int(round(self.rect.width * hp_part))
         rect = self.rect
-        pg.draw.rect(
-            destination,
-            (0, 255, 255),
-            pg.Rect(rect.left, rect.top, filled_width, rect.height),
-        )
+        if filled_width > 0:
+            pg.draw.rect(
+                destination,
+                self.fg_color,
+                pg.Rect(rect.left, rect.top, filled_width, rect.height),
+            )
         if rect.width > filled_width:
             pg.draw.rect(
                 destination,
-                (128, 128, 128),
+                self.bg_color,
                 pg.Rect(rect.left + filled_width, rect.top, rect.width - filled_width, rect.height),
             )
 
@@ -369,3 +370,25 @@ class FightHpIndicator(FightMixin):
 
     def get_max_hp(self):
         return get_state()['player_max_hp']
+
+
+    fg_color = (0, 255, 255)
+    bg_color = (128, 128, 128)
+
+
+class EnemyHpIndicator(FightHpIndicator):
+    def __init__(self, enemy: 'Enemy', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.enemy = enemy
+        self._max_hp = enemy.hp
+
+
+    def get_current_hp(self):
+        return self.enemy.hp
+
+
+    def get_max_hp(self):
+        return self._max_hp
+
+
+    fg_color = (255, 200, 0)
