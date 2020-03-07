@@ -1,13 +1,10 @@
 from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
-from underkate.state import get_state
 
 import abc
-import copy
 from pathlib import Path
-from types import CodeType
-from typing import List, Callable, Any, Coroutine, Union, TYPE_CHECKING
+from typing import List, Callable, Any, Union, TYPE_CHECKING
 from importlib.util import module_from_spec, spec_from_file_location
 
 from memoization import cached  # type: ignore
@@ -39,7 +36,12 @@ class PythonScript(Script):
 
 
     def __call__(self, *args, **kwargs) -> 'SuspendedPythonScript':
-        return SuspendedPythonScript(getattr(self.module, self.function_name), self.root, args, kwargs)
+        return SuspendedPythonScript(
+            getattr(self.module, self.function_name),
+            self.root,
+            args,
+            kwargs,
+        )
 
 
 class SuspendedPythonScript:
@@ -75,6 +77,7 @@ class TextScript(Script):
 
 
     async def _run(self, *args, **kwargs):
+        del args, kwargs
         get_game().overworld.freeze()
         await display_text(load_text(self.text_name))
         get_game().overworld.unfreeze()
@@ -110,7 +113,11 @@ def _raw_load_python_script(path: Path):
 
 
 def load_python_script(path: Path, function_name: str) -> PythonScript:
-    return PythonScript(_raw_load_python_script(path), root=path.parent, function_name=function_name)
+    return PythonScript(
+        _raw_load_python_script(path),
+        root = path.parent,
+        function_name = function_name,
+    )
 
 
 def make_function_from_code(code: str) -> Callable:

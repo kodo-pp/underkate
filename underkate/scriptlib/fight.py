@@ -1,5 +1,5 @@
 from underkate import inventory
-from underkate.event_manager import get_event_manager, Subscriber
+from underkate.event_manager import get_event_manager
 from underkate.fight.enemy_battle import EnemyBattle
 from underkate.fight.mode import Fight
 from underkate.font import load_font
@@ -9,7 +9,7 @@ from underkate.scriptlib.common import wait_for_event, display_text, make_callba
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.ui import Menu, BulletBoard, FightHpIndicator
 from underkate.sprite import Sprite, BaseSprite
-from underkate.text import DisplayedText, TextPage, draw_text
+from underkate.text import DisplayedText, TextPage
 from underkate.texture import BaseTexture
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
@@ -89,6 +89,7 @@ class SimpleMenu(Menu):
 class HitAnimation:
     class Animator(Sprite):
         def __init__(self, sprite):
+            super().__init__(Sprite)
             self.sprite = sprite
             self.orig_pos = sprite.pos
             self.elapsed_time = 0.0
@@ -109,7 +110,7 @@ class HitAnimation:
 
 
         def draw(self, destination):
-            pass
+            del destination
 
 
         def update(self, time_delta):
@@ -542,7 +543,7 @@ class BulletSpawner:
 
     def __init__(self, bullet_board):
         self.bullet_board = bullet_board
-        self._remaining_wait_time = 0.0
+        self._remaining_sleep_time = 0.0
         self._flow = self._run_wrapper()
         self._flow.send(None)
 

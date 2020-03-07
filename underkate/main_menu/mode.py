@@ -49,14 +49,15 @@ class MainMenuUi(BaseMenu):
 
 class MainMenuMode(GameMode):
     def __init__(self, game: 'Game'):
-       super().__init__(game)
-       self.menu = MainMenuUi(self)
-       self.element = None
-       script = SimpleScript(self.run)
-       script()
+        super().__init__(game)
+        self.menu = MainMenuUi(self)
+        self.element = None
+        script = SimpleScript(self.run)
+        script()
 
 
     async def run(self, **kwargs):
+        del kwargs
         choice = await self.menu.choose()
         await choice.perform_action(self.game)
 

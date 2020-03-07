@@ -1,5 +1,4 @@
 from underkate.event_manager import get_event_manager
-from underkate.fight.enemy_battle import EnemyBattle
 from underkate.fight.mode import Fight
 from underkate.game_mode import GameMode
 from underkate.global_game import set_game

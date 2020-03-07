@@ -1,8 +1,6 @@
 from underkate.fight.enemy_battle import EnemyBattle
 from underkate.game_mode import GameMode
 from underkate.global_game import get_game
-from underkate.sprite import Sprite
-from underkate.wal_list import WalList
 
 import pygame as pg  # type: ignore
 

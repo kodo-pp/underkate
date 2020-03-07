@@ -3,7 +3,7 @@ from underkate.global_game import get_game
 from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.room import Room, Trigger, Event
-from underkate.script import load_script, SimpleScript, make_function_from_code
+from underkate.script import load_script, make_function_from_code
 from underkate.texture import Texture, load_texture, BaseTexture
 from underkate.vector import Vector
 
@@ -96,7 +96,11 @@ def make_hitbox(texture: BaseTexture) -> pg.Rect:
     return r
 
 
-def load_room(path: Union[Path, str], prev_room_name: str, player_position: Optional[Vector]) -> Room:
+def load_room(
+    path: Union[Path, str],
+    prev_room_name: str,
+    player_position: Optional[Vector],
+) -> Room:
     if isinstance(path, str):
         path = Path(path)
     data = _load_room_data(path)
@@ -130,7 +134,9 @@ def load_room(path: Union[Path, str], prev_room_name: str, player_position: Opti
         )
 
         save_text_displayer = load_script(save_point_info['script'], root=path)
+
         def saver(**kwargs):
+            del kwargs
             save_text_displayer()
             save_file.save(get_game())
         save_point.on_interact = saver

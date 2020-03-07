@@ -91,9 +91,9 @@ class TexturedWalkingSprite(Sprite):
             raise Exception('Invalid direction: ' + repr(self.direction))
 
 
-    def draw(self, surface):
+    def draw(self, destination):
         x, y = self.pos.ints()
         if self.is_moving():
-            self.get_current_texture().draw(surface, x, y)
+            self.get_current_texture().draw(destination, x, y)
         else:
-            self.get_current_texture().draw(surface, x, y, force_frame=0)
+            self.get_current_texture().draw(destination, x, y, force_frame=0)

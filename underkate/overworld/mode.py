@@ -4,11 +4,10 @@ from underkate.game_mode import GameMode
 from underkate.overworld.load_room import load_room
 from underkate.overworld.room import Room
 from underkate.room_transition import RoomTransitionFadeIn, RoomTransitionFadeOut
-from underkate.sprite import Sprite
 from underkate.vector import Vector
 
 from pathlib import Path
-from typing import List, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 import pygame as pg  # type: ignore
 from loguru import logger
@@ -18,7 +17,12 @@ if TYPE_CHECKING:
 
 
 class Overworld(GameMode):
-    def __init__(self, game: 'Game', start_room: str = 'start', player_pos: Optional[Vector] = None):
+    def __init__(
+        self,
+        game: 'Game',
+        start_room: str = 'start',
+        player_pos: Optional[Vector] = None,
+    ):
         super().__init__(game)
         self._room_loaded = False
         self._frozen = Counter()
@@ -26,8 +30,10 @@ class Overworld(GameMode):
         self.room: Room
         self._room_screen: pg.Surface
         self._run_room_loading_logic(start_room, player_pos)
+        self._room_ready = False
 
 
+    # TODO: maybe rewrite this shit with async/await
     def _run_room_loading_logic(self, room_name: str, player_pos: Optional[Vector] = None):
         if self._room_loaded:
             prev_room_name = self.room.name
@@ -35,14 +41,18 @@ class Overworld(GameMode):
         else:
             prev_room_name = 'default'
 
-        self.room = load_room(Path('.') / 'assets' / 'rooms' / room_name, prev_room_name, player_pos)
+        self.room = load_room(
+            Path('.') / 'assets' / 'rooms' / room_name,
+            prev_room_name,
+            player_pos,
+        )
         self._room_screen = pg.Surface(self.room.get_size())
         self.spawn(RoomTransitionFadeOut(self.game.screen.get_size()).start_animation())
-        subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading(room_name))
+        subscriber = Subscriber(lambda event_id, arg: self._finalize_room_loading)
         get_event_manager().subscribe('room_enter_animation_finished', subscriber)
 
 
-    def _finalize_room_loading(self, room_name: str):
+    def _finalize_room_loading(self):
         self.unfreeze()
         self._room_loaded = True
         self.room.maybe_run_script('on_load')
@@ -118,4 +128,3 @@ class Overworld(GameMode):
         data['room'] = self.room.name
         data['player_pos'] = self.room.player.pos.ints()
         return data
-

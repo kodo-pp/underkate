@@ -33,9 +33,9 @@ class AnimatedSprite(BaseSprite):
         return current_time - self._start_time
 
 
-    def draw(self, surface: pg.Surface):
+    def draw(self, destination: pg.Surface):
         elapsed_time = self.get_elapsed_time()
-        self.draw_frame(surface, elapsed_time)
+        self.draw_frame(destination, elapsed_time)
 
 
     @abc.abstractmethod

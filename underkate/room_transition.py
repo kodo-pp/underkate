@@ -1,13 +1,11 @@
 from underkate.animated_sprite import AnimatedSprite
-from underkate.pending_callback_queue import get_pending_callback_queue
-from underkate.event_manager import get_event_manager, Subscriber
+from underkate.event_manager import get_event_manager
 from underkate.util import clamp
 
 import abc
 from typing import Tuple
 
 import pygame as pg  # type: ignore
-from loguru import logger
 
 
 class RoomTransitionBase(AnimatedSprite):

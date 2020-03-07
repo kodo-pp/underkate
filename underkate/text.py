@@ -2,7 +2,6 @@ from underkate.animated_sprite import AnimatedSprite
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.font import Font, load_font
 from underkate.global_game import get_game
-from underkate.pending_callback_queue import get_pending_callback_queue
 from underkate.sprite import Sprite
 from underkate.texture import BaseTexture
 
@@ -89,7 +88,12 @@ class TextPage(AnimatedSprite):
                 values[key] = default
 
         font = load_font(Path('.') / 'assets' / 'fonts' / values['font_name'])
-        return TextPage(values['text'], font=font, delay=values['delay'], skippable=values['skippable'])
+        return TextPage(
+            values['text'],
+            font = font,
+            delay = values['delay'],
+            skippable = values['skippable'],
+        )
 
 
     def to_dict(self) -> dict:
@@ -128,6 +132,7 @@ class TextPage(AnimatedSprite):
 
 
     def draw_text_frame(self, surface: pg.Surface, elapsed_time: float):
+        del elapsed_time
         surface_width, surface_height = surface.get_size()
         glyph_width, glyph_height = self.font.glyph_size
         num_cols = surface_width // glyph_width
@@ -146,7 +151,12 @@ class TextPage(AnimatedSprite):
                     break
                 glyph_name = self.font.get_glyph_name(char)
                 source_rect = self.font.get_glyph_rectangle(glyph_name)
-                destination_rect = pg.Rect(x * glyph_width, y * glyph_height, glyph_width, glyph_height)
+                destination_rect = pg.Rect(
+                    x * glyph_width,
+                    y * glyph_height,
+                    glyph_width,
+                    glyph_height,
+                )
                 surface.blit(self.font.image, destination_rect, source_rect)
                 x += 1
             if index < limit and char != '\n' and text[index] == '\n':
@@ -171,6 +181,7 @@ class TextPage(AnimatedSprite):
 
 class DisplayedText(Sprite):
     def __init__(self, pages: List[TextPage], on_finish: Callable = lambda: None):
+        super().__init__()
         # TODO: get rid of `game` as an argument (and property) and use get_game() instead
         self.pages = pages
         self.page_index = -1
@@ -198,7 +209,7 @@ class DisplayedText(Sprite):
     def draw(self, surface: pg.Surface):
         if self.page_index >= len(self.pages):
             return
-        width, height = surface.get_size()
+        width, _ = surface.get_size()
         rect = pg.Rect(0, 450, width, 150)
         sub = surface.subsurface(rect)
         self.pages[self.page_index].draw(sub)
@@ -213,6 +224,7 @@ class DisplayedText(Sprite):
 
 
     def on_confirm(self, event, arg):
+        del event, arg
         if not self.is_alive():
             return
         if self.pages[self.page_index].has_animation_finished():
@@ -221,6 +233,7 @@ class DisplayedText(Sprite):
 
 
     def on_cancel(self, event, arg):
+        del event, arg
         if not self.is_alive():
             return
         self.pages[self.page_index].try_force_finish()

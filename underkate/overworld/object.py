@@ -33,7 +33,14 @@ class Object(Sprite):
 
 
     def __repr__(self) -> str:
-        return f'Object(pos: {self.pos.ints()}, texture: {self.texture}, passable: {self.is_passable}, hitbox: {self.hitbox}, alive: {self._is_alive})'
+        # Not a tuple, but literal string concatenation instead
+        return (
+            f'Object(pos: {self.pos.ints()}, '
+            f'texture: {self.texture}, '
+            f'passable: {self.is_passable}, '
+            f'hitbox: {self.hitbox}, '
+            f'alive: {self._is_alive})'
+        )
 
 
     def update(self):
@@ -65,6 +72,7 @@ class Object(Sprite):
 
 
     def _on_interact_somewhere(self, *args):
+        del args
         if not self.is_alive():
             return
         if not get_game().overworld.is_frozen():

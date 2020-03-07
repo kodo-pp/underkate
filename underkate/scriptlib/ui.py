@@ -1,17 +1,18 @@
 from underkate.event_manager import get_event_manager
 from underkate.font import load_font
 from underkate.global_game import get_game
-from underkate.scriptlib.common import wait_for_event, next_frame, wait_for_event_by_filter, notify_after
+from underkate.scriptlib.common import notify_after
+from underkate.scriptlib.common import wait_for_event, next_frame, wait_for_event_by_filter
 from underkate.sprite import BaseSprite
 from underkate.state import get_state
 from underkate.text import draw_text
 from underkate.texture import load_texture
-from underkate.textured_sprite import TexturedSprite
 from underkate.util import clamp
 from underkate.vector import Vector, MappingFunction, Mappings
 from underkate.wal_list import WalList
 
 import time
+import sys
 from abc import abstractmethod
 from copy import copy
 from pathlib import Path
@@ -318,7 +319,7 @@ class BulletBoard(FightMixin, BaseSprite):
         if state['player_hp'] == 0:
             logger.info('Player died')
             # TODO: show game over screen
-            exit()
+            sys.exit()
 
 
     center = Vector(400, 300)

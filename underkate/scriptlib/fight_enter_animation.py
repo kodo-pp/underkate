@@ -1,5 +1,3 @@
-from underkate.animated_sprite import AnimatedSprite
-from underkate.scriptlib.common import make_callback
 from underkate.room_transition import RoomTransitionBase
 
 

@@ -7,7 +7,7 @@ import pygame as pg  # type: ignore
 
 class BaseSprite:
     @abc.abstractmethod
-    def draw(self, surface: pg.Surface):
+    def draw(self, destination: pg.Surface):
         pass
 
 

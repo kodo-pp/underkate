@@ -1,11 +1,7 @@
 from underkate.animated_texture import load_animated_texture
-from underkate.counter import Counter
 from underkate.global_game import get_game
-from underkate.overworld.pass_map import PassMap
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.vector import Vector
-
-from typing import Optional, TYPE_CHECKING, ContextManager
 
 import pygame as pg  # type: ignore
 

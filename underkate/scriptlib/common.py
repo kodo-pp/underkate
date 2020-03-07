@@ -14,7 +14,6 @@ def sleep(delay):
 
 
 def notify_after(delay: float, event_id: EventId, argument: Any = None):
-    script = get_game().current_script
     get_pending_callback_queue().fire_after(
         delay,
         lambda *args: get_event_manager().raise_event(event_id, argument),

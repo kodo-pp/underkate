@@ -1,5 +1,5 @@
 import time
-from typing import NewType, Callable
+from typing import Callable
 
 from sortedcontainers import SortedList  # type: ignore
 

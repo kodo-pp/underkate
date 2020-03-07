@@ -1,7 +1,6 @@
 from underkate.wal_list import WalList
 
-from collections import namedtuple
-from typing import Any, Callable, Dict, Hashable, List, Tuple
+from typing import Any, Callable, Dict, Hashable
 
 from loguru import logger
 

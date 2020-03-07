@@ -3,17 +3,15 @@ from underkate.global_game import get_game
 from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.player import Player
-from underkate.script import Script, load_script
 from underkate.sprite import BaseSprite
 from underkate.texture import BaseTexture
 from underkate.vector import Vector
 from underkate.wal_list import WalList
 
 from pathlib import Path
-from typing import Tuple, List, Mapping, NewType, Callable, Dict, Optional, TYPE_CHECKING
+from typing import Tuple, List, Mapping, NewType, Callable, Dict, Optional
 
 import pygame as pg # type: ignore
-import yaml
 
 from loguru import logger
 
@@ -147,6 +145,7 @@ class Room:
 
 
     def on_interact(self, *args):
+        del args
         if get_game().overworld.room is not self:
             return
         if not get_game().overworld.is_frozen():

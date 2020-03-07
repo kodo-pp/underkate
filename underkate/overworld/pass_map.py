@@ -1,5 +1,3 @@
-from typing import List
-
 import pygame as pg # type: ignore
 
 

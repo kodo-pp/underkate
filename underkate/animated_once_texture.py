@@ -2,9 +2,9 @@ from underkate.texture import BaseTexture, load_texture
 
 import time
 from pathlib import Path
-from typing import List, Union, Optional, Callable, Tuple
+from typing import List, Union, Callable, Tuple
 
-import pygame  # type: ignore
+import pygame as pg  # type: ignore
 import yaml
 
 
@@ -26,7 +26,7 @@ class AnimatedOnceTexture(BaseTexture):
         return clamped_frame_num, has_finished
 
 
-    def draw(self, surface: pygame.Surface, x: int, y: int):
+    def draw(self, surface: pg.Surface, x: int, y: int):
         frame_num, has_finished = self.get_frame_info()
         if has_finished and not self._has_finished:
             self._has_finished = True
@@ -42,7 +42,7 @@ class AnimatedOnceTexture(BaseTexture):
         return self.frames[0].get_height()
 
 
-    def clipped(self):
+    def clipped(self, clip_rect: pg.Rect):
         raise NotImplementedError()
 
 

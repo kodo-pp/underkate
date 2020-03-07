@@ -1,4 +1,4 @@
-from underkate.event_manager import get_event_manager, Subscriber
+from underkate.event_manager import get_event_manager
 from underkate.scriptlib.common import wait_for_event
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.vector import Vector

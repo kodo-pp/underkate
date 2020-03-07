@@ -4,8 +4,7 @@ from underkate.scriptlib.common import wait_for_event, make_callback
 from underkate.sprite import BaseSprite
 from underkate.wal_list import WalList
 
-import abc
-from typing import List, Callable, TYPE_CHECKING
+from typing import Callable, TYPE_CHECKING
 
 import pygame as pg  # type: ignore
 
