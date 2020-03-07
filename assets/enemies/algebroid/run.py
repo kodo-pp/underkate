@@ -6,6 +6,7 @@ from underkate.scriptlib.common import display_text
 from underkate.scriptlib.fight import BulletSpawner, Interaction
 from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon, RectangularBullet
 from underkate.state import get_state
+from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
 from underkate.vector import Vector
@@ -38,8 +39,13 @@ class EquationBulletSpawner(BulletSpawner):
 
 
 class Script(FightScript):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__is_player_scared = False
+
+
     def can_spare(self):
-        return True
+        return self.__is_player_scared
 
 
     async def on_kill(self):
@@ -52,6 +58,14 @@ class Script(FightScript):
 
     async def interact(self, interaction):
         await super().interact(interaction)
+        if interaction.name == 'get_scared':
+            self.__is_player_scared = True
+
+        await display_text(
+            DisplayedText([
+                TextPage('Algebroid feels that you are not dangerous and is likely to let you go now'),
+            ])
+        )
 
 
     def get_interactions(self):
