@@ -22,7 +22,16 @@ class Script(FightScript):
 
 
     def get_choices(self):
-        return [UseWeapon(Weapon('itt_tutorial_answer_correctly', 'Answer correctly')), Spare()]
+        return [
+            UseWeapon(
+                Weapon(
+                    name = 'itt_tutorial_answer_correctly',
+                    pretty_name = 'Answer correctly',
+                    inline_name = 'the correct answer',
+                )
+            ),
+            Spare(),
+        ]
 
 
     async def run(self):

@@ -1,8 +1,10 @@
+from underkate import inventory
 from underkate.event_manager import get_event_manager, Subscriber
 from underkate.fight.enemy_battle import EnemyBattle
 from underkate.fight.mode import Fight
 from underkate.font import load_font
 from underkate.global_game import get_game
+from underkate.items.weapon import Weapon
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.ui import Menu, BulletBoard, FightHpIndicator
@@ -62,19 +64,6 @@ class UseWeapon(Action):
 
     def __str__(self):
         return f'Use weapon: {str(self.weapon)}'
-
-
-class Weapon:
-    def __init__(self, name: str, pretty_name: Optional[str] = None):
-        self.name = name
-        if pretty_name is None:
-            self.pretty_name = self.name
-        else:
-            self.pretty_name = pretty_name
-
-
-    def __str__(self):
-        return self.pretty_name
 
 
 class Spare(Action):
@@ -383,7 +372,12 @@ class FightScript:
 
 
     def get_choices(self):
-        return [UseWeapon(Weapon('logic', 'Logic')), Spare(), DoNothing()]
+        items = inventory.enumerate_items(inventory.get_inventory())
+        item_choices = [
+            UseWeapon(item) if isinstance(item, Weapon) else DoNothing()
+            for item in items
+        ]
+        return item_choices + [Spare()]
 
 
     def get_main_menu(self):

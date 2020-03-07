@@ -21,12 +21,7 @@ DEFAULTS = {
     'genocide_route_possible': True,
     'grumpylook_met': False,
     'player_inventory': [
-        {
-            'type': 'weapon',
-            'name': 'logic',
-            'pretty_name': 'Use logic',
-            'pretty_name2': 'logic',
-        },
+        'logic',
         None,
         None,
         None,

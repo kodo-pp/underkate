@@ -41,10 +41,6 @@ class Script(FightScript):
         return True
 
 
-    def get_choices(self):
-        return [UseWeapon(Weapon('Test weapon', 'Test weapon')), Spare()]
-
-
     async def on_kill(self):
         get_state()['pacifist_route_possible'] = False
 
