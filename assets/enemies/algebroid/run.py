@@ -3,7 +3,8 @@ from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
-from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon, RectangularBullet, BulletSpawner
+from underkate.scriptlib.fight import BulletSpawner, Interaction
+from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon, RectangularBullet
 from underkate.state import get_state
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
@@ -47,6 +48,20 @@ class Script(FightScript):
 
     async def on_spare(self):
         get_state()['genocide_route_possible'] = False
+
+
+    async def interact(self, interaction):
+        await super().interact(interaction)
+
+
+    def get_interactions(self):
+        return [
+            Interaction(
+                name = 'get_scared',
+                pretty_name = 'Get scared',
+                description = 'You get scared by the problem and look very frightened',
+            ),
+        ]
 
 
     def create_bullet_spawner(self):

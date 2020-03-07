@@ -53,14 +53,17 @@ class TextPage(AnimatedSprite):
     def __init__(
         self,
         text: str,
-        font: Font,
+        font: Optional[Font] = None,
         delay: float = 0.05,
         skippable: bool = True,
         picture: Optional[BaseTexture] = None,
     ):
         super().__init__()
         self.text = text
-        self.font = font
+        if font is None:
+            self.font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
+        else:
+            self.font = font
         self.delay = delay
         self.skippable = skippable
         self.picture = picture

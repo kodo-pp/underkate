@@ -21,7 +21,7 @@ import random as rd
 from abc import abstractmethod
 from pathlib import Path
 from types import coroutine
-from typing import Optional, Protocol, Dict
+from typing import Optional, Protocol, Dict, Callable, Any, Coroutine, cast, List
 
 import pygame as pg  # type: ignore
 
@@ -69,6 +69,17 @@ class UseWeapon(Action):
 class Spare(Action):
     def __str__(self):
         return 'Spare'
+
+
+class Interaction(Action):
+    def __init__(self, name: str, pretty_name: str, description: str):
+        self.name = name
+        self.pretty_name = pretty_name
+        self.description = description
+
+
+    def __str__(self):
+        return self.pretty_name
 
 
 class DoNothing(Action):
@@ -372,13 +383,17 @@ class FightScript:
         self.sprites.filter(lambda x: x.is_alive())
 
 
+    def get_interactions(self) -> List[Interaction]:
+        return []
+
+
     def get_choices(self):
         items = inventory.enumerate_items(inventory.get_inventory())
         item_choices = [
             UseWeapon(item) if isinstance(item, Weapon) else DoNothing()
             for item in items
         ]
-        return item_choices + [Spare()]
+        return self.get_interactions() + item_choices + [Spare()]
 
 
     def get_main_menu(self):
@@ -442,16 +457,30 @@ class FightScript:
             await self.on_kill()
 
 
-    def get_action_for_choice(self, choice):
+    async def interact(self, interaction: Interaction):
+        await display_text(
+            DisplayedText([
+                TextPage(interaction.description),
+            ])
+        )
+
+
+    def get_action_for_choice(self, choice: Action) -> Callable[[], Coroutine[Any, Any, Any]]:
         async def nothing():
             pass
 
         if isinstance(choice, UseWeapon):
-            return lambda: self.use_weapon(choice.weapon)
+            # Mypy doesn't seem to understand this instance check
+            weapon_usage = cast(UseWeapon, choice)
+            return lambda: self.use_weapon(weapon_usage.weapon)
         if isinstance(choice, Spare):
             return self.spare
         if isinstance(choice, DoNothing):
             return nothing
+        if isinstance(choice, Interaction):
+            interaction = cast(Interaction, choice)
+            return lambda: self.interact(interaction)
+        raise TypeError(f'Unknown action type: {type(choice)}')
 
 
     def can_spare(self):
