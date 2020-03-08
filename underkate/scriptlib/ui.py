@@ -16,7 +16,7 @@ import sys
 from abc import abstractmethod
 from copy import copy
 from pathlib import Path
-from typing import Tuple, Optional, TYPE_CHECKING
+from typing import Tuple, Optional, Any, TYPE_CHECKING
 
 import pygame as pg  # type: ignore
 from loguru import logger
@@ -204,6 +204,7 @@ class BulletBoard(FightMixin, BaseSprite):
         self.sprites: WalList[BaseSprite] = WalList([])
         self.unrestricted_sprites: WalList[BaseSprite] = WalList([])
         self._last_time_player_hit: Optional[float] = None
+        self._timeout_event: Any = None
 
 
     def spawn(self, sprite: BaseSprite, unrestricted: bool = False):
@@ -225,14 +226,18 @@ class BulletBoard(FightMixin, BaseSprite):
         self.unrestricted_sprites.filter(lambda x: x.is_alive())
 
 
+    def set_timeout(self, new_timeout: float):
+        self._timeout_event = get_event_manager().unique_id()
+        notify_after(new_timeout, self._timeout_event)
+
+
     async def run(self, duration: float):
-        time_up_event = get_event_manager().unique_id()
-        notify_after(duration, time_up_event)
+        self.set_timeout(duration)
         while True:
             event, arg = await wait_for_event_by_filter(
-                lambda event, arg: (event in [time_up_event, 'key:any'])
+                lambda event, arg: (event in [self._timeout_event, 'key:any'])
             )
-            if event == time_up_event:
+            if event == self._timeout_event:
                 break
 
             assert event == 'key:any'

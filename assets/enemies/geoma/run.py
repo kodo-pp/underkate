@@ -94,15 +94,53 @@ class Line(BaseBullet):
         )
 
 
-    setup_duration = 0.8
-    beam_duration = 1.4
+    setup_duration = 1.0
+    beam_duration = 1.2
     teardown_duration = 0.2
 
 
 class LineSpawner(BulletSpawner):
     async def run(self):
+        await rd.choice([self.run_line_grid, self.run_chaotic_lines, self.run_chaotic_lines])()
+
+
+    async def run_line_grid(self):
+        self.set_timeout(100.0)
+
+        for i in range(0, 10, 2):
+            self._spawn_line(i, -1, i, 10)
+            self._spawn_line(-1, i, 10, i)
+
+        await self.sleep_for(2.8)
+
+        for i in range(1, 10, 2):
+            self._spawn_line(i, -1, i, 10)
+            self._spawn_line(-1, i, 10, i)
+
+        await self.sleep_for(2.8)
+
+
+    def _spawn_line(self, r1, c1, r2, c2):
+        start = self.bullet_board.get_coords_at(r1, c1)
+        end = self.bullet_board.get_coords_at(r2, c2)
+        self.spawn(
+            Line(
+                bullet_board = self.bullet_board,
+                pos = Vector(0, 0),
+                speed = Vector(0, 0),
+                damage = 4,
+                start = start,
+                end = end,
+                thickness = 20,
+                displayed_thickness = 8,
+            ),
+            unrestricted = True,
+        )
+
+
+    async def run_chaotic_lines(self):
         while True:
-            await self.sleep_for(0.3)
+            await self.sleep_for(0.4)
             if rd.randint(0, 1) == 0:
                 row = rd.randrange(0, 10)
                 start = self.bullet_board.get_coords_at(row, -1)

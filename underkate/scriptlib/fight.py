@@ -601,10 +601,16 @@ class BulletSpawner:
             await self.run()
         except BulletSpawner.TerminateCoroutine:
             pass
+        except StopIteration:
+            pass
 
 
     def spawn(self, bullet, unrestricted: bool = False):
         self.bullet_board.spawn(bullet, unrestricted)
+
+
+    def set_timeout(self, new_timeout: float):
+        self.bullet_board.set_timeout(new_timeout)
 
 
     @coroutine
