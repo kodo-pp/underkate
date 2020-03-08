@@ -18,11 +18,3 @@ def make_fight(name):
 fight_algebroid = make_fight('algebroid')
 fight_geoma = make_fight('geoma')
 fight_literallia = make_fight('literallia')
-
-
-async def fight_algebroid(*a, **k):
-    pass
-
-
-async def fight_geoma(*a, **k):
-    pass
