@@ -1,0 +1,13 @@
+name: Geoma
+hp: 20
+attack: 4
+phrases: {}
+damage_by_weapon:
+    logic: 3
+textures:
+    enemy_normal: geoma.png//4
+    enemy_wounded: geoma_wounded.png//4
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py

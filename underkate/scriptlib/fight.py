@@ -527,17 +527,16 @@ class FightScript:
         get_event_manager().raise_event('fight_finished')
 
 
-class Bullet(TexturedSprite):
+class BaseBullet(Sprite):
     def __init__(
         self,
+        *,
         bullet_board: BulletBoard,
-        texture: BaseTexture,
-        row: int,
-        col: int,
+        pos: Vector,
         speed: Vector,
         damage: int
     ):
-        super().__init__(bullet_board.get_coords_at(row, col), texture)
+        super().__init__(pos)
         self.bullet_board = bullet_board
         self.speed = speed
         self.damage = damage
@@ -553,6 +552,16 @@ class Bullet(TexturedSprite):
         if self.does_hit_at(self.bullet_board.get_current_coords()):
             self.bullet_board.maybe_hit_player(self.damage)
 
+
+class Bullet(BaseBullet):
+    def __init__(self, *, texture: BaseTexture, **kwargs):
+        super().__init__(**kwargs)
+        self.texture = texture
+
+
+    def draw(self, destination: pg.Surface):
+        x, y = self.pos.ints()
+        self.texture.draw(destination, x, y)
 
 
 class RectangularBullet(Bullet):
@@ -594,8 +603,8 @@ class BulletSpawner:
             pass
 
 
-    def spawn(self, bullet):
-        self.bullet_board.spawn(bullet)
+    def spawn(self, bullet, unrestricted: bool = False):
+        self.bullet_board.spawn(bullet, unrestricted)
 
 
     @coroutine

@@ -13,6 +13,21 @@ triggers:
             if state['lyceum_2_right_fights']['algebroid']:
                 return []
             return 'python::fight_algebroid@fights.py'
+    - rect: [296, 262, 74, 230]
+      events:
+        enter: |
+            dynamic::
+            if state['lyceum_2_right_fights']['geoma']:
+                return []
+            return 'python::fight_geoma@fights.py'
+    - rect: [114, 260, 70, 241]
+      events:
+        enter: |
+            dynamic::
+            if state['lyceum_2_right_fights']['literallia']:
+                return []
+            return 'python::fight_literallia@fights.py'
+
 
 initial_positions:
     lyceum_staircase_r: [684, 315]

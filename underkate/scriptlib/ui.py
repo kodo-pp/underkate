@@ -202,11 +202,15 @@ class BulletBoard(FightMixin, BaseSprite):
             mapping = Mappings.ease_out,
         )
         self.sprites: WalList[BaseSprite] = WalList([])
+        self.unrestricted_sprites: WalList[BaseSprite] = WalList([])
         self._last_time_player_hit: Optional[float] = None
 
 
-    def spawn(self, sprite: BaseSprite):
-        self.sprites.append(sprite)
+    def spawn(self, sprite: BaseSprite, unrestricted: bool = False):
+        if unrestricted:
+            self.unrestricted_sprites.append(sprite)
+        else:
+            self.sprites.append(sprite)
 
 
     def update(self, time_delta: float):
@@ -214,7 +218,11 @@ class BulletBoard(FightMixin, BaseSprite):
         with self.sprites:
             for x in self.sprites:
                 x.update(time_delta)
+        with self.unrestricted_sprites:
+            for x in self.unrestricted_sprites:
+                x.update(time_delta)
         self.sprites.filter(lambda x: x.is_alive())
+        self.unrestricted_sprites.filter(lambda x: x.is_alive())
 
 
     async def run(self, duration: float):
@@ -262,6 +270,9 @@ class BulletBoard(FightMixin, BaseSprite):
             for sprite in self.sprites:
                 sprite.draw(destination)
         destination.set_clip(prev_clip)
+        with self.unrestricted_sprites:
+            for sprite in self.unrestricted_sprites:
+                sprite.draw(destination)
 
 
     def get_current_coords(self) -> Vector:

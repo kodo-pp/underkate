@@ -1,3 +1,4 @@
+import math
 from typing import Tuple, Callable
 
 
@@ -37,12 +38,35 @@ class Vector:
         return Vector(self.x * k, self.y * k)
 
 
+    def dot(self, p: 'Vector') -> float:
+        return self.x * p.x + self.y * p.y
+
+
+    def sin(self, p: 'Vector') -> float:
+        return self.x * p.y - self.y * p.x
+
+
     def __truediv__(self, k: float) -> 'Vector':
         return self * (1.0 / k)
 
 
     def __repr__(self) -> str:
         return f'Vector({self.x}, {self.y})'
+
+
+    def length(self) -> float:
+        return math.sqrt(self.dot(self))
+
+
+    def normalized(self) -> 'Vector':
+        length = self.length()
+        if length < 1e-9:
+            return Vector(1.0, 0.0)
+        return self / length
+
+
+    def normal(self) -> 'Vector':
+        return Vector(self.y, -self.x)
 
 
     def interpolated(

@@ -26,12 +26,14 @@ class EquationBulletSpawner(BulletSpawner):
     async def run(self):
         while True:
             await self.sleep_for(0.2)
+            row = -1
+            col = rd.randrange(0, 10)
+            pos = self.bullet_board.get_coords_at(row, col)
             self.spawn(
                 EquationBullet(
                     bullet_board = self.bullet_board,
                     texture = self.bullet_board.fight_script.textures['equation_bullet'],
-                    row = -1,
-                    col = rd.randrange(0, 10),
+                    pos = pos,
                     speed = Vector(0, 150),
                     damage = 3,
                 )
