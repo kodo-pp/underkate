@@ -24,6 +24,27 @@ class EquationBullet(RectangularBullet):
 
 class EquationBulletSpawner(BulletSpawner):
     async def run(self):
+        await rd.choice([self.run_lambdas, self.run_xs])()
+
+
+    async def run_lambdas(self):
+        while True:
+            await self.sleep_for(0.15)
+            row = rd.randrange(-5, 7)
+            col = rd.choice([-1, 10])
+            pos = self.bullet_board.get_coords_at(row, col)
+            self.spawn(
+                EquationBullet(
+                    bullet_board = self.bullet_board,
+                    texture = self.bullet_board.fight_script.textures['lambda_bullet'],
+                    pos = pos,
+                    speed = Vector(150 if col == -1 else -150, 150),
+                    damage = 2,
+                )
+            )
+
+
+    async def run_xs(self):
         while True:
             await self.sleep_for(0.2)
             row = -1
