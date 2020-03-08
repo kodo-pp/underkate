@@ -18,5 +18,10 @@ def get_item_by_name(item_name: str) -> Item:
             pretty_name = 'Use logic',
             inline_name = 'logic',
         ),
+        'nonsense': Weapon(
+            name = 'nonsense',
+            pretty_name = 'Complete nonsense',
+            inline_name = 'a nonsense speech',
+        ),
     }
     return mapping[item_name]

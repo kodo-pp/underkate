@@ -2,6 +2,7 @@ from underkate.animated_texture import AnimatedTexture
 from underkate.event_manager import get_event_manager
 from underkate.font import load_font
 from underkate.global_game import get_game
+from underkate.inventory import get_inventory, give
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
 from underkate.scriptlib.fight import BulletSpawner, Interaction
@@ -113,6 +114,7 @@ class Script(FightScript):
             await display_text(load_text('fight/lyceum/literallia/flate_intervention'))
             await flate.walk_x(-300.0)
             flate.kill()
+            give(get_inventory(), 'nonsense')
 
 
     async def on_kill(self):

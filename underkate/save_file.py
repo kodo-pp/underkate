@@ -22,13 +22,6 @@ DEFAULTS = {
     'grumpylook_met': False,
     'player_inventory': [
         'logic',
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
     ],
     'player_hp': 20,
     'player_max_hp': 20,
