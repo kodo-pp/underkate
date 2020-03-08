@@ -19,7 +19,7 @@ import pygame as pg
 
 class EquationBullet(RectangularBullet):
     def get_hitbox(self):
-        return pg.Rect(-3, -10, 13, 20)
+        return pg.Rect(-10, -10, 20, 20)
 
 
 class EquationBulletSpawner(BulletSpawner):

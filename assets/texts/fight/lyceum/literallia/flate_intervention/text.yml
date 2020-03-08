@@ -1,0 +1,34 @@
+pictures:
+    evil: flate/face_evil.png//2
+    smiling: flate/face_smiling.png//2
+    thinking: flate/face_thinking.png//2
+    tired: flate/face_tired.png//2
+
+pages:
+    - text: "Oh my, it took so long to arrive here"
+      picture: tired
+    - text: "And, needless to say, I hate walking that much"
+      picture: tired
+    - text: "Well, actually I hate walking at all"
+      picture: thinking
+    - text: "BECAUSE I AM A GODDAMN FLOWER"
+      picture: evil
+    - text: "..."
+      picture: thinking
+    - text: "Oh, hi! How're you doing?"
+      picture: smiling
+    - text: "Awful, as usual? Yeah, that's the spirit"
+      picture: smiling
+    - text: "Do you want to hear a little secret?"
+      picture: smiling
+    - text: "(actually, I don't care about your answer, so I'm going to tell it anyway)"
+      picture: thinking
+    - text: "You think everything can be solved by logic?"
+      picture: thinking
+    - text: "Forget about it!"
+      picture: smiling
+    - text: "Sometimes you say complete nonsense and that's exactly what they want from you"
+      picture: smiling
+    - text: "You should DEFINITELY try it out!"
+      picture: smiling
+    - text: "You feel like you have just learned a new method of dealing with problems"

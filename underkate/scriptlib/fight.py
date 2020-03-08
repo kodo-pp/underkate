@@ -615,6 +615,11 @@ class BulletSpawner:
             raise BulletSpawner.TerminateCoroutine()
 
 
+    async def wait_until_timeout(self):
+        while True:
+            await self.sleep_for(1e+9)
+
+
     def update(self, time_delta):
         if self._remaining_sleep_time > 0.0:
             self._remaining_sleep_time -= time_delta

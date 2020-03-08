@@ -1,0 +1,15 @@
+name: Literallia
+hp: 50
+attack: 4
+phrases: {}
+damage_by_weapon:
+    nonsense: 23
+textures:
+    enemy_normal: literallia.png//4
+    enemy_wounded: literallia_wounded.png//4
+    letter_bullet: letter_bullet.png//2
+    book_bullet: book_bullet.png//4
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py

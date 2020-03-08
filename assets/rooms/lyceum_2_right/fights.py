@@ -22,3 +22,7 @@ fight_literallia = make_fight('literallia')
 
 async def fight_algebroid(*a, **k):
     pass
+
+
+async def fight_geoma(*a, **k):
+    pass
