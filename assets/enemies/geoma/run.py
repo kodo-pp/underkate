@@ -107,13 +107,13 @@ class LineSpawner(BulletSpawner):
     async def run_line_grid(self):
         self.set_timeout(100.0)
 
-        for i in range(0, 10, 2):
+        for i in range(0, 10, 3):
             self._spawn_line(i, -1, i, 10)
             self._spawn_line(-1, i, 10, i)
 
         await self.sleep_for(2.8)
 
-        for i in range(1, 10, 2):
+        for i in range(1, 10, 3):
             self._spawn_line(i, -1, i, 10)
             self._spawn_line(-1, i, 10, i)
 
