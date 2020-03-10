@@ -1,0 +1,17 @@
+name: lyceum_2_midright_1
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [771, 231, 28, 231]
+      events:
+        enter: room::lyceum_2_right
+    - rect: [329, 187, 144, 161]
+      events:
+        interact: text::overworld/lyceum_2_midright_1/note_backtrack
+
+initial_positions:
+    lyceum_2_right: [738, 349]
+
+save_point:
+    pos: [174, 281]
+    script: text::overworld/lyceum_2_midright_1/save

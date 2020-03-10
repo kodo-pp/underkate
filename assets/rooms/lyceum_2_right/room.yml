@@ -6,6 +6,9 @@ triggers:
     - rect: [633, 260, 97, 10]
       events:
         enter: room::lyceum_staircase_r
+    - rect: [0, 258, 25, 236]
+      events:
+        enter: room::lyceum_2_midright_1
     - rect: [481, 261, 85, 232]
       events:
         enter: |
@@ -31,6 +34,7 @@ triggers:
 
 initial_positions:
     lyceum_staircase_r: [684, 315]
+    lyceum_2_midright_1: [66, 378]
 
 scripts: {}
 objects: []
