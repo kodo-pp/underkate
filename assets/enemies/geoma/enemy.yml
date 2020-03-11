@@ -4,6 +4,7 @@ attack: 4
 phrases: {}
 damage_by_weapon:
     logic: 3
+    ruler: 8
 textures:
     enemy_normal: geoma.png//4
     enemy_wounded: geoma_wounded.png//4
