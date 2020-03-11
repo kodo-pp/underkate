@@ -167,11 +167,11 @@ class LineSpawner(BulletSpawner):
 class Script(FightScript):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__is_player_scared = False
+        self._can_spare = False
 
 
     def can_spare(self):
-        return self.__is_player_scared
+        return self._can_spare
 
 
     async def on_kill(self):
@@ -184,6 +184,40 @@ class Script(FightScript):
 
     def create_bullet_spawner(self):
         return LineSpawner(bullet_board=self.bullet_board)
+
+
+    async def interact(self, interaction):
+        await super().interact(interaction)
+
+        if interaction.name == 'cry':
+            await display_text(
+                DisplayedText([
+                    TextPage("... but Geoma doesn't care"),
+                ])
+            )
+        elif interaction.name == 'circle':
+            await display_text(
+                DisplayedText([
+                    TextPage("Geoma recognizes an old friend in your drawing"),
+                    TextPage("She looks much happier now"),
+                ])
+            )
+            self._can_spare = True
+
+
+    def get_interactions(self):
+        return [
+            Interaction(
+                name = 'cry',
+                pretty_name = 'Start crying',
+                description = 'You start crying. Tears are running down your cheeks',
+            ),
+            Interaction(
+                name = 'circle',
+                pretty_name = 'Draw a circle',
+                description = 'You find some paper and draw a circle on it',
+            ),
+        ]
 
 
 async def run(*, enemy_battle, **kwargs):
