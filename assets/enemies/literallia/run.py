@@ -85,10 +85,11 @@ class Script(FightScript):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._num_attacks = 0
+        self._can_spare = False
 
 
     def can_spare(self):
-        return self._num_attacks >= 4
+        return self._can_spare
 
 
     async def process_enemy_attack(self):
@@ -115,6 +116,13 @@ class Script(FightScript):
             await flate.walk_x(-300.0)
             flate.kill()
             give(get_inventory(), 'nonsense')
+
+
+    async def use_weapon(self, weapon):
+        await super().use_weapon(weapon)
+        if weapon.name == 'nonsense' and not self._can_spare:
+            await display_text(load_text('fight/lyceum/literallia/phd'))
+            self._can_spare = True
 
 
     async def on_kill(self):

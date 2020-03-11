@@ -1,0 +1,6 @@
+pictures:
+    surprised: literallia/face_surprised.png//2
+
+pages:
+    - text: "Oh, I didn't know you have a PhD in literature..."
+      picture: surprised
