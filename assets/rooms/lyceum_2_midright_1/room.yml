@@ -5,12 +5,16 @@ triggers:
     - rect: [771, 231, 28, 231]
       events:
         enter: room::lyceum_2_right
+    - rect: [0, 230, 21, 233]
+      events:
+        enter: room::lyceum_2_midright_2
     - rect: [329, 187, 144, 161]
       events:
         interact: text::overworld/lyceum_2_midright_1/note_backtrack
 
 initial_positions:
     lyceum_2_right: [738, 349]
+    lyceum_2_midright_2: [52, 356]
 
 save_point:
     pos: [174, 281]

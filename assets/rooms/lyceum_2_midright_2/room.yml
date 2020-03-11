@@ -1,0 +1,16 @@
+name: lyceum_2_midright_2
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [781, 306, 18, 191]
+      events:
+        enter: room::lyceum_2_midright_1
+    - rect: [557, 170, 92, 131]
+      events:
+        interact: text::overworld/lyceum_2_midright_2/door-under-renovation
+    - rect: [64, 167, 125, 131]
+      events:
+        interact: text::overworld/lyceum_2_midright_2/beware-mad-economists
+
+initial_positions:
+    lyceum_2_midright_1: [754, 409]
