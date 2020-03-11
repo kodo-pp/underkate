@@ -4,6 +4,7 @@ from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.room import Room, Trigger, Event
 from underkate.script import load_script, make_function_from_code
+from underkate.state import get_state
 from underkate.texture import Texture, load_texture, BaseTexture
 from underkate.vector import Vector
 
@@ -134,10 +135,14 @@ def load_room(
         )
 
         save_text_displayer = load_script(save_point_info['script'], root=path)
+        should_restore_hp = save_point_info.get('restores_hp', True)
 
         def saver(**kwargs):
             del kwargs
             save_text_displayer()
+            if should_restore_hp:
+                state = get_state()
+                state['player_hp'] = state['player_max_hp']
             save_file.save(get_game())
         save_point.on_interact = saver
     else:
