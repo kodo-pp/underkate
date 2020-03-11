@@ -1,0 +1,19 @@
+name: lyceum_2_geoma
+background: bg.png
+pass_map: pass.png
+triggers:
+    - rect: [369, 580, 106, 16]
+      events:
+        enter: room::lyceum_2_right
+
+objects:
+    - pos: [0, 0]
+      texture: ruler.png
+      rect: [321, 245, 175, 62]
+      on_interact: python::take_ruler.py
+      name: ruler
+      if: |
+          return not state['took_ruler']
+
+initial_positions:
+    lyceum_2_right: [421, 526]

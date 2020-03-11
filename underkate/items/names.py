@@ -23,5 +23,10 @@ def get_item_by_name(item_name: str) -> Item:
             pretty_name = 'Complete nonsense',
             inline_name = 'a nonsense speech',
         ),
+        'ruler': Weapon(
+            name = 'ruler',
+            pretty_name = 'Ruler',
+            inline_name = 'a ruler',
+        ),
     }
     return mapping[item_name]

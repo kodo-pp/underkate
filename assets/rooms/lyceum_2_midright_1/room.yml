@@ -10,7 +10,10 @@ triggers:
         enter: room::lyceum_2_midright_2
     - rect: [329, 187, 144, 161]
       events:
-        interact: text::overworld/lyceum_2_midright_1/note_backtrack
+        interact: |
+            dynamic::
+            state['unlocked_ruler'] = True
+            return 'text::overworld/lyceum_2_midright_1/note_backtrack'
 
 initial_positions:
     lyceum_2_right: [738, 349]

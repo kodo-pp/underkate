@@ -31,10 +31,28 @@ triggers:
                 return []
             return 'python::fight_literallia@fights.py'
 
+    - rect: [102, 122, 89, 141]
+      events:
+        interact: text::overworld/lyceum_2_right/door-closed
+
+    - rect: [294, 123, 91, 140]
+      events:
+        interact: |
+            dynamic::
+            if state['unlocked_ruler']:
+                return 'room::lyceum_2_geoma'
+            else:
+                return 'text::overworld/lyceum_2_right/door-closed-geoma'
+
+    - rect: [478, 123, 93, 140]
+      events:
+        interact: text::overworld/lyceum_2_right/door-closed
+
 
 initial_positions:
     lyceum_staircase_r: [684, 315]
     lyceum_2_midright_1: [66, 378]
+    lyceum_2_geoma: [335, 340]
 
 scripts: {}
 objects: []

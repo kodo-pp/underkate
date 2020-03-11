@@ -32,6 +32,8 @@ DEFAULTS = {
         'geoma': False,
         'literallia': False,
     },
+    'unlocked_ruler': False,
+    'took_ruler': False,
 }
 
 
