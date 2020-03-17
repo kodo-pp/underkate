@@ -54,8 +54,12 @@ class Vector:
         return f'Vector({self.x}, {self.y})'
 
 
+    def length_sq(self) -> float:
+        return self.dot(self)
+
+
     def length(self) -> float:
-        return math.sqrt(self.dot(self))
+        return math.sqrt(self.length_sq())
 
 
     def normalized(self) -> 'Vector':

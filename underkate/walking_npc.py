@@ -1,54 +1,63 @@
-from underkate.event_manager import get_event_manager
+from underkate.event_manager import get_event_manager, EventId
 from underkate.scriptlib.common import wait_for_event
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.vector import Vector
 
-
-def sign(x):
-    return -1 if x < 0 else 1
+from typing import Optional
 
 
 class WalkingNpc(TexturedWalkingSprite):
     def __init__(self, *, pos, left, right, front, back, speed):
         super().__init__(pos=pos, left=left, right=right, front=front, back=back, speed=speed)
-        self._desired_position = None
-        self._event_id = None
+        self._stop_event: Optional[EventId] = None
         self._is_alive = True
+        self._target: Optional[Vector] = None
 
 
-    async def walk_x(self, delta):
-        self._desired_position = self.pos + Vector(delta, 0)
-        self.set_moving(sign(delta), 0)
-        self._event_id = get_event_manager().unique_id()
-        await wait_for_event(self._event_id)
+    async def walk(self, delta: Vector):
+        assert self._target is None
+        self._target = self.pos + delta
+
+        direction = delta.normalized()
+        self.set_moving(direction.x, direction.y)
+
+        self._stop_event = get_event_manager().unique_id()
+        await wait_for_event(self._stop_event)
+
+        self.set_moving(0, 0)
+        self.pos = self._target
+        self._target = None
 
 
-    async def walk_y(self, delta):
-        self._desired_position = self.pos + Vector(0, delta)
-        self.set_moving(0, sign(delta))
-        self._event_id = get_event_manager().unique_id()
-        await wait_for_event(self._event_id)
+    async def walk_x(self, delta: float):
+        await self.walk(Vector(delta, 0))
 
 
-    def update(self, time_delta):
+    async def walk_y(self, delta: float):
+        await self.walk(Vector(0, delta))
+
+
+    def _is_walking(self) -> bool:
+        return self._target is not None
+
+
+    def update(self, time_delta: float):
         super().update(time_delta)
-        if self.__should_stop():
-            self.set_moving(0, 0)
-            self.pos = self._desired_position
-            get_event_manager().raise_event(self._event_id, None)
-            self._desired_position = None
-            self._event_id = None
+        if self._is_walking() and self._should_stop():
+            assert self._stop_event is not None
+            get_event_manager().raise_event(self._stop_event, None)
+            self._stop_event = None
 
 
-    def __should_stop(self):
-        if self.moving_x != 0:
-            return (self._desired_position.x - self.pos.x) * self.moving_x <= 0
-        if self.moving_y != 0:
-            return (self._desired_position.y - self.pos.y) * self.moving_y <= 0
-        return False
+    def _should_stop(self) -> bool:
+        assert self._target is not None
+        vec_current = self._target - self.pos
+        next_pos = self.pos + self.get_movement_direction() * self.speed * 1e-2
+        vec_next = self._target - next_pos
+        return vec_next.length_sq() >= vec_current.length_sq()
 
 
-    def is_alive(self):
+    def is_alive(self) -> bool:
         return self._is_alive
 
 

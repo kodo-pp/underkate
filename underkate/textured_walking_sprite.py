@@ -97,3 +97,7 @@ class TexturedWalkingSprite(Sprite):
             self.get_current_texture().draw(destination, x, y)
         else:
             self.get_current_texture().draw(destination, x, y, force_frame=0)
+
+
+    def get_movement_direction(self) -> Vector:
+        return Vector(self.moving_x, self.moving_y)
