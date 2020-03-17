@@ -38,9 +38,10 @@ async def async_none():
     pass
 
 
-async def fight(battle, on_before_finish=async_none):
+async def fight(battle, on_after_enter=async_none, on_before_finish=async_none):
     game = get_game()
     await _play_transition_animation()
+    await on_after_enter()
     game.current_game_mode = Fight(battle)
     game.current_game_mode.run()
     await game.current_game_mode.async_show()
