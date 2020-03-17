@@ -5,6 +5,9 @@ triggers:
     - rect: [781, 306, 18, 191]
       events:
         enter: room::lyceum_2_midright_1
+    - rect: [0, 305, 18, 192]
+      events:
+        enter: room::lyceum_2_mid_1
     - rect: [557, 170, 92, 131]
       events:
         interact: text::overworld/lyceum_2_midright_2/door-under-renovation
@@ -14,3 +17,4 @@ triggers:
 
 initial_positions:
     lyceum_2_midright_1: [754, 409]
+    lyceum_2_mid_1: [40, 405]

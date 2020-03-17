@@ -1,0 +1,44 @@
+name: @@tem:name@@
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [LEFT, TOP, WIDTH, HEIGHT]          # <-- Edit here (rect)
+      events:
+        enter: room::@@tem:connect@@
+
+    - rect: [LEFT, TOP, WIDTH, HEIGHT]          # <-- Edit here (rect)
+      events:
+        interact: python::SCRIPT.py             # <-- Edit here (file: script)
+
+
+initial_positions:
+    @@tem:connect@@: [X, Y]                     # <-- Edit here (pos)
+
+
+save_point:
+    pos: [X, Y]                                 # <-- Edit here (pos)
+    script: text::overworld/@@tem:name@@/save   # <-- Edit here (file: script)
+
+
+scripts:
+    on_load: python::LOAD.py                    # <-- Edit here (file: script)
+
+
+objects:
+    - pos: [X, Y]                               # <-- Edit here (pos)
+      texture: TEXTURE.png                      # <-- Edit here (file: texture)
+      on_interact: python::SCRIPT.py            # <-- Edit here (file: script)
+      if: |
+          return CONDITION                      # <-- Edit here (script)
+
+    - pos: [0, 0]
+      texture: TEXTURE.png                      # <-- Edit here (file: texture)
+      rect: [LEFT, TOP, WIDTH, HEIGHT]          # <-- Edit here (rect)
+      passable: False                           # <-- Edit here (bool: is passable)
+      name: "NAME"                              # <-- Edit here (name)
+
+    - pos: [0, 0]
+      texture: TEXTURE.png
+      hitbox: [-HALF_W, -HALF_H, W, H]          # <-- Edit here (hitbox)
