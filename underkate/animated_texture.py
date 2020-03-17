@@ -6,6 +6,7 @@ from typing import List, Union, Optional
 
 import pygame as pg  # type: ignore
 import yaml
+from memoization import cached  # type: ignore
 
 
 class AnimatedTexture(BaseTexture):
@@ -46,6 +47,7 @@ class AnimatedTexture(BaseTexture):
         return AnimatedTexture(frames, self.fps)
 
 
+@cached
 def load_animated_texture(path: Union[Path, str], scale: int = 1) -> AnimatedTexture:
     if isinstance(path, str):
         path = Path(path)

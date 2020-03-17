@@ -88,6 +88,7 @@ class Room:
         self.save_point = save_point
         if save_point is not None:
             self.add_object(save_point)
+        self._update_callbacks: WalList[Callable[[float], None]] = WalList([])
         get_event_manager().subscribe('key:confirm', Subscriber(self.on_interact))
 
 
@@ -141,6 +142,10 @@ class Room:
             for sprite in self.sprites:
                 sprite.update(time_delta)
 
+        with self._update_callbacks:
+            for callback in self._update_callbacks:
+                callback(time_delta)
+
         self.maybe_run_script('update')
 
 
@@ -182,3 +187,7 @@ class Room:
         with self.objects:
             for obj in self.objects:
                 obj.kill()
+
+
+    def add_update_callback(self, callback: Callable[[float], None]):
+        self._update_callbacks.append(callback)
