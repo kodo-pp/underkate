@@ -1,0 +1,17 @@
+name: lyceum_2_mid_2
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [2183, 242, 21, 217]
+      events:
+        enter: room::lyceum_2_mid_1
+
+
+initial_positions:
+    lyceum_2_mid_1: [2141, 353]
+
+
+scripts:
+    on_load: python::spawn_madecs.py        
