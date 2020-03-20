@@ -189,7 +189,6 @@ class DisplayedText(Sprite):
         # TODO: get rid of `game` as an argument (and property) and use get_game() instead
         self.pages = pages
         self.page_index = -1
-        self._is_alive = True
         self.on_finish_callback = on_finish
 
 
@@ -251,16 +250,12 @@ class DisplayedText(Sprite):
         self.next()
 
 
-    def is_alive(self):
-        return self._is_alive
-
-
     def finalize(self):
         get_event_manager().subscribe(
             'end_of_cycle',
             Subscriber(lambda *args: get_game().overworld.unfreeze()),
         )
-        self._is_alive = False
+        self.kill()
         self.on_finish_callback()
 
 

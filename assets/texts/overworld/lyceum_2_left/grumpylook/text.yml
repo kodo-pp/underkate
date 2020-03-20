@@ -1,0 +1,18 @@
+pictures:
+    sad: grumpylook/face_sad.png//2
+
+pages:
+    - text: "hi again..."
+      picture: sad
+
+    - text: "i noticed you wandering somewhere around"
+      picture: sad
+
+    - text: "and you didn't seem very happy..."
+      picture: sad
+
+    - text: "actually, i have an idea how to cheer up"
+      picture: sad
+
+    - text: "there's a big project presentation upstairs, let's go there"
+      picture: sad

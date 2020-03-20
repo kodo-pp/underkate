@@ -6,7 +6,7 @@ from underkate.scriptlib.common import sleep
 from underkate.scriptlib.fight import fight
 from underkate.vector import Vector
 from underkate.wal_list import WalList
-from underkate.walking_npc import WalkingNpc
+from underkate.textured_walking_sprite import TexturedWalkingSprite
 
 import random as rd
 from pathlib import Path
@@ -14,7 +14,7 @@ from pathlib import Path
 import pygame as pg
 
 
-class Madec(WalkingNpc):
+class Madec(TexturedWalkingSprite):
     def __init__(self, pos, speed, direction, lifetime, manager):
         texture = load_animated_texture(
             Path('.') / 'assets' / 'textures' / 'madec' / 'overworld',

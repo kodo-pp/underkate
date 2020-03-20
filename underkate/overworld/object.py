@@ -27,7 +27,6 @@ class Object(Sprite):
         self.texture = texture
         self.is_passable = is_passable
         self.hitbox = hitbox if hitbox is not None else generate_hitbox(20, 20)
-        self._is_alive = True
         get_event_manager().subscribe('key:confirm', Subscriber(self._on_interact_somewhere))
         self.on_interact: Callable[[], None] = lambda: None
 
@@ -61,14 +60,6 @@ class Object(Sprite):
 
     def can_player_pass(self, player_position: pg.Rect) -> bool:
         return not bool(self.get_hitbox_with_position().colliderect(player_position))
-
-
-    def kill(self):
-        self._is_alive = False
-
-
-    def is_alive(self) -> bool:
-        return self._is_alive
 
 
     def _on_interact_somewhere(self, *args):

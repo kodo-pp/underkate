@@ -34,6 +34,7 @@ DEFAULTS = {
     },
     'unlocked_ruler': False,
     'took_ruler': False,
+    'grumpylook_met_at_floor2': False,
 }
 
 

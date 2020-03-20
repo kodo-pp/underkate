@@ -6,6 +6,18 @@ import pygame as pg  # type: ignore
 
 
 class BaseSprite:
+    def __init__(self):
+        self._is_alive = True
+
+
+    def is_alive(self) -> bool:
+        return self._is_alive
+
+
+    def kill(self):
+        self._is_alive = False
+
+
     @abc.abstractmethod
     def draw(self, destination: pg.Surface):
         pass
@@ -13,10 +25,6 @@ class BaseSprite:
 
     def update(self, time_delta: float):
         pass
-
-
-    def is_alive(self) -> bool:
-        return True
 
 
     def is_osd(self) -> bool:
@@ -29,4 +37,5 @@ class BaseSprite:
 
 class Sprite(BaseSprite):
     def __init__(self, pos: Vector):
+        super().__init__()
         self.pos = pos

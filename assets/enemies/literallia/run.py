@@ -13,7 +13,7 @@ from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
 from underkate.util import collide_beam_and_point, clamp
 from underkate.vector import Vector
-from underkate.walking_npc import WalkingNpc
+from underkate.textured_walking_sprite import TexturedWalkingSprite
 
 import math
 import random as rd
@@ -102,7 +102,7 @@ class Script(FightScript):
                 ],
                 fps = 1,
             )
-            flate = WalkingNpc(
+            flate = TexturedWalkingSprite(
                 pos = Vector(-100, 100),
                 left = flate_texture,
                 right = flate_texture,

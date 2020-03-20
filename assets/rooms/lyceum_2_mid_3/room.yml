@@ -8,6 +8,10 @@ triggers:
       events:
         enter: room::lyceum_2_mid_2
 
+    - rect: [0, 246, 12, 214]
+      events:
+        enter: room::lyceum_2_left
+
     - rect: [316, 175, 64, 56]
       events:
         interact: text::overworld/lyceum_2_mid_3/table
@@ -19,6 +23,7 @@ triggers:
 
 initial_positions:
     lyceum_2_mid_2: [956, 360]
+    lyceum_2_left: [50, 360]
 
 
 save_point:

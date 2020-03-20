@@ -5,7 +5,7 @@ from underkate.scriptlib.common import display_text
 from underkate.state import get_state
 from underkate.texture import load_texture
 from underkate.vector import Vector
-from underkate.walking_npc import WalkingNpc
+from underkate.textured_walking_sprite import TexturedWalkingSprite
 
 
 async def main(*args, root, **kwargs):
@@ -15,7 +15,7 @@ async def main(*args, root, **kwargs):
     room.named_objects['grumpylook'].kill()
     texture = AnimatedTexture([load_texture(root / 'grumpylook' / 'overworld.png')], fps=1)
 
-    grumpy = WalkingNpc(
+    grumpy = TexturedWalkingSprite(
         pos = Vector(840, 360),
         left = texture,
         right = texture,

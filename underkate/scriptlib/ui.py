@@ -114,7 +114,6 @@ class BaseMenu(BaseSprite):
 class OverworldMenu(BaseMenu):
     def __init__(self):
         super().__init__()
-        self.__is_alive = True
 
 
     def start_displaying(self):
@@ -123,14 +122,6 @@ class OverworldMenu(BaseMenu):
 
     def stop_displaying(self):
         self.kill()
-
-
-    def is_alive(self):
-        return self.__is_alive
-
-
-    def kill(self):
-        self.__is_alive = False
 
 
     def get_rect(self):

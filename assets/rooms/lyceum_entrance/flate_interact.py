@@ -10,7 +10,7 @@ from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.vector import Vector
-from underkate.walking_npc import WalkingNpc
+from underkate.textured_walking_sprite import TexturedWalkingSprite
 
 from pathlib import Path
 from pygame import Rect
@@ -36,7 +36,7 @@ async def main(*, root, script, **kwargs):
     await wait_for_event(event_id)
     get_game().overworld.room.state['flate_object'].kill()
 
-    cariel_overworld = WalkingNpc(
+    cariel_overworld = TexturedWalkingSprite(
         pos = Vector(400, -170),
         left = load_animated_texture(root / 'cariel' / 'left', scale=2),
         right = load_animated_texture(root / 'cariel' / 'right', scale=2),
