@@ -7,10 +7,14 @@ triggers:
     - rect: [2183, 242, 21, 217]
       events:
         enter: room::lyceum_2_mid_1
+    - rect: [0, 245, 23, 212]
+      events:
+        enter: room::lyceum_2_mid_3
 
 
 initial_positions:
     lyceum_2_mid_1: [2141, 353]
+    lyceum_2_mid_3: [48, 355]
 
 
 scripts:

@@ -1,0 +1,26 @@
+name: lyceum_2_mid_3
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [986, 245, 13, 213]
+      events:
+        enter: room::lyceum_2_mid_2
+
+    - rect: [316, 175, 64, 56]
+      events:
+        interact: text::overworld/lyceum_2_mid_3/table
+
+    - rect: [666, 110, 90, 133]
+      events:
+        interact: text::overworld/lyceum_2_mid_3/economics
+
+
+initial_positions:
+    lyceum_2_mid_2: [956, 360]
+
+
+save_point:
+    pos: [186, 195]
+    script: text::overworld/lyceum_2_mid_3/save
