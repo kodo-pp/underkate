@@ -16,6 +16,7 @@ class Player(TexturedWalkingSprite):
             back = load_animated_texture('assets/player/back', 4),
             speed = 250.0,
         )
+        self._controls_scripted = False
 
 
     @staticmethod
@@ -61,7 +62,8 @@ class Player(TexturedWalkingSprite):
 
         if self.are_controls_disabled():
             x, y = 0, 0
-        self.set_moving(x, y)
+        if not self.are_controls_scripted():
+            self.set_moving(x, y)
 
 
     def _can_move(self, delta: Vector) -> bool:
@@ -77,7 +79,7 @@ class Player(TexturedWalkingSprite):
 
 
     def move(self, delta: Vector):
-        if self._can_move(delta):
+        if self.are_controls_scripted() or self._can_move(delta):
             self._move_unchecked(delta)
             return
 
@@ -91,3 +93,13 @@ class Player(TexturedWalkingSprite):
 
     def are_controls_disabled(self) -> bool:
         return get_game().overworld.is_frozen()
+
+
+    def are_controls_scripted(self) -> bool:
+        return self._controls_scripted
+
+
+    async def walk(self, delta: Vector):
+        self._controls_scripted = True
+        await super().walk(delta)
+        self._controls_scripted = False

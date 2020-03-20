@@ -5,6 +5,7 @@ from underkate.scriptlib.gather import gather
 from underkate.texture import load_texture
 from underkate.animated_texture import AnimatedTexture
 from underkate.textured_walking_sprite import TexturedWalkingSprite
+from underkate.script import RoomScript
 
 
 async def main(root, **kwargs):
@@ -20,6 +21,7 @@ async def main(root, **kwargs):
     grumpylook_object.kill()
     del grumpylook_object
 
+    player = room.player
     texture = AnimatedTexture([load_texture(root / 'grumpylook' / 'overworld.png')], fps=1)
     grumpylook = TexturedWalkingSprite(
         pos = pos,
@@ -27,10 +29,10 @@ async def main(root, **kwargs):
         right = texture,
         front = texture,
         back = texture,
-        speed = 180,
+        speed = player.speed,
     )
     room.spawn(grumpylook)
 
-    await gather(grumpylook.walk_x(-200), player.walk_x(-200))
-    print('XXX')
+    await gather(grumpylook.walk_x(-150), player.walk_x(-150))
+    overworld.load_room('lyceum_2_mid_3') # TODO: presentation room
     overworld.unfreeze()
