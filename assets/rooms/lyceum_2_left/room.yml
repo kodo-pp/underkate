@@ -7,9 +7,9 @@ triggers:
     - rect: [786, 247, 13, 211]
       events:
         enter: room::lyceum_2_mid_3
-    - rect: [786, 247, 13, 211]
+    - rect: [50, 136, 95, 112]
       events:
-        enter: text::overworld/lyceum_2_left/stairs
+        interact: text::overworld/lyceum_2_left/stairs
 
 
 initial_positions:
