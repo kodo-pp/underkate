@@ -1,0 +1,12 @@
+pictures:
+    sad: grumpylook/face_sad.png//2
+
+pages:
+    - text: "so, it is on the right, in the assembly hall"
+      picture: sad
+    - text: "oh.."
+      picture: sad
+    - text: "i forgot i have to submit my homework..."
+      picture: sad
+    - text: "i'm sorry, i have to go.."
+      picture: sad

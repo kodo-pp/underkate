@@ -1,0 +1,22 @@
+name: lyceum_5_left
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [95, 103, 97, 109]
+      events:
+        interact: text::overworld/lyceum_5_left/stairs
+
+
+initial_positions:
+    lyceum_2_left: [142, 266]
+
+
+objects:
+    - pos: [207, 251]
+      texture: grumpylook/overworld.png
+      on_interact: python::grumpylook.py
+      name: grumpylook
+      if: |
+          return not state['grumpylook_met_at_floor2']
