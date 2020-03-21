@@ -33,6 +33,6 @@ async def main(root, **kwargs):
     )
     room.spawn(grumpylook)
 
-    await gather(grumpylook.walk_x(-150), player.walk_x(-150))
+    await gather(grumpylook.walk_x(-240), player.walk_x(-240))
     overworld.load_room('lyceum_2_mid_3') # TODO: presentation room
     overworld.unfreeze()

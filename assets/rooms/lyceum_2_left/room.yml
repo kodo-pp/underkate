@@ -17,7 +17,7 @@ initial_positions:
 
 
 objects:
-    - pos: [224, 266]
+    - pos: [368, 279]
       texture: grumpylook/overworld.png
       on_interact: python::grumpylook.py
       name: grumpylook
