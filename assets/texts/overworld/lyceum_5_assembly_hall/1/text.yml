@@ -2,6 +2,7 @@ pictures:
     u: unknown.png//2
 
 pages:
+    - text: "Someone with the voice you've never heard before starts speaking"
     - text: "Ladies and gentlemen!"
       picture: u
     - text: "Please, take your seats, we are beginning our presentation"
