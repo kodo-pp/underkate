@@ -1,8 +1,9 @@
+from underkate.animated_texture import AnimatedTexture
 from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text, sleep
+from underkate.state import get_state
 from underkate.texture import load_texture
-from underkate.animated_texture import AnimatedTexture
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 
 
@@ -32,4 +33,5 @@ async def main(root, **kwargs):
 
     await grumpylook.walk_x(700)
     grumpylook.kill()
+    get_state()['grumpylook_gone'] = True
     overworld.unfreeze()

@@ -10,6 +10,13 @@ triggers:
     - rect: [778, 216, 21, 272]
       events:
         enter: room::lyceum_5_assembly_hall
+    - rect: [653, 212, 29, 276]
+      events:
+        enter: |
+            dynamic::
+            if state['grumpylook_gone']:
+                return []
+            return 'python::goback.py'
 
 
 initial_positions:
@@ -23,4 +30,4 @@ objects:
       on_interact: python::grumpylook.py
       name: grumpylook
       if: |
-          return not state['grumpylook_met_at_floor2']
+          return not state['grumpylook_gone']
