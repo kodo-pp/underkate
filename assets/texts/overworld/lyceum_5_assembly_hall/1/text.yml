@@ -1,0 +1,64 @@
+pictures:
+    u: unknown.png//2
+
+pages:
+    - text: "Ladies and gentlemen!"
+      picture: u
+    - text: "Please, take your seats, we are beginning our presentation"
+      picture: u
+    - text: "(there's a pause for you to take your seats)"
+      picture: u
+    - text: "Today, we are presenting our innovative and fascinating project called..."
+      picture: u
+    - text: "\"CRYCEUM\""
+      picture: u
+    - text: "(there's a pause because I have to recall what I should say next)"
+      picture: u
+    - text: "(oh, yes, I remember now. Here we go!)"
+      picture: u
+    - text: "It is widely known that our students don't suffer enough"
+      picture: u
+    - text: "Despite all the efforts to make them cry, there are too little tears on their faces"
+      picture: u
+    - text: "IT'S TIME TO CORRECT THIS ISSUE!"
+      picture: u
+    - text: "Cryceum aims to make everyone cry as much as they can and even beyond that limit!"
+      picture: u
+    - text: "(oh wait, we can't actualy go beyond this limit...)"
+      picture: u
+    - text: "Whatever!"
+      picture: u
+    - text: "You are about to face the first stage of our project..."
+      picture: u
+    - text: "... which is called..."
+      picture: u
+    - text: "(*agressive searching for something in a paper book*)"
+      picture: u
+    - text: "(yeah, I found it)"
+      picture: u
+    - text: "... The First Stage!"
+      picture: u
+    - text: "..."
+      picture: u
+    - text: "Ok, the title may not be as convincing as it was supposed to be"
+      picture: u
+    - text: "BUT IT'S THE CONTENT WHAT ACTUALLY MATTERS, NOT THE NAME!"
+      picture: u
+    - text: "Get ready to meet our professionally-selected set of cry-catalysts!"
+      picture: u
+    - text: "... which are also known as..."
+      picture: u
+    - text: "CRY-TALYSTS!!!"
+      picture: u
+    - text: "(*lauhgs at this pun continuously for ten minutes*)"
+      picture: u
+    - text: "Alright, here we go!"
+      picture: u
+    - text: "Here comes a simple... GEOGRAPHY PROBLEM!"
+      picture: u
+    - text: "Are there any volunteers to solve it?"
+      picture: u
+    - text: "For example..."
+      picture: u
+    - text: "For example, YOU!"
+      picture: u

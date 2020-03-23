@@ -85,3 +85,5 @@ mappings:
     latin_z: [4, 9]
 
     apostrophe: [4, 10]
+    asterisk: [4, 11]
+    quotation_mark: [4, 12]

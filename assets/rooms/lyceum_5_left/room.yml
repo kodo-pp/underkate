@@ -7,10 +7,14 @@ triggers:
     - rect: [95, 103, 97, 109]
       events:
         interact: text::overworld/lyceum_5_left/stairs
+    - rect: [778, 216, 21, 272]
+      events:
+        enter: room::lyceum_5_assembly_hall
 
 
 initial_positions:
     lyceum_2_left: [142, 266]
+    lyceum_5_assembly_hall: [754, 360]
 
 
 objects:

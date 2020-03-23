@@ -1,0 +1,21 @@
+name: lyceum_5_assembly_hall
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [0, 139, 17, 110]
+      events:
+        enter: room::lyceum_5_left
+
+    - rect: [788, 0, 38, 598]
+      events:
+        interact: |
+            dynamic::
+            if state['lyceum_presentation_watched']:
+                return []
+            return 'python::presentation.py'
+
+
+initial_positions:
+    lyceum_5_left: [52, 195]

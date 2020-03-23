@@ -51,6 +51,8 @@ class Font:
         '?': 'question_mark',
         '~': 'tilde',
         "'": 'apostrophe',
+        '*': 'asterisk',
+        '"': 'quotation_mark',
 
         '0': 'digit_0',
         '1': 'digit_1',

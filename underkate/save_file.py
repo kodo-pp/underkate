@@ -35,6 +35,7 @@ DEFAULTS = {
     'unlocked_ruler': False,
     'took_ruler': False,
     'grumpylook_met_at_floor2': False,
+    'lyceum_presentation_watched': False,
 }
 
 
