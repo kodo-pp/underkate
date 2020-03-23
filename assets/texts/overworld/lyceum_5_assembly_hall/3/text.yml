@@ -1,0 +1,29 @@
+pictures:
+    u: unknown.png//2
+
+pages:
+    - text: "Wow, I'm amazed!"
+      picture: u
+    - text: "So much suffering! So much pain!"
+      picture: u
+    - text: "But even such a torture is not the last stage of our project"
+      picture: u
+    - text: "THE LAST STAGE OF OUR PROJECT IS........"
+      picture: u
+    - text: "(*gulps nervously*)"
+      picture: u
+    - text: "......."
+      picture: u
+      delay: 0.3
+    - text: "It is..."
+      picture: u
+    - text: "THE CRIER"
+      picture: u
+    - text: "..."
+      picture: u
+    - text: "Wait..."
+      picture: u
+    - text: "Something's wrong..."
+      picture: u
+    - text: "Let me look... NO NO NO NONONONONOOOOO!"
+      picture: u
