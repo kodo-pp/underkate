@@ -10,7 +10,7 @@ triggers:
 
     - rect: [788, 0, 38, 598]
       events:
-        interact: |
+        enter: |
             dynamic::
             if state['lyceum_presentation_watched']:
                 return []
