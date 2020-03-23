@@ -8,6 +8,10 @@ triggers:
       events:
         enter: room::lyceum_5_left
 
+    - rect: [205, 46, 138, 70]
+      events:
+        interact: text::overworld/lyceum_5_assembly_hall/ad
+
     - rect: [788, 0, 38, 598]
       events:
         enter: |
