@@ -1,0 +1,45 @@
+pictures:
+    u: unknown.png//2
+
+pages:
+    - text: "Wonderful!.."
+      picture: u
+    - text: "Hey! You don't look cheered and enjoyed!"
+      picture: u
+    - text: "You must be very tired after facing such a horrendous problem"
+      picture: u
+    - text: "Or... is it my fault?"
+      picture: u
+    - text: "Oh my! How could I forget!"
+      picture: u
+    - text: "You must be desperate of asking some questions!"
+      picture: u
+    - text: "In that case, don't be afraid! You can ask absolutely ANY question"
+      picture: u
+    - text: "You may ask, for example, why I don't have any slides in my presentation"
+      picture: u
+    - text: "..."
+      picture: u
+    - text: "Well... that's a tricky one"
+      picture: u
+    - text: "..."
+      picture: u
+    - text: "I'm not completely sure, but..."
+      picture: u
+    - text: "... it might be so, because I only worked on this project for 8 minutes"
+      picture: u
+    - text: "Ok, any other questions?    "
+      picture: u
+      auto_advance: True
+    - text: "Alright, no questions"
+      picture: u
+    - text: "Let's move on then!"
+      picture: u
+    - text: "Move on to... THE SECOND STAGE OF OUR MAGNIFICENT PROJECT!"
+      picture: u
+    - text: "Cry-catalysts are a good solution to make a person cry"
+      picture: u
+    - text: "But if you want them to suffocate in sufferings..."
+      picture: u
+    - text: "Then nothing helps better than some math!"
+      picture: u

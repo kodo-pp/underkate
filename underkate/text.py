@@ -56,6 +56,7 @@ class TextPage(AnimatedSprite):
         font: Optional[Font] = None,
         delay: float = 0.05,
         skippable: bool = True,
+        auto_advance: bool = False,
         picture: Optional[BaseTexture] = None,
     ):
         super().__init__()
@@ -67,6 +68,7 @@ class TextPage(AnimatedSprite):
         self.delay = delay
         self.skippable = skippable
         self.picture = picture
+        self.auto_advance = auto_advance
         self._force_finished = False
 
 
@@ -78,6 +80,7 @@ class TextPage(AnimatedSprite):
             ('font_name', str, 'default'),
             ('delay', float, 0.05),
             ('skippable', bool, True),
+            ('auto_advance', bool, False),
         ]
 
         values: dict = {}
@@ -97,6 +100,7 @@ class TextPage(AnimatedSprite):
             font = font,
             delay = values['delay'],
             skippable = values['skippable'],
+            auto_advance = values['auto_advance'],
         )
 
 
@@ -264,4 +268,8 @@ class DisplayedText(Sprite):
 
 
     def update(self, time_delta: float):
-        pass
+        if self.page_index >= len(self.pages):
+            return
+        page = self.pages[self.page_index]
+        if page.has_animation_finished() and page.auto_advance:
+            self.next()

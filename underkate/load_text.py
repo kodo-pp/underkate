@@ -37,10 +37,20 @@ def load_text(name: str, fmt: Optional[Dict[str, str]] = None):
         delay = page.get('delay', 0.05)
         skippable = page.get('skippable', True)
         picture_name = page.get('picture', None)
+        auto_advance = page.get('auto_advance', False)
         if picture_name is None:
             picture = None
         else:
             picture = pictures[picture_name]
         text = page['text'].format(**fmt)
-        pages.append(TextPage(text, font=font, delay=delay, skippable=skippable, picture=picture))
+        pages.append(
+            TextPage(
+                text,
+                font = font,
+                delay = delay,
+                skippable = skippable,
+                picture = picture,
+                auto_advance = auto_advance,
+            )
+        )
     return DisplayedText(pages)
