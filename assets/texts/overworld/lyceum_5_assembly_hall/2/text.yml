@@ -4,11 +4,13 @@ pictures:
 pages:
     - text: "Wonderful!.."
       picture: u
-    - text: "Hey! You don't look cheered and enjoyed!"
+    - text: "You must be completely exhausted after facing such a horrendous problem"
       picture: u
-    - text: "You must be very tired after facing such a horrendous problem"
+    - text: "Your mind must be aching..."
       picture: u
-    - text: "Or... is it my fault?"
+    - text: "But you still look a bit dissatisfied"
+      picture: u
+    - text: "Waht could be the reason for that?"
       picture: u
     - text: "Oh my! How could I forget!"
       picture: u
