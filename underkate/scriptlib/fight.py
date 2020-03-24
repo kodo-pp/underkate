@@ -604,6 +604,7 @@ class BulletSpawner:
             pass
         except StopIteration:
             pass
+        get_event_manager().raise_event('attack_finished')
 
 
     def spawn(self, bullet, unrestricted: bool = False):
@@ -632,7 +633,10 @@ class BulletSpawner:
             self._remaining_sleep_time -= time_delta
             if self._remaining_sleep_time <= 0.0:
                 self._remaining_sleep_time = 0.0
-                self._flow.send(False)
+                try:
+                    self._flow.send(False)
+                except StopIteration:
+                    pass
 
 
     def on_kill(self):

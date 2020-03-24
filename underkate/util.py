@@ -19,6 +19,4 @@ def collide_beam_and_point(
     normal = (end - start).normal().normalized()
     offset = normal * (thickness / 2.0)
     line = end - start
-    print(line, point - (start + offset), point - (start - offset))
-    print(line.sin(point - (start + offset)), line.sin(point - (start - offset)))
     return line.sin(point - (start + offset)) * line.sin(point - (start - offset)) < 0

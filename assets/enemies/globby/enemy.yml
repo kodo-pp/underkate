@@ -1,0 +1,14 @@
+name: Globby
+hp: 11
+phrases: []
+damage_by_weapon:
+    logic: 2
+    ruler: 5
+textures:
+    enemy_normal: globby.png//4
+    enemy_wounded: globby_wounded.png//4
+    #globe: globe.png//2
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py

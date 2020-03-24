@@ -218,17 +218,19 @@ class BulletBoard(FightMixin, BaseSprite):
 
 
     def set_timeout(self, new_timeout: float):
+        print(f'SET TIMEOUT {new_timeout}')
         self._timeout_event = get_event_manager().unique_id()
         notify_after(new_timeout, self._timeout_event)
 
 
     async def run(self, duration: float):
-        self.set_timeout(duration)
+        if self._timeout_event is None:
+            self.set_timeout(duration)
         while True:
             event, arg = await wait_for_event_by_filter(
-                lambda event, arg: (event in [self._timeout_event, 'key:any'])
+                lambda event, arg: (event in [self._timeout_event, 'key:any', 'attack_finished'])
             )
-            if event == self._timeout_event:
+            if event in [self._timeout_event, 'attack_finished']:
                 break
 
             assert event == 'key:any'
