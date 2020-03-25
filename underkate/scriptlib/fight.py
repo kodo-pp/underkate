@@ -425,6 +425,7 @@ class FightScript:
         return [
             Submenu('Weapons', SimpleMenu(self, weapon_choices)),
             Submenu('Food', SimpleMenu(self, food_choices)),
+            Submenu('Interact', SimpleMenu(self, self.get_interactions())),
             Spare(),
         ]
 
