@@ -25,7 +25,7 @@ DEFAULTS = {
     ],
     'player_hp': 20,
     'player_max_hp': 20,
-    'player_money': 5,
+    'player_money': 0,
     'lyceum_staircase_unlocked': False,
     'lyceum_2_right_fights': {
         'algebroid': False,

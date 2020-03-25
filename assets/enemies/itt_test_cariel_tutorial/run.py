@@ -49,12 +49,12 @@ class Script(FightScript):
 
     async def on_kill(self):
         get_state()['itt_test_tutorial'] = 'dead'
-        get_state()['pacifist_route_possible'] = False
+        await super().on_kill()
 
 
     async def on_spare(self):
         get_state()['itt_test_tutorial'] = 'spared'
-        get_state()['genocide_route_possible'] = False
+        await super().on_spare()
 
 
 async def run(*, enemy_battle, **kwargs):

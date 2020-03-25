@@ -11,3 +11,5 @@ scripts:
     run: python::run@run.py
     draw: python::draw@run.py
     update: python::update@run.py
+reward_for_kill: 5
+reward_for_spare: 3

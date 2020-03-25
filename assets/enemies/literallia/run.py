@@ -125,14 +125,6 @@ class Script(FightScript):
             self._can_spare = True
 
 
-    async def on_kill(self):
-        get_state()['pacifist_route_possible'] = False
-
-
-    async def on_spare(self):
-        get_state()['genocide_route_possible'] = False
-
-
     def create_bullet_spawner(self):
         return LiteralliaBulletSpawner(bullet_board=self.bullet_board)
 

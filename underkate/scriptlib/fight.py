@@ -8,9 +8,11 @@ from underkate.items.food import Food
 from underkate.items.weapon import Weapon
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
+from underkate.scriptlib.money import pay
 from underkate.scriptlib.ui import BaseMenu, Menu, BulletBoard, FightHpIndicator, EnemyHpIndicator
 from underkate.scriptlib.ui import EnemyNameIndicator
 from underkate.sprite import Sprite, BaseSprite
+from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import BaseTexture
 from underkate.texture import load_texture
@@ -439,7 +441,8 @@ class FightScript:
 
 
     async def on_spare(self):
-        pass
+        get_state()['genocide_route_possible'] = False
+        await pay(self.battle.data['reward_for_spare'])
 
 
     async def on_hit(self, killed):
@@ -447,7 +450,8 @@ class FightScript:
 
 
     async def on_kill(self):
-        pass
+        get_state()['pacifist_route_possible'] = False
+        await pay(self.battle.data['reward_for_kill'])
 
 
     async def use_weapon(self, weapon):

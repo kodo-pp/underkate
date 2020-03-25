@@ -1,0 +1,3 @@
+pictures: {}
+pages:
+    - text: "You got {coins} coins"

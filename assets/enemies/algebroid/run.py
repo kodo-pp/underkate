@@ -71,14 +71,6 @@ class Script(FightScript):
         return self.__is_player_scared
 
 
-    async def on_kill(self):
-        get_state()['pacifist_route_possible'] = False
-
-
-    async def on_spare(self):
-        get_state()['genocide_route_possible'] = False
-
-
     async def interact(self, interaction):
         await super().interact(interaction)
         if interaction.name == 'get_scared':

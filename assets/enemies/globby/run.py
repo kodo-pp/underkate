@@ -183,14 +183,6 @@ class Script(FightScript):
         return self._has_rotated and self._has_offered_water
 
 
-    async def on_kill(self):
-        get_state()['pacifist_route_possible'] = False
-
-
-    async def on_spare(self):
-        get_state()['genocide_route_possible'] = False
-
-
     def create_bullet_spawner(self):
         return AttackSpawner(bullet_board=self.bullet_board)
 

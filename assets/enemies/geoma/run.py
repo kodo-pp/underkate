@@ -174,14 +174,6 @@ class Script(FightScript):
         return self._can_spare
 
 
-    async def on_kill(self):
-        get_state()['pacifist_route_possible'] = False
-
-
-    async def on_spare(self):
-        get_state()['genocide_route_possible'] = False
-
-
     def create_bullet_spawner(self):
         return LineSpawner(bullet_board=self.bullet_board)
 
