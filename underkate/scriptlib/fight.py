@@ -68,7 +68,16 @@ class UseWeapon(Action):
 
 
     def __str__(self):
-        return f'Use weapon: {str(self.weapon)}'
+        return str(self.weapon)
+
+
+class ConsumeFood(Action):
+    def __init__(self, food):
+        self.food = food
+
+
+    def __str__(self):
+        return str(self.food)
 
 
 class Spare(Action):
@@ -410,9 +419,9 @@ class FightScript:
 
 
     def get_choices(self):
-        items = inventory.enumerate_items(inventory.get_inventory())
+        items = list(inventory.enumerate_items(inventory.get_inventory()))
         weapon_choices = [UseWeapon(item) for item in items if isinstance(item, Weapon)]
-        food_choices = [DoNothing() for item in items if isinstance(item, Food)]
+        food_choices = [ConsumeFood(item) for item in items if isinstance(item, Food)]
         return [
             Submenu('Weapons', SimpleMenu(self, weapon_choices)),
             Submenu('Food', SimpleMenu(self, food_choices)),
@@ -483,6 +492,22 @@ class FightScript:
             await self.on_kill()
 
 
+    async def consume_food(self, food):
+        recovered = food.restores
+        state = get_state()
+        state['player_hp'] += recovered
+        if state['player_hp'] >= state['player_max_hp']:
+            state['player_hp'] = state['player_max_hp']
+            txt = DisplayedText([
+                TextPage(f'You ate {food.inline_name} and recovered HP to the maximum'),
+            ])
+        else:
+            txt = DisplayedText([
+                TextPage(f'You ate {food.inline_name} and recovered {recovered} HP'),
+            ])
+        await display_text(txt)
+
+
     async def interact(self, interaction: Interaction):
         await display_text(
             DisplayedText([
@@ -501,6 +526,9 @@ class FightScript:
             # Mypy doesn't seem to understand this instance check
             weapon_usage = cast(UseWeapon, choice)
             return lambda: self.use_weapon(weapon_usage.weapon)
+        if isinstance(choice, ConsumeFood):
+            food_consumption = cast(ConsumeFood, choice)
+            return lambda: self.consume_food(food_consumption.food)
         if isinstance(choice, Spare):
             return self.spare
         if isinstance(choice, DoNothing):
