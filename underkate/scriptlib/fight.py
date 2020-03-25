@@ -442,12 +442,12 @@ class FightScript:
             ])
             await display_text(txt)
             self._has_spared = True
+            await self.on_spare()
         else:
             txt = DisplayedText([
                 TextPage(f'{self.enemy.name} doesn\'t want to\nquit fighting with you', font),
             ])
             await display_text(txt)
-        await self.on_spare()
 
 
     async def on_spare(self):
