@@ -38,8 +38,12 @@ class Script(FightScript):
         if not DEBUG_SKIP:
             await display_text(load_text('fight/pre-lyceum/itt_test_cariel_tutorial'))
         menu = self.get_main_menu()
-        choice = await menu.choose()
-        await self.get_action_for_choice(choice)()
+        while True:
+            choice = await menu.choose()
+            action = await self.get_action_for_choice(choice)
+            if action is not None:
+                await action()
+                break
         get_event_manager().raise_event('fight_finished')
 
 

@@ -27,22 +27,28 @@ if TYPE_CHECKING:
 
 class BaseMenu(BaseSprite):
     async def choose(self):
+        self.choices = self.get_choices()
+        if len(self.choices) == 0:
+            return None
         self.index = 0
         self.font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
-        self.choices = self.get_choices()
         self.pointer_texture = load_texture(Path('.') / 'assets' / 'fight' / 'pointer.png', scale=2)
         self.start_displaying()
-        while True:
-            _, pygame_event = await wait_for_event('key:any')
-            key = pygame_event.key
-            if key == pg.K_UP:
-                self.on_key_up()
-            if key == pg.K_DOWN:
-                self.on_key_down()
-            if key in (pg.K_z, pg.K_RETURN, pg.K_LSHIFT, pg.K_RSHIFT):
-                break
-        choice = self.choices[self.index]
-        self.stop_displaying()
+        try:
+            while True:
+                _, pygame_event = await wait_for_event('key:any')
+                key = pygame_event.key
+                if key == pg.K_UP:
+                    self.on_key_up()
+                if key == pg.K_DOWN:
+                    self.on_key_down()
+                if key in (pg.K_z, pg.K_RETURN):
+                    break
+                if key in (pg.K_x, pg.K_RSHIFT):
+                    return None
+            choice = self.choices[self.index]
+        finally:
+            self.stop_displaying()
         await next_frame()
         return choice
 

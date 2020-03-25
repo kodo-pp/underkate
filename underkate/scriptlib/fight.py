@@ -4,10 +4,11 @@ from underkate.fight.enemy_battle import EnemyBattle
 from underkate.fight.mode import Fight
 from underkate.font import load_font
 from underkate.global_game import get_game
+from underkate.items.food import Food
 from underkate.items.weapon import Weapon
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
-from underkate.scriptlib.ui import Menu, BulletBoard, FightHpIndicator, EnemyHpIndicator
+from underkate.scriptlib.ui import BaseMenu, Menu, BulletBoard, FightHpIndicator, EnemyHpIndicator
 from underkate.sprite import Sprite, BaseSprite
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import BaseTexture
@@ -88,13 +89,23 @@ class DoNothing(Action):
         return 'Nothing'
 
 
+class Submenu(Action):
+    def __init__(self, pretty_name: str, submenu: Menu):
+        self.pretty_name = pretty_name
+        self.submenu = submenu
+
+
+    def __str__(self):
+        return self.pretty_name
+
+
 class SimpleMenu(Menu):
-    def __init__(self, fight_script, choices):
+    def __init__(self, fight_script: 'FightScript', choices: List[Action]):
         super().__init__(fight_script)
         self.choices = choices
 
 
-    def get_choices(self):
+    def get_choices(self) -> List[Action]:
         return self.choices
 
 
@@ -396,11 +407,13 @@ class FightScript:
 
     def get_choices(self):
         items = inventory.enumerate_items(inventory.get_inventory())
-        item_choices = [
-            UseWeapon(item) if isinstance(item, Weapon) else DoNothing()
-            for item in items
+        weapon_choices = [UseWeapon(item) for item in items if isinstance(item, Weapon)]
+        food_choices = [DoNothing() for item in items if isinstance(item, Food)]
+        return [
+            Submenu('Weapons', SimpleMenu(self, weapon_choices)),
+            Submenu('Food', SimpleMenu(self, food_choices)),
+            Spare(),
         ]
-        return self.get_interactions() + item_choices + [Spare()]
 
 
     def get_main_menu(self):
@@ -472,10 +485,12 @@ class FightScript:
         )
 
 
-    def get_action_for_choice(self, choice: Action) -> Callable[[], Coroutine[Any, Any, Any]]:
+    async def get_action_for_choice(self, choice: Action) -> Callable[[], Coroutine[Any, Any, Any]]:
         async def nothing():
             pass
 
+        if choice is None:
+            return None
         if isinstance(choice, UseWeapon):
             # Mypy doesn't seem to understand this instance check
             weapon_usage = cast(UseWeapon, choice)
@@ -487,6 +502,8 @@ class FightScript:
         if isinstance(choice, Interaction):
             interaction = cast(Interaction, choice)
             return lambda: self.interact(interaction)
+        assert not isinstance(choice, Submenu)
+
         raise TypeError(f'Unknown action type: {type(choice)}')
 
 
@@ -517,11 +534,34 @@ class FightScript:
         return self.enemy.hp <= 0 or self._has_spared
 
 
+    async def choose_from_menu_tree(self, menu: BaseMenu) -> Action:
+        while True:
+            result = await self.try_choose_from_menu_tree(menu)
+            if result is not None:
+                return result
+
+
+    async def try_choose_from_menu_tree(self, menu: BaseMenu) -> Optional[Action]:
+        menu_stack: List[BaseMenu] = [menu]
+        while menu_stack:
+            choice = await menu_stack[-1].choose()
+            if choice is None:
+                menu_stack.pop()
+            elif isinstance(choice, Submenu):
+                menu_stack.append(choice.submenu)
+            else:
+                return choice
+        return None
+
+
+
     async def run(self):
         while True:
             menu = self.get_main_menu()
-            choice = await menu.choose()
-            await self.get_action_for_choice(choice)()
+            choice = await self.choose_from_menu_tree(menu)
+            action = await self.get_action_for_choice(choice)
+            await action()
+
             if self.has_battle_finished():
                 break
             await self.process_enemy_attack()
