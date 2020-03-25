@@ -224,7 +224,6 @@ class BulletBoard(FightMixin, BaseSprite):
 
 
     def set_timeout(self, new_timeout: float):
-        print(f'SET TIMEOUT {new_timeout}')
         self._timeout_event = get_event_manager().unique_id()
         notify_after(new_timeout, self._timeout_event)
 
@@ -389,6 +388,25 @@ class FightHpIndicator(FightMixin):
 
     fg_color = (0, 255, 255)
     bg_color = (128, 128, 128)
+
+
+class EnemyNameIndicator(FightMixin):
+    def __init__(self, enemy: 'Enemy', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.enemy = enemy
+
+
+    def draw(self, destination: pg.Surface):
+        draw_text(
+            self.enemy.name,
+            x = 10,
+            y = 20,
+            destination = destination,
+        )
+
+
+    def update(self, time_delta: float):
+        pass
 
 
 class EnemyHpIndicator(FightHpIndicator):

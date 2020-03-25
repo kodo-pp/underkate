@@ -9,6 +9,7 @@ from underkate.items.weapon import Weapon
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.ui import BaseMenu, Menu, BulletBoard, FightHpIndicator, EnemyHpIndicator
+from underkate.scriptlib.ui import EnemyNameIndicator
 from underkate.sprite import Sprite, BaseSprite
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import BaseTexture
@@ -354,6 +355,7 @@ class FightScript:
         self.bullet_board: Optional['BulletBoard'] = None
         self._bullet_spawner: Optional['BulletSpawner'] = None
         self.elements: WalList[ElementProtocol] = WalList([
+            EnemyNameIndicator(self.enemy, fight_script=self),
             FightHpIndicator(self, pg.Rect(350, 550, 100, 30)),
             EnemyHpIndicator(self.enemy, self, pg.Rect(300, 15, 200, 30)),
         ])
