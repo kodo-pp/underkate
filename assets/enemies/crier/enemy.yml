@@ -1,0 +1,15 @@
+name: Crier
+hp: 999
+phrases: {}
+damage_by_weapon: {}
+textures:
+    enemy_normal: empty.png
+    enemy_wounded: empty.png
+    tear: tear.png//2
+    unknown: unknown.png//2
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py
+reward_for_kill: 0
+reward_for_spare: 0

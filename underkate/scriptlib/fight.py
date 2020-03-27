@@ -589,6 +589,9 @@ class FightScript:
         return None
 
 
+    async def on_finish(self):
+        pass
+
 
     async def run(self):
         while True:
@@ -600,6 +603,9 @@ class FightScript:
             if self.has_battle_finished():
                 break
             await self.process_enemy_attack()
+            if self.has_battle_finished():
+                break
+        await self.on_finish()
         get_event_manager().raise_event('fight_finished')
 
 
