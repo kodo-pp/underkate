@@ -1,0 +1,28 @@
+pictures:
+    p: unknown.png//2
+
+pages:
+    - text: "Well, ladies and gentlemen..."
+      picture: p
+    - text: "It's a bit wet here, I must admit"
+      picture: p
+    - text: "It looks like we have to finish our presentation for technical reasons"
+      picture: p
+    - text: "I have to go"
+      picture: p
+    - text: "But by no means am I forcing you to go away"
+      picture: p
+    - text: "Of course you can stay here"
+      picture: p
+    - text: "It won't be extremely useful, though, because there won't be any presentation here anymore"
+      picture: p
+    - text: "But it's completely up to you to decide"
+      picture: p
+    - text: "..."
+      picture: p
+    - text: "Anyway, it's time for me to go"
+      picture: p
+    - text: "Goodbye everyone!"
+      picture: p
+    - text: "Thank you for not paying attention to my presentation and for not realizing how horrible it is!"
+      picture: p
