@@ -1,0 +1,13 @@
+pictures:
+    neutral: sportick/face_neutral.png//2
+    hehe: sportick/face_hehe.png//2
+
+pages:
+    - text: "Hello, student!"
+      picture: hehe
+    - text: "Welcome to my PE class!"
+      picture: hehe
+    - text: "Hmmm, your muscles don't seem very strong"
+      picture: neutral
+    - text: "That's not a problem, we'll train them!"
+      picture: hehe
