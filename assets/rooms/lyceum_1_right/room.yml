@@ -6,21 +6,47 @@ triggers:
     - rect: [0, 263, 15, 229]
       events:
         enter: room::lyceum_hall
+
     - rect: [82, 260, 97, 8]
       events:
         enter: room::lyceum_staircase_r
+
     - rect: [447, 237, 88, 19]
       events:
-        interact: text::overworld/lyceum_1_right/door
+        interact: |
+            dynamic::
+            if state['lyceum_elevator_used']:
+                return []
+            else:
+                return 'text::overworld/lyceum_1_right/door'
+
     - rect: [749, 250, 32, 244]
       events:
         interact: text::overworld/lyceum_1_right/window
+
+    - rect: [446, 262, 90, 39]
+      events:
+        enter: |
+            dynamic::
+            if state['lyceum_elevator_used']:
+                return [] # TODO: Sportick's room
+            else:
+                return []
 
 objects:
     - pos: [486, 293]
       texture: sportick/overworld.png//2
       hitbox: [-40, -90, 80, 180]
       on_interact: text::overworld/lyceum_1_right/sportick
+      if: |
+          return not state['lyceum_elevator_used']
+
+    - pos: [491, 202]
+      texture: open_door.png
+      is_passable: true
+      if: |
+          return state['lyceum_elevator_used']
+
     - pos: [666, 161]
       texture: hole.png//2
       is_passable: true
