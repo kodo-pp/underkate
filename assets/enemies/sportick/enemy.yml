@@ -1,0 +1,14 @@
+name: Sportick
+hp: 10
+phrases: {}
+damage_by_weapon:
+    logic: 1
+textures:
+    enemy_normal: sportick.png//4
+    enemy_wounded: grumpylook_wounded.png//4
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py
+reward_for_kill: 0
+reward_for_spare: 0
