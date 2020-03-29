@@ -37,6 +37,7 @@ DEFAULTS = {
     'grumpylook_met_at_floor2': False,
     'lyceum_presentation_watched': False,
     'grumpylook_gone': False,
+    'lyceum_elevator_used': False,
 }
 
 

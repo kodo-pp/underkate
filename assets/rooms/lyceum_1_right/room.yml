@@ -21,7 +21,14 @@ objects:
       texture: sportick/overworld.png//2
       hitbox: [-40, -90, 80, 180]
       on_interact: text::overworld/lyceum_1_right/sportick
+    - pos: [666, 161]
+      texture: hole.png//2
+      is_passable: true
+      on_interact: text::overworld/lyceum_1_right/hole
+      if: |
+          return state['lyceum_elevator_used']
 
 initial_positions:
     lyceum_hall: [85, 383]
     lyceum_staircase_r: [128, 301]
+    lyceum_5_right: [658, 307]

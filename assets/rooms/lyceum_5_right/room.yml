@@ -1,0 +1,27 @@
+name: lyceum_5_right
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [0, 183, 16, 230]
+      events:
+        enter: room::lyceum_5_assembly_hall
+
+    - rect: [158, 182, 96, 15]
+      events:
+        enter: room::lyceum_staircase_r
+
+    - rect: [570, 160, 98, 21]
+      events:
+        interact: python::elevator.py
+
+
+initial_positions:
+    lyceum_5_assembly_hall: [33, 303]
+    lyceum_staircase_r: [202, 226]
+
+
+save_point:
+    pos: [623, 377]
+    script: text::overworld/lyceum_5_right/save

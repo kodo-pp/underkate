@@ -16,13 +16,13 @@ async def spawn_water(root):
 
 async def main(*, root, **kwargs):
     get_game().overworld.freeze()
-    await display_text(load_text('overworld/lyceum_5_assembly_hall/1'))
-    await fight(load_enemy_battle_by_name('globby'))
-    await display_text(load_text('overworld/lyceum_5_assembly_hall/2'))
-    await fight(load_enemy_battle_by_name('algebroid'))
-    await fight(load_enemy_battle_by_name('geoma'))
-    await display_text(load_text('overworld/lyceum_5_assembly_hall/3'))
-    await fight(load_enemy_battle_by_name('crier'), on_before_finish = lambda: spawn_water(root))
-    await display_text(load_text('overworld/lyceum_5_assembly_hall/4'))
+    #await display_text(load_text('overworld/lyceum_5_assembly_hall/1'))
+    #await fight(load_enemy_battle_by_name('globby'))
+    #await display_text(load_text('overworld/lyceum_5_assembly_hall/2'))
+    #await fight(load_enemy_battle_by_name('algebroid'))
+    #await fight(load_enemy_battle_by_name('geoma'))
+    #await display_text(load_text('overworld/lyceum_5_assembly_hall/3'))
+    #await fight(load_enemy_battle_by_name('crier'), on_before_finish = lambda: spawn_water(root))
+    #await display_text(load_text('overworld/lyceum_5_assembly_hall/4'))
     get_state()['lyceum_presentation_watched'] = True
     get_game().overworld.unfreeze()

@@ -59,7 +59,7 @@ class Object(Sprite):
 
 
     def can_player_pass(self, player_position: pg.Rect) -> bool:
-        return not bool(self.get_hitbox_with_position().colliderect(player_position))
+        return self.is_passable or not bool(self.get_hitbox_with_position().colliderect(player_position))
 
 
     def _on_interact_somewhere(self, *args):
