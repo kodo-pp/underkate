@@ -29,7 +29,7 @@ triggers:
         enter: |
             dynamic::
             if state['lyceum_elevator_used']:
-                return [] # TODO: Sportick's room
+                return 'room::lyceum_1_sportick'
             else:
                 return []
 
@@ -58,3 +58,4 @@ initial_positions:
     lyceum_hall: [85, 383]
     lyceum_staircase_r: [128, 301]
     lyceum_5_right: [658, 307]
+    lyceum_1_sportick: [492, 301]

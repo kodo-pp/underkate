@@ -1,0 +1,19 @@
+name: lyceum_1_sportick
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [370, 582, 87, 17]
+      events:
+        enter: room::lyceum_1_right
+
+
+initial_positions:
+    lyceum_1_right: [411, 532]
+
+
+objects:
+    - pos: [400, 300]
+      texture: sportick/overworld.png//2
+      on_interact: python::sportick.py
