@@ -1,3 +1,5 @@
+from underkate.animated_texture import AnimatedTexture
+from underkate.textured_walking_sprite import TexturedWalkingSprite
 from underkate.event_manager import get_event_manager
 from underkate.font import load_font
 from underkate.global_game import get_game
@@ -293,6 +295,48 @@ class Script(FightScript):
                 description = 'You move around the room',
             ),
         ]
+
+
+    async def _become_grumpylook(self):
+        old_sportick = self.enemy.sprite
+        texture = AnimatedTexture([old_sportick.texture], fps=1)
+        sportick = TexturedWalkingSprite(
+            pos = old_sportick.pos,
+            left = texture,
+            right = texture,
+            front = texture,
+            back = texture,
+            speed = 240,
+        )
+        self.spawn(sportick)
+        old_sportick.kill()
+        await sportick.walk_x(500)
+        texture = AnimatedTexture([self.textures['grumpylook']], fps=1)
+        grumpylook = TexturedWalkingSprite(
+            pos = sportick.pos,
+            left = texture,
+            right = texture,
+            front = texture,
+            back = texture,
+            speed = 240,
+        )
+        self.spawn(grumpylook)
+        sportick.kill()
+        await grumpylook.walk_x(-500)
+        self.enemy.sprite = grumpylook
+
+
+    async def _move_grumpylook_away(self):
+        assert isinstance(self.enemy.sprite, TexturedWalkingSprite)
+        await self.enemy.sprite.walk_x(-500)
+
+
+    async def on_spare(self):
+        await display_text(load_text('fight/lyceum/sportick/after_spare/1'))
+        await self._become_grumpylook()
+        await display_text(load_text('fight/lyceum/sportick/after_spare/2'))
+        await self._move_grumpylook_away()
+        await super().on_spare()
 
 
 async def run(*, enemy_battle, **kwargs):

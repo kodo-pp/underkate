@@ -1,0 +1,56 @@
+pictures:
+    s: grumpylook/face_sad.png//2
+
+pages:
+    - text: "i'm not actually sportick..."
+      picture: s
+    - text: "well, i am, but... oh my... it's a bit complicated..."
+      picture: s
+    - text: "actually, i'm a ghost that can take any physical form"
+      picture: s
+    - text: "... whether corporeal or not"
+      picture: s
+    - text: "so... sportick and i... are actually the same person..."
+      picture: s
+    - text: "i tricked you to believe that sportick is someone else, but... you know the truth now..."
+      picture: s
+    - text: "also, i can change the voice i speak"
+      picture: s
+    - text: "... so you didn't notice anything familiar in the voices of sportick and that guy..."
+      picture: s
+    - text: "..."
+      picture: s
+    - text: "oh..."
+      picture: s
+    - text: "i forgot to tell you that is was me who managed that presentation..."
+      picture: s
+    - text: "it was me who prepared the materials for it, who presented all the stages of that project..."
+      picture: s
+    - text: "..."
+      picture: s
+    - text: "but why have i done all this?"
+      picture: s
+    - text: "you just seemed a bit sad"
+      picture: s
+    - text: "and i simply wanted to cheer you up..."
+      picture: s
+    - text: "so i appeared as sportick to make you more interested..."
+      picture: s
+    - text: "i placed these fences to the staircase so that you don't miss anything i had prepared..."
+      picture: s
+    - text: "i..."
+      picture: s
+    - text: "i'm sorry..."
+      picture: s
+    - text: "i've done it all wrong"
+      picture: s
+    - text: "..."
+      picture: s
+    - text: "it would be better if i go.."
+      picture: s
+    - text: "i'll remove those fences..."
+      picture: s
+    - text: "... and i'll stop chasing you"
+      picture: s
+    - text: "i'm very sorry....."
+      picture: s

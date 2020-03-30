@@ -1,0 +1,12 @@
+pictures:
+    n: sportick/face_neutral.png//2
+
+pages:
+    - text: "So, you want to finish this training session, don't you?"
+      picture: n
+    - text: "..."
+      picture: n
+    - text: "I see"
+      picture: n
+    - text: "in this case, i have to show you something.."
+      picture: n

@@ -17,3 +17,6 @@ objects:
     - pos: [400, 300]
       texture: sportick/overworld.png//2
       on_interact: python::sportick.py
+      name: sportick
+      if: |
+          return not state['sportick_fought']

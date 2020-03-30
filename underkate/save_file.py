@@ -38,6 +38,7 @@ DEFAULTS = {
     'lyceum_presentation_watched': False,
     'grumpylook_gone': False,
     'lyceum_elevator_used': False,
+    'sportick_fought': False,
 }
 
 
