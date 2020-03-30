@@ -339,6 +339,14 @@ class Script(FightScript):
         await super().on_spare()
 
 
+    async def on_hit(self, killed):
+        await super().on_hit(killed)
+        if not killed:
+            return
+        await display_text(load_text('fight/lyceum/sportick/after_fight'))
+        self.enemy.name = 'Grumpylook'
+
+
 async def run(*, enemy_battle, **kwargs):
     global fs
     fs = Script(enemy_battle)

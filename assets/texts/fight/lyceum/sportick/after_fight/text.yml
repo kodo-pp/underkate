@@ -1,0 +1,154 @@
+pictures:
+    s: grumpylook/face_wounded.png//2
+
+pages:
+    - text: "... oh..."
+      picture: s
+
+    - text: "that's what i was afraid of..."
+      picture: s
+
+    - text: "i'm... i'm dying... because of what i organized..."
+      picture: s
+
+    - text: "... absolute nightmare..."
+      picture: s
+
+    - text: "well..."
+      picture: s
+
+    - text: "in my last minutes, i probably should tell you what i actually did..."
+      picture: s
+
+    - text: "and who i actually am..."
+      picture: s
+
+    - text: "i'm a ghost that can take any physical form"
+      picture: s
+
+    - text: "... whether corporeal or not"
+      picture: s
+
+    - text: "so... sportick... is just one of these forms"
+      picture: s
+
+    - text: "but... as i was wounded, i could not hold their body anymore..."
+      picture: s
+
+    - text: "so i turned back into my usual one..."
+      picture: s
+
+    - text: "at first, i tricked you to believe that sportick is someone else, but... you know the truth now..."
+      picture: s
+
+    - text: "also, i can change the voice i speak"
+      picture: s
+
+    - text: "... so you didn't notice anything familiar in the voices of sportick and that guy..."
+      picture: s
+
+    - text: "..."
+      picture: s
+
+    - text: "oh..."
+      picture: s
+
+    - text: "i forgot to tell you that is was me who managed that presentation..."
+      picture: s
+
+    - text: "it was me who prepared the materials for it, who presented all the stages of that project..."
+      picture: s
+
+    - text: "..."
+      picture: s
+
+    - text: "but why have i done all this?"
+      picture: s
+
+    - text: "you just seemed a bit sad"
+      picture: s
+
+    - text: "and i simply wanted to cheer you up..."
+      picture: s
+
+    - text: "so i appeared as sportick to make you more interested..."
+      picture: s
+
+    - text: "i placed these fences to the staircase so that you don't miss anything i had prepared..."
+      picture: s
+
+    - text: "..."
+      picture: s
+
+    - text: "but is has all gone wrong..."
+      picture: s
+
+    - text: "it... was just way to entertain you..."
+      picture: s
+
+    - text: "i mean, this training..."
+      picture: s
+
+    - text: "but.. it turned out quite not as expected..."
+      picture: s
+
+    - text: "i..."
+      picture: s
+
+    - text: "i think it's my fault..."
+      picture: s
+
+    - text: "i should have warned you..."
+      picture: s
+
+    - text: "i should have warned you..."
+      picture: s
+      skippable: false
+      delay: 0.1
+
+    - text: "..."
+      picture: s
+      delay: 0.1
+
+    - text: "i have to say one more thing"
+      picture: s
+      delay: 0.1
+
+    - text: "these fences..."
+      picture: s
+      delay: 0.1
+
+    - text: "they are kind of corporeal holograms..."
+      picture: s
+      delay: 0.1
+
+    - text: "that are controlled by me"
+      picture: s
+      delay: 0.1
+
+    - text: "so, when i die, they will be gone for good"
+      picture: s
+      delay: 0.1
+
+    - text: "i hope you will be able to make use of it"
+      picture: s
+      delay: 0.15
+
+    - text: "..."
+      picture: s
+      delay: 0.15
+
+    - text: "it's my fault..."
+      picture: s
+      skippable: false
+      delay: 0.15
+
+    - text: "i should have warned..."
+      picture: s
+      skippable: false
+      delay: 0.22
+
+    - text: ". . . . . ."
+      picture: s
+      skippable: false
+      delay: 0.3
