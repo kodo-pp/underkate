@@ -6,6 +6,7 @@ damage_by_weapon:
 textures:
     enemy_normal: sportick.png//2
     enemy_wounded: grumpylook_wounded.png//1
+    ball: ball.png
 scripts:
     run: python::run@run.py
     draw: python::draw@run.py

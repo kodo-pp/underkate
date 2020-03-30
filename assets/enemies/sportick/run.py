@@ -3,7 +3,7 @@ from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
-from underkate.scriptlib.fight import BulletSpawner, Interaction
+from underkate.scriptlib.fight import BulletSpawner, Interaction, RectangularBullet
 from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon, BaseBullet
 from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
@@ -18,6 +18,24 @@ import time
 from pathlib import Path
 
 import pygame as pg
+
+
+class Ball(RectangularBullet):
+    def get_hitbox(self):
+        return pg.Rect(-30, -30, 60, 60)
+
+
+    def update(self, time_delta):
+        super().update(time_delta)
+        rect = self.bullet_board.get_rect()
+        if self.pos.x < rect.left:
+            self.speed.x = abs(self.speed.x)
+        if self.pos.x >= rect.right:
+            self.speed.x = -abs(self.speed.x)
+        if self.pos.y < rect.top:
+            self.speed.y = abs(self.speed.y)
+        if self.pos.y >= rect.bottom:
+            self.speed.y = -abs(self.speed.y)
 
 
 class Line(BaseBullet):
@@ -101,7 +119,7 @@ class Line(BaseBullet):
 
 class AttackSpawner(BulletSpawner):
     async def run(self):
-        await rd.choice([self.run_lines])()
+        await rd.choice([self.run_lines, self.run_basketballs])()
 
 
     def _spawn_line(self, start, end):
@@ -143,6 +161,20 @@ class AttackSpawner(BulletSpawner):
             #end = self._random_point_on_circle_boundary()
             start, end = self._random_diameter()
             self._spawn_line(start, end)
+
+
+    async def run_basketballs(self):
+        for r, c, vx, vy in [(2, 4, -150, 180), (5, 9, 200, -170), (8, 1, 160, 160)]:
+            self.spawn(
+                Ball(
+                    bullet_board = self.bullet_board,
+                    pos = self.bullet_board.get_coords_at(r, c),
+                    speed = Vector(vx, vy) * 1.5,
+                    damage = 3,
+                    texture = self.bullet_board.fight_script.textures['ball'],
+                ),
+            )
+        await self.wait_until_timeout()
 
 
 class Script(FightScript):
