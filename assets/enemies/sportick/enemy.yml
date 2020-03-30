@@ -1,11 +1,11 @@
 name: Sportick
-hp: 10
+hp: 99
 phrases: {}
 damage_by_weapon:
-    logic: 1
+    logic: 10
 textures:
-    enemy_normal: sportick.png//4
-    enemy_wounded: grumpylook_wounded.png//4
+    enemy_normal: sportick.png//2
+    enemy_wounded: grumpylook_wounded.png//1
 scripts:
     run: python::run@run.py
     draw: python::draw@run.py

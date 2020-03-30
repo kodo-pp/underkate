@@ -1,5 +1,6 @@
 from underkate.vector import Vector
 
+import random as rd
 from typing import Tuple
 
 
@@ -20,3 +21,7 @@ def collide_beam_and_point(
     offset = normal * (thickness / 2.0)
     line = end - start
     return line.sin(point - (start + offset)) * line.sin(point - (start - offset)) < 0
+
+
+def random_between(minimum: float, maximum: float):
+    return rd.random() * (maximum - minimum) + minimum

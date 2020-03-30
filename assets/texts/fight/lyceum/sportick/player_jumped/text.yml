@@ -1,0 +1,17 @@
+pictures:
+    th: sportick/face_thinking.png//2
+    he: sportick/face_hehe.png//2
+    nt: sportick/face_neutral.png//2
+pages:
+    - text: "Oh my, are you hurt?"
+      picture: th
+    - text: "..."
+      picture: th
+    - text: "Phew, you're fine"
+      picture: he
+    - text: "That jump could turn out much, much worse"
+      picture: nt
+    - text: "..."
+      picture: nt
+    - text: "Probably, giving you that training wasn't a good idea at the first place..."
+      picture: nt

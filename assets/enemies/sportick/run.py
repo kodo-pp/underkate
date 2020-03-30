@@ -9,7 +9,7 @@ from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
-from underkate.util import collide_beam_and_point, clamp
+from underkate.util import collide_beam_and_point, clamp, random_between
 from underkate.vector import Vector
 
 import math
@@ -99,30 +99,12 @@ class Line(BaseBullet):
     teardown_duration = 0.2
 
 
-class LineSpawner(BulletSpawner):
+class AttackSpawner(BulletSpawner):
     async def run(self):
-        await rd.choice([self.run_line_grid, self.run_chaotic_lines, self.run_chaotic_lines])()
+        await rd.choice([self.run_lines])()
 
 
-    async def run_line_grid(self):
-        self.set_timeout(100.0)
-
-        for i in range(0, 10, 3):
-            self._spawn_line(i, -1, i, 10)
-            self._spawn_line(-1, i, 10, i)
-
-        await self.sleep_for(2.8)
-
-        for i in range(1, 10, 3):
-            self._spawn_line(i, -1, i, 10)
-            self._spawn_line(-1, i, 10, i)
-
-        await self.sleep_for(2.8)
-
-
-    def _spawn_line(self, r1, c1, r2, c2):
-        start = self.bullet_board.get_coords_at(r1, c1)
-        end = self.bullet_board.get_coords_at(r2, c2)
+    def _spawn_line(self, start, end):
         self.spawn(
             Line(
                 bullet_board = self.bullet_board,
@@ -138,76 +120,145 @@ class LineSpawner(BulletSpawner):
         )
 
 
-    async def run_chaotic_lines(self):
+    def _random_point_on_circle_boundary(self):
+        return self._random_diameter()[0]
+
+
+    def _random_diameter(self):
+        rect = self.bullet_board.get_rect()
+        r = 0.5 * math.sqrt(rect.width ** 2 + rect.height ** 2) + 20.0
+        angle = random_between(0.0, math.pi * 2)
+        offset = Vector(math.cos(angle), math.sin(angle)) * r
+        center = Vector(*rect.center)
+
+        first = center + offset
+        second = center - offset
+        return first, second
+
+
+    async def run_lines(self):
         while True:
-            await self.sleep_for(0.4)
-            if rd.randint(0, 1) == 0:
-                row = rd.randrange(0, 10)
-                start = self.bullet_board.get_coords_at(row, -1)
-                end = self.bullet_board.get_coords_at(row, 10)
-            else:
-                col = rd.randrange(0, 10)
-                start = self.bullet_board.get_coords_at(-1, col)
-                end = self.bullet_board.get_coords_at(10, col)
-            self.spawn(
-                Line(
-                    bullet_board = self.bullet_board,
-                    pos = Vector(0, 0),
-                    speed = Vector(0, 0),
-                    damage = 5,
-                    start = start,
-                    end = end,
-                    thickness = 20,
-                    displayed_thickness = 8,
-                ),
-                unrestricted = True,
-            )
+            await self.sleep_for(0.27)
+            #start = self._random_point_on_circle_boundary()
+            #end = self._random_point_on_circle_boundary()
+            start, end = self._random_diameter()
+            self._spawn_line(start, end)
 
 
 class Script(FightScript):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._can_spare = False
+        self._has_run = False
+        self._has_jumped = False
+        self._has_moved = False
 
 
     def can_spare(self):
-        return self._can_spare
+        return self._has_run and self._has_jumped and self._has_moved
 
 
     def create_bullet_spawner(self):
-        return LineSpawner(bullet_board=self.bullet_board)
+        return AttackSpawner(bullet_board=self.bullet_board)
 
 
     async def interact(self, interaction):
         await super().interact(interaction)
 
-        if interaction.name == 'cry':
+        if interaction.name == 'move':
+            await self.interact_move()
+        elif interaction.name == 'run':
+            await self.interact_run()
+        elif interaction.name == 'jump':
+            await self.interact_jump()
+
+
+    async def interact_move(self):
+        if self._has_moved:
             await display_text(
                 DisplayedText([
-                    TextPage("... but Geoma doesn't care"),
+                    TextPage("... but nothing changes"),
                 ])
             )
-        elif interaction.name == 'circle':
+        else:
             await display_text(
                 DisplayedText([
-                    TextPage("Geoma recognizes an old friend in your drawing"),
-                    TextPage("She looks much happier now"),
+                    TextPage("It turns out that this is a good warm-up exercise!"),
+                    TextPage("Sportick now allows you to proceed with training"),
                 ])
             )
-            self._can_spare = True
+            self._has_moved = True
+
+
+    async def interact_run(self):
+        if self._has_run:
+            await display_text(
+                DisplayedText([
+                    TextPage("... but, having already ran recently, you feel too tired to do it again"),
+                ])
+            )
+        elif self._has_moved:
+            await display_text(
+                DisplayedText([
+                    TextPage("You begin to walk slowly first, but then start to increase the speed"),
+                    TextPage("Sportick admits that your running skills are fine"),
+                    TextPage("Also, you have warmed up even more"),
+                ])
+            )
+            self._has_run = True
+        else:
+            await display_text(
+                DisplayedText([
+                    TextPage("... but, before you run, you have to make your first movement"),
+                ])
+            )
+
+
+    async def interact_jump(self):
+        if self._has_jumped:
+            await display_text(
+                DisplayedText([
+                    TextPage("... but Sportick is afraid that you can get an injury"),
+                ])
+            )
+        elif self._has_run:
+            await display_text(
+                DisplayedText([
+                    TextPage("... and your attempt is sucessful"),
+                    TextPage("You lift yourself up, into the air"),
+                    TextPage("Wow, you can jump really high!"),
+                    TextPage("You remain in the air for a moment..."),
+                    TextPage("But then it's time to fall down"),
+                    TextPage("Regretting about the height of your jump, you begin your descent"),
+                    TextPage("..."),
+                    TextPage("Ouch!"),
+                ])
+            )
+            self._has_jumped = True
+            await display_text(load_text('fight/lyceum/sportick/player_jumped'))
+        else:
+            await display_text(
+                DisplayedText([
+                    TextPage("... but you haven't warmed up enough"),
+                ])
+            )
 
 
     def get_interactions(self):
         return [
             Interaction(
-                name = 'cry',
-                pretty_name = 'Start crying',
-                description = 'You start crying. Tears are running down your cheeks',
+                name = 'run',
+                pretty_name = 'Run',
+                description = 'You try to run',
             ),
             Interaction(
-                name = 'circle',
-                pretty_name = 'Draw a circle',
-                description = 'You find some paper and draw a circle on it',
+                name = 'jump',
+                pretty_name = 'Jump',
+                description = 'You try to jump',
+            ),
+            Interaction(
+                name = 'move',
+                pretty_name = 'Move',
+                description = 'You move around the room',
             ),
         ]
 
