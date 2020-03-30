@@ -17,6 +17,14 @@ triggers:
         interact: python::elevator.py
 
 
+objects:
+    - pos: [619, 46]
+      is_passable: true
+      texture: elevator_1.png
+      if: |
+          return state['lyceum_elevator_used']
+
+
 initial_positions:
     lyceum_5_assembly_hall: [33, 303]
     lyceum_staircase_r: [202, 226]

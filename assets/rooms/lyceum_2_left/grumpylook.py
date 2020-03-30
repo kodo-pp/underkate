@@ -1,11 +1,12 @@
+from underkate.animated_texture import AnimatedTexture
 from underkate.global_game import get_game
 from underkate.load_text import load_text
+from underkate.script import RoomScript
 from underkate.scriptlib.common import display_text, sleep
 from underkate.scriptlib.gather import gather
+from underkate.state import get_state
 from underkate.texture import load_texture
-from underkate.animated_texture import AnimatedTexture
 from underkate.textured_walking_sprite import TexturedWalkingSprite
-from underkate.script import RoomScript
 
 
 async def main(root, **kwargs):
@@ -34,5 +35,6 @@ async def main(root, **kwargs):
     room.spawn(grumpylook)
 
     await gather(grumpylook.walk_x(-240), player.walk_x(-240))
+    get_state()['grumpylook_met_at_floor2'] = True
     overworld.load_room('lyceum_5_left')
     overworld.unfreeze()

@@ -9,6 +9,12 @@ from underkate.vector import Vector
 
 async def main(*, root, **kwargs):
     overworld = get_game().overworld
+    if get_state()['lyceum_elevator_used']:
+        overworld.freeze()
+        await display_text(load_text('overworld/lyceum_5_right/elevator_1'))
+        overworld.unfreeze()
+        return
+
     overworld.freeze()
     elevator_open_texture = load_texture(root / 'elevator_open.png')
     elevator_open_sprite = TexturedSprite(pos=Vector(619, 126), texture=elevator_open_texture)
