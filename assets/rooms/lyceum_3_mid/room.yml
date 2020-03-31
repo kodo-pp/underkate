@@ -8,6 +8,10 @@ triggers:
       events:
         enter: room::lyceum_3_right
 
+    - rect: [0, 169, 14, 258]
+      events:
+        enter: room::lyceum_3_cariel
+
     - rect: [388, 68, 71, 357]
       events:
         enter: |
@@ -20,6 +24,12 @@ triggers:
 
 initial_positions:
     lyceum_3_right: [752, 296]
+    lyceum_3_cariel: [42, 299]
+
+
+save_point:
+    pos: [180, 216]
+    script: text::overworld/lyceum_3_mid/save
 
 
 objects:

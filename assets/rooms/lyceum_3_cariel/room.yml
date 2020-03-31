@@ -1,0 +1,33 @@
+name: lyceum_3_cariel
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [782, 154, 17, 316]
+      events:
+        enter: room::lyceum_3_mid
+
+    - rect: [276, 107, 134, 118]
+      events:
+        interact: text::overworld/lyceum_3_cariel/computer
+
+
+initial_positions:
+    lyceum_3_mid: [739, 309]
+
+
+scripts:
+    on_load: |
+        dynamic::
+        if state['cariel_fought']:
+            return []
+        else:
+            return 'python::on_enter.py'
+
+
+objects:
+    - pos: [472, 211]
+      texture: cariel/overworld.png//2
+      if: |
+          return not state['cariel_fought']

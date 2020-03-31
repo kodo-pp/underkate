@@ -40,6 +40,7 @@ DEFAULTS = {
     'lyceum_elevator_used': False,
     'sportick_fought': False,
     'lyceum_3_flate_met': False,
+    'cariel_fought': False,
 }
 
 
