@@ -1,0 +1,54 @@
+pictures:
+    beg: cariel/face_begging.png//2
+    both: cariel/face_bothered.png//2
+    dis: cariel/face_dissatisfied_c.png//2
+    neu: cariel/face_neutral.png//2
+    sh: cariel/face_shouting.png//2
+    smile: cariel/face_smiling.png//2
+    sur: cariel/face_surprised.png//2
+    th: cariel/face_thinking.png//2
+    thr: cariel/face_thinking_r.png//2
+    ang: cariel/face_angry.png//2
+    fri: cariel/face_frightened.png//2
+
+pages:
+    - text: "Hello again!"
+      picture: smile
+
+    - text: "You look a bit anxious, something must be worrying you"
+      picture: neu
+
+    - text: "Surprisingly, I am also a bit worried about something for no apparent reason"
+      picture: both
+
+    - text: "Alright, today I will teach you..."
+      picture: neu
+
+    - text: "..."
+      picture: both
+
+    - text: "well... do not look at me this way, please"
+      picture: dis
+
+    - text: "If you are bored, we can get to the point straight away"
+      picture: dis
+
+    - text: "It is extremely simple"
+      picture: neu
+
+    - text: "All you have to do is..."
+      picture: both
+
+    - text: "Fill these cells with the data..."
+      picture: both
+
+    - text: "Huh? Are you listening to me?"
+      picture: dis
+
+    - text: "W-what is that strange expression on your face?"
+      picture: fri
+      delay: 0.1
+
+    - text: "Are you..."
+      picture: fri
+      delay: 0.1

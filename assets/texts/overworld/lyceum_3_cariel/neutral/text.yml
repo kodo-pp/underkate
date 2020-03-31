@@ -1,0 +1,137 @@
+pictures:
+    beg: cariel/face_begging.png//2
+    both: cariel/face_bothered.png//2
+    dis: cariel/face_dissatisfied_c.png//2
+    neu: cariel/face_neutral.png//2
+    sh: cariel/face_shouting.png//2
+    smile: cariel/face_smiling.png//2
+    sur: cariel/face_surprised.png//2
+    th: cariel/face_thinking.png//2
+    thr: cariel/face_thinking_r.png//2
+    ang: cariel/face_angry.png//2
+
+pages:
+    - text: "Hello, nice to see you!"
+      picture: smile
+
+    - text: "You look a bit annoyed, is everything fine?"
+      picture: neu
+
+    - text: "Alright, today I will teach you how to use XXL to solve..."
+      picture: neu
+
+    - text: "Hmm..."
+      picture: th
+
+    - text: "We are not going to disappoint or hurt anyone, are we?"
+      picture: both
+
+    - text: "Anyway, I have to teach you the operation of this powerful system"
+      picture: smile
+
+    - text: "It is extremely simple"
+      picture: neu
+
+    - text: "All you have to do is..."
+      picture: smile
+
+    - text: >
+        Fill these cells with the data you are given, for example here we have 391 oh wait wrong problem......
+      picture: smile
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        here it is so it is 1, 2, 3, 894876, -pi, frog, 69 oh wait, the frog isn't supposed to be here......
+      picture: neu
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        probably i have already screwed up with this but that doesn't matter......
+      picture: neu
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        then you put the formulas here so first we try to carefully and accurately design this formula......
+      picture: smile
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        whoops it's 7 gigabytes long so ok let's put a sum here, a product here,
+        a proof of Riemann Hypothesis here......
+      picture: smile
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        wait it does not exist, but still, we just have to apply a bit of logic here......
+      picture: dis
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        just imagine an n-dimensional line being projected onto a plane that is flying at 7.5km......
+      picture: smile
+      delay: 0.02
+      skippable: false
+      auto_advance: true
+
+    - text: >
+        wait, that's also wrong, oh my, it's simply a xor here, so the answer is 28-2.755i
+      picture: neu
+      delay: 0.02
+      skippable: false
+
+    - text: "Pretty easy, right?"
+      picture: smile
+
+    - text: "..."
+      picture: smile
+
+    - text: "..."
+      picture: neu
+
+    - text: "Why are you having that expression?"
+      picture: both
+
+    - text: "Don't you like XXL?"
+      picture: both
+
+    - text: >
+        What to answer? [z] = "Honestly, ...", [Enter] = "No, I don't"
+
+    - text: "How come!?"
+      picture: sur
+
+    - text: "XXL is absolutely universal and capable of doing anything, and you disrespect it like that!"
+      picture: dis
+
+    - text: "Are you just in bad mood?"
+      picture: neu
+
+    - text: "Cheer up, it's not that bad :)"
+      picture: smile
+
+    - text: "..."
+      picture: smile
+
+    - text: "..."
+      picture: neu
+
+    - text: "Still don't want to use it?"
+      picture: dis
+
+    - text: "Well... you know what that means"
+      picture: neu
+
+    - text: "Prove to me that you are stong enough to survive without XXL."
+      picture: ang
