@@ -1,0 +1,21 @@
+name: lyceum_3_right
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [789, 256, 10, 84]
+      events:
+        enter: room::lyceum_staircase_r
+
+    - rect: [560, 79, 123, 76]
+      events:
+        interact: text::overworld/lyceum_3_right/poster
+
+    - rect: [204, 60, 77, 109]
+      events:
+        interact: text::overworld/lyceum_3_right/door
+
+
+initial_positions:
+    lyceum_staircase_r: [733, 302]

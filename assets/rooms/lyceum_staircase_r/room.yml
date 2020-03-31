@@ -8,6 +8,9 @@ triggers:
     - rect: [0, 991, 11, 121]
       events:
         enter: room::lyceum_2_right
+    - rect: [0, 613, 12, 107]
+      events:
+        enter: room::lyceum_3_right
     - rect: [331, 0, 182, 18]
       events:
         enter: room::lyceum_5_right
@@ -15,6 +18,7 @@ triggers:
 initial_positions:
     lyceum_1_right: [422, 1285]
     lyceum_2_right: [53, 1049]
+    lyceum_3_right: [50, 664]
     lyceum_5_right: [420, 40]
 scripts: {}
 objects:
