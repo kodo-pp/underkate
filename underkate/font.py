@@ -53,6 +53,9 @@ class Font:
         "'": 'apostrophe',
         '*': 'asterisk',
         '"': 'quotation_mark',
+        '[': 'left_bracket',
+        ']': 'right_bracket',
+        '=': 'equals_sign',
 
         '0': 'digit_0',
         '1': 'digit_1',

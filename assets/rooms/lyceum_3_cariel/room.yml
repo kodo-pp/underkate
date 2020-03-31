@@ -29,5 +29,6 @@ scripts:
 objects:
     - pos: [472, 211]
       texture: cariel/overworld.png//2
+      name: cariel
       if: |
           return not state['cariel_fought']

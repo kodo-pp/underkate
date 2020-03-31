@@ -87,3 +87,6 @@ mappings:
     apostrophe: [4, 10]
     asterisk: [4, 11]
     quotation_mark: [4, 12]
+    left_bracket: [4, 13]
+    right_bracket: [4, 14]
+    equals_sign: [4, 15]
