@@ -1,0 +1,33 @@
+pictures:
+    cry: flate/face_crying.png//2
+    smile: flate/face_smiling.png//2
+    evil: flate/face_evil.png//2
+    think: flate/face_thinking.png//2
+    tired: flate/face_tired.png//2
+    neutral: flate/face_neutral.png//2
+
+pages:
+    - text: "Hi again!"
+      picture: smile
+    - text: "I heard you've almost finished your first year in the lyceum"
+      picture: smile
+    - text: "Isn't it great?"
+      picture: smile
+    - text: "..."
+      picture: think
+    - text: "But... did you do it honestly, without cheating?"
+      picture: think
+    - text: "Yes, it looks just like you've hacked the entire game in order to pass"
+      picture: neutral
+    - text: "Well, that's not bad!"
+      picture: smile
+    - text: "I know we all wanna have fun, and using cheats or editing the save file are good ways to do it"
+      picture: smile
+    - text: "So, surely, go on with that!"
+      picture: smile
+    - text: >
+        Don't expect the game to behave adequately, though,
+        since I have absolutely no idea what else you've modified
+      picture: neutral
+    - text: "So, have fun!"
+      picture: smile

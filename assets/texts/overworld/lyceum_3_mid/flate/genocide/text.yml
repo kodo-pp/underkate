@@ -1,0 +1,35 @@
+pictures:
+    cry: flate/face_crying.png//2
+    smile: flate/face_smiling.png//2
+    evil: flate/face_evil.png//2
+    think: flate/face_thinking.png//2
+    tired: flate/face_tired.png//2
+    neutral: flate/face_neutral.png//2
+
+pages:
+    - text: "Hi again!"
+      picture: smile
+    - text: "I heard you've almost finished your first year in the lyceum"
+      picture: smile
+    - text: "Isn't it great?"
+      picture: smile
+    - text: "Surely, it is!"
+      picture: smile
+    - text: "You solved all the tasks, you tackled all the problems!"
+      picture: smile
+    - text: "But..."
+      picture: neutral
+    - text: "I feel something empty inside you"
+      picture: neutral
+    - text: "Some lack of joy, happiness, care..."
+      picture: neutral
+    - text: "..."
+      picture: think
+    - text: "Ah, forget it"
+      picture: smile
+    - text: "I'm just overthinking, as usual"
+      picture: smile
+    - text: "Have a nice day!"
+      picture: smile
+    - text: "He-he-he!"
+      picture: evil

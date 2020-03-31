@@ -1,0 +1,53 @@
+pictures:
+    cry: flate/face_crying.png//2
+    smile: flate/face_smiling.png//2
+    evil: flate/face_evil.png//2
+    think: flate/face_thinking.png//2
+    tired: flate/face_tired.png//2
+    neutral: flate/face_neutral.png//2
+
+pages:
+    - text: "Hi again!"
+      picture: smile
+
+    - text: "I heard you've almost finished your first year in the lyceum"
+      picture: smile
+
+    - text: "Isn't it great?"
+      picture: smile
+
+    - text: "..."
+      picture: think
+
+    - text: "Well, it might actually be not as great as it is supposed to be"
+      picture: think
+
+    - text: "Remember all the tasks you were given"
+      picture: neutral
+
+    - text: "Did you solve them?"
+      picture: neutral
+
+    - text: "Well, yes"
+      picture: neutral
+
+    - text: "But you didn't do your best"
+      picture: neutral
+
+    - text: "Sometimes you cowardly ran away"
+      picture: neutral
+
+    - text: "Despite clearly being able to solve the problems facing you"
+      picture: neutral
+
+    - text: "Don't you remember the rules?"
+      picture: neutral
+
+    - text: >
+        "Just solve 'em all, and everything's gonna be fine"
+      picture: evil
+      delay: 0.15
+      skippable: false
+
+    - text: "You can do better, student"
+      picture: neutral

@@ -9,8 +9,13 @@ triggers:
         enter: room::lyceum_3_right
 
     - rect: [388, 68, 71, 357]
-      events: {}
-        #enter: python::flate.py
+      events:
+        enter: |
+            dynamic::
+            if state['lyceum_3_flate_met']:
+                return []
+            else:
+                return 'python::flate.py'
 
 
 initial_positions:
