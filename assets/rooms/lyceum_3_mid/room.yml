@@ -1,0 +1,26 @@
+name: lyceum_3_mid
+background: bg.png
+pass_map: pass.png
+
+
+triggers:
+    - rect: [783, 172, 16, 255]
+      events:
+        enter: room::lyceum_3_right
+
+    - rect: [388, 68, 71, 357]
+      events: {}
+        #enter: python::flate.py
+
+
+initial_positions:
+    lyceum_3_right: [752, 296]
+
+
+objects:
+    - pos: [420, 200]
+      texture: flate/overworld_back.png//2
+      on_interact: text::overworld/lyceum_3_mid/flower
+      name: flate
+      if: |
+          return not state['lyceum_3_flate_met']

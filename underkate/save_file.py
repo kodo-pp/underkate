@@ -39,6 +39,7 @@ DEFAULTS = {
     'grumpylook_gone': False,
     'lyceum_elevator_used': False,
     'sportick_fought': False,
+    'lyceum_3_flate_met': False,
 }
 
 

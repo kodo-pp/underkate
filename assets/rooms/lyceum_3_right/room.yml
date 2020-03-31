@@ -8,6 +8,10 @@ triggers:
       events:
         enter: room::lyceum_staircase_r
 
+    - rect: [0, 172, 15, 253]
+      events:
+        enter: room::lyceum_3_mid
+
     - rect: [560, 79, 123, 76]
       events:
         interact: text::overworld/lyceum_3_right/poster
@@ -19,3 +23,4 @@ triggers:
 
 initial_positions:
     lyceum_staircase_r: [733, 302]
+    lyceum_3_mid: [37, 291]
