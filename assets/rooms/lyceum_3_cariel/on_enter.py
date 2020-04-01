@@ -8,24 +8,23 @@ from underkate.state import get_state
 from underkate.textured_walking_sprite import TexturedWalkingSprite
 
 
-async def maybe_remove_cariel():
-    if get_state()['cariel'] == 'killed':
-        room.state['cariel_sprite'].kill()
+async def remove_cariel():
+    get_game().overworld.room.state['cariel_sprite'].kill()
 
 
 async def branch_pacifist():
-    #await display_text(load_text('overworld/lyceum_3_cariel/pacifist'))
-    await fight(load_enemy_battle_by_name('cariel'), on_before_finish=maybe_remove_cariel)
+    await display_text(load_text('overworld/lyceum_3_cariel/pacifist'))
+    await fight(load_enemy_battle_by_name('cariel'), on_before_finish=remove_cariel)
 
 
 async def branch_neutral():
-    #await display_text(load_text('overworld/lyceum_3_cariel/neutral'))
-    await fight(load_enemy_battle_by_name('cariel'), on_before_finish=maybe_remove_cariel)
+    await display_text(load_text('overworld/lyceum_3_cariel/neutral'))
+    await fight(load_enemy_battle_by_name('cariel'), on_before_finish=remove_cariel)
 
 
 async def branch_genocide():
     await display_text(load_text('overworld/lyceum_3_cariel/genocide'))
-    await fight(load_enemy_battle_by_name('cariel_genocide'), on_before_finish=maybe_remove_cariel)
+    await fight(load_enemy_battle_by_name('cariel_genocide'), on_before_finish=remove_cariel)
 
 
 def respawn_cariel(root, room):
