@@ -1,0 +1,23 @@
+name: XXL
+hp: 50
+textures:
+    cariel: cariel/fight_neutral.png//2
+    enemy_normal: xxl.png//2
+    enemy_wounded: xxl_wounded.png//2
+    cariel_smiling: cariel/face_smiling.png//2
+    cariel_begging: cariel/face_begging.png//2
+    cariel_thinking: cariel/face_thinking.png//2
+    cariel_dissat_c: cariel/face_dissatisfied_c.png//2
+    cariel_dissat_r: cariel/face_dissatisfied_r.png//2
+    cariel_neutral: cariel/face_neutral.png//2
+    cariel_surprised: cariel/face_surprised.png//2
+    cariel_frightened: cariel/face_frightened.png//2
+    cariel_desperate: cariel/face_desperate.png//2
+    cariel_closed_eyes: cariel/face_closed_eyes.png//2
+    cariel_shouting: cariel/face_shouting.png//2
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py
+reward_for_kill: 0
+reward_for_spare: 0
