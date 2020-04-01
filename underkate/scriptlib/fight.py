@@ -81,8 +81,12 @@ class ConsumeFood(Action):
 
 
 class Spare(Action):
+    def __init__(self, message: str = 'Spare'):
+        self.message = message
+
+
     def __str__(self):
-        return 'Spare'
+        return self.message
 
 
 class Interaction(Action):

@@ -1,0 +1,14 @@
+name: Some problem
+hp: 50
+textures:
+    bit0: 0.png
+    bit1: 1.png
+    cariel: cariel/fight_neutral.png//2
+    enemy_normal: xxl.png//2
+    enemy_wounded: xxl_wounded.png//2
+scripts:
+    run: python::run@run.py
+    draw: python::draw@run.py
+    update: python::update@run.py
+reward_for_kill: 0
+reward_for_spare: 0

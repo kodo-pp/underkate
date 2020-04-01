@@ -14,12 +14,12 @@ async def maybe_remove_cariel():
 
 
 async def branch_pacifist():
-    await display_text(load_text('overworld/lyceum_3_cariel/pacifist'))
+    #await display_text(load_text('overworld/lyceum_3_cariel/pacifist'))
     await fight(load_enemy_battle_by_name('cariel'), on_before_finish=maybe_remove_cariel)
 
 
 async def branch_neutral():
-    await display_text(load_text('overworld/lyceum_3_cariel/neutral'))
+    #await display_text(load_text('overworld/lyceum_3_cariel/neutral'))
     await fight(load_enemy_battle_by_name('cariel'), on_before_finish=maybe_remove_cariel)
 
 
