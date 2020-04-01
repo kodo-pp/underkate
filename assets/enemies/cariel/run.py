@@ -400,8 +400,8 @@ class Script(FightScript):
             ])
         if self._num_attacks == 5:
             return DisplayedText([
-                TextPage('You throw the mouse away'),
-                TextPage('However, it manages to copy the cells exactly the way you need'),
+                TextPage('You shout at the screen'),
+                TextPage('Voice recognition almost completes the formula'),
                 TextPage('Almost done!', picture=self.textures['cariel_smiling']),
             ])
         if self._num_attacks == 6:
