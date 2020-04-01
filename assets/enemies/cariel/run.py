@@ -431,6 +431,7 @@ class Script(FightScript):
         if self._has_spared:
             get_state()['cariel_fought'] = True
             await self.cariel_sprite.walk_x(-300)
+            await self.on_spare()
 
 
     def check_if_has_spared(self):
