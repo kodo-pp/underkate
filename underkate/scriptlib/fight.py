@@ -179,15 +179,18 @@ class HitAnimation:
 
 
 class Particle(TexturedSprite):
-    def __init__(self, pos, texture, clip_rect, bottom, lifetime, momentum):
-        super().__init__(pos, texture.clipped(clip_rect))
+    def __init__(self, pos, texture, clip_rect, bottom, lifetime, momentum, slowdown_factor=1.0):
+        safe_clip_rect = clip_rect.clip(texture.get_rect())
+        super().__init__(pos, texture.clipped(safe_clip_rect))
         self.bottom = bottom
         self.lifetime = lifetime
         self.momentum = momentum
         self.total_time = 0.0
+        self.slowdown_factor = slowdown_factor
 
 
     def update(self, time_delta):
+        time_delta /= self.slowdown_factor
         self.total_time += time_delta
         if not self.is_alive():
             return
@@ -204,10 +207,11 @@ class Particle(TexturedSprite):
 
 
 class DisappearAnimation:
-    def __init__(self, texture, pos):
+    def __init__(self, texture, pos, slowdown_factor=1.0):
         self.rect = texture.get_rect()
         self.rect.center = pos.ints()
         self.texture = texture
+        self.slowdown_factor = slowdown_factor
 
 
     async def animate(self):
@@ -219,7 +223,7 @@ class DisappearAnimation:
                 particle = self.make_particle(x, y)
                 get_game().current_game_mode.spawn(particle)
 
-        await sleep(self.max_lifetime)
+        await sleep(self.max_lifetime * self.slowdown_factor)
 
 
     @staticmethod
@@ -266,6 +270,7 @@ class DisappearAnimation:
             bottom = self.random_bottom(),
             lifetime = self.random_lifetime(),
             momentum = self.random_momentum(),
+            slowdown_factor = self.slowdown_factor,
         )
         return particle
 
