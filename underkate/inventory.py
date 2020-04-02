@@ -19,3 +19,7 @@ def enumerate_items(inventory: Inventory) -> Generator[Item, None, None]:
 
 def give(inventory: Inventory, item: str) -> None:
     inventory.append(item)
+
+
+def remove_from_slot(inventory: Inventory, slot_index: int) -> None:
+    del inventory[slot_index]

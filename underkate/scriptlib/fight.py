@@ -75,8 +75,9 @@ class UseWeapon(Action):
 
 
 class ConsumeFood(Action):
-    def __init__(self, food):
+    def __init__(self, food, inventory_slot):
         self.food = food
+        self.inventory_slot = inventory_slot
 
 
     def __str__(self):
@@ -437,7 +438,7 @@ class FightScript:
     def get_choices(self):
         items = list(inventory.enumerate_items(inventory.get_inventory()))
         weapon_choices = [UseWeapon(item) for item in items if isinstance(item, Weapon)]
-        food_choices = [ConsumeFood(item) for item in items if isinstance(item, Food)]
+        food_choices = [ConsumeFood(item, i) for i, item in enumerate(items) if isinstance(item, Food)]
         return [
             Submenu('Weapons', SimpleMenu(self, weapon_choices)),
             Submenu('Food', SimpleMenu(self, food_choices)),
@@ -509,7 +510,8 @@ class FightScript:
             await self.on_kill()
 
 
-    async def consume_food(self, food):
+    async def consume_food(self, food_consumption):
+        food = food_consumption.food
         recovered = food.restores
         state = get_state()
         state['player_hp'] += recovered
@@ -523,6 +525,7 @@ class FightScript:
                 TextPage(f'You ate {food.inline_name} and recovered {recovered} HP'),
             ])
         await display_text(txt)
+        inventory.remove_from_slot(inventory.get_inventory(), food_consumption.inventory_slot)
 
 
     async def interact(self, interaction: Interaction):
@@ -545,7 +548,7 @@ class FightScript:
             return lambda: self.use_weapon(weapon_usage.weapon)
         if isinstance(choice, ConsumeFood):
             food_consumption = cast(ConsumeFood, choice)
-            return lambda: self.consume_food(food_consumption.food)
+            return lambda: self.consume_food(food_consumption)
         if isinstance(choice, Spare):
             return self.spare
         if isinstance(choice, DoNothing):
