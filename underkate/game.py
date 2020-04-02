@@ -7,6 +7,7 @@ from underkate.overworld.mode import Overworld
 from underkate.pending_callback_queue import get_pending_callback_queue
 from underkate.script import SuspendedPythonScript
 
+import sys
 from typing import Tuple, Optional, List
 
 import pygame as pg # type: ignore
@@ -21,6 +22,10 @@ class Game:
     def __init__(self, window_size: Tuple[int, int] = (800, 600), target_fps: int = 60):
         # Initialize the global `game` object
         set_game(self)
+
+        # Initialize loguru
+        logger.remove()
+        logger.add(sink=sys.stderr, level='INFO')
 
         # Initialize coroutine support in scripts
         self._current_script_stack: List[SuspendedPythonScript] = []

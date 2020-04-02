@@ -6,7 +6,6 @@ from typing import Dict
 
 
 def get_item_by_name(item_name: str) -> Item:
-    print(item_name)
     mapping: Dict[str, Item] = {
         'candy': Food(
             pretty_name = 'Colorful candy',
