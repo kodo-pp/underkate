@@ -8,6 +8,10 @@ triggers:
       events:
         enter: room::lyceum_3_mid
 
+    - rect: [0, 232, 25, 95]
+      events:
+        enter: python::leave_lyceum.py
+
     - rect: [276, 107, 134, 118]
       events:
         interact: text::overworld/lyceum_3_cariel/computer
