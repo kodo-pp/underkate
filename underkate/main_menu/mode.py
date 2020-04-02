@@ -47,6 +47,10 @@ class MainMenuUi(BaseMenu):
         return [Play(), Reset()]
 
 
+    def get_border_width(self):
+        return 0
+
+
 class MainMenuMode(GameMode):
     def __init__(self, game: 'Game'):
         super().__init__(game)

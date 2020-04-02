@@ -128,6 +128,10 @@ class SimpleMenu(Menu):
         return self.choices
 
 
+    def get_border_width(self):
+        return 0
+
+
 class HitAnimation:
     class Animator(Sprite):
         def __init__(self, sprite):

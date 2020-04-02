@@ -58,7 +58,7 @@ class BaseMenu(BaseSprite):
 
 
     def get_coords_for_line(self, index):
-        return (200, 400 + 40 * index)
+        return (self.get_left() + 60, self.get_top() + 20 + 40 * index)
 
 
     def get_coords_for_title(self, index):
@@ -70,15 +70,51 @@ class BaseMenu(BaseSprite):
         return (x - 30, y + 10)
 
 
+    def get_left(self):
+        return 140
+
+
+    def get_top(self):
+        return 350
+
+
+    def get_width(self):
+        return 800 - 2 * self.get_left()
+
+
+    def get_height(self):
+        return 40 * len(self.get_choices()) + 20
+
+
     def get_rect(self):
-        return pg.Rect(140, 380, 200, 40 * len(self.get_choices()) + 20)
+        return pg.Rect(self.get_left(), self.get_top(), self.get_width(), self.get_height())
 
 
     def get_fill_color(self):
         return (0, 0, 0)
 
 
+    def get_border_color(self):
+        return (255, 255, 255)
+
+
+    def get_border_width(self):
+        return 3
+
+
+    def _draw_border(self, destination):
+        # TODO: replace with faster algorithm if performance issues arise
+        border_width = self.get_border_width()
+        rect = (
+            self
+                .get_rect()
+                .inflate(2 * border_width, 2 * border_width)
+        )
+        pg.draw.rect(destination, self.get_border_color(), rect)
+
+
     def draw(self, destination):
+        self._draw_border(destination)
         pg.draw.rect(destination, self.get_fill_color(), self.get_rect())
         for i, title_line in enumerate(self.get_title()):
             x, y = self.get_coords_for_title(i)
