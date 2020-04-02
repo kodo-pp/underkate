@@ -27,7 +27,7 @@ triggers:
       events:
         enter: |
             dynamic::
-            if room.state.get('grumpylook_talked', False):
+            if room.state.get('grumpylook_talked', False) and not state['grumpylook_met']:
                 return 'python::go_to_canteen.py'
             return []
 
