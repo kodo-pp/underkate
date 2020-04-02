@@ -52,7 +52,7 @@ class Madec(TexturedWalkingSprite):
             self.kill()
             return
 
-        if self.is_touching_player():
+        if self.is_touching_player() and not get_game().overworld.is_frozen():
             enemy_name = rd.choice(['algebroid', 'geoma'])
 
             async def func(*a, **k):
