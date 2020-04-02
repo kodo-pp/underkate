@@ -60,7 +60,7 @@ class SuspendedPythonScript:
                 return False
             except StopIteration:
                 assert self.finish_event is not None
-                get_event_manager().raise_event(self.finish_event)
+                get_event_manager().raise_event(self.finish_event, silent=True)
                 self.finish_event = None
                 return True
         finally:

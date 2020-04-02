@@ -26,7 +26,6 @@ class EventManager:
     def unique_id(self) -> EventId:
         event_id = self._counter
         self._counter += 1
-        logger.debug('EventManager: unique_id: {}', event_id)
         return event_id
 
 
