@@ -1,6 +1,7 @@
 from underkate import save_file
 from underkate.game_mode import GameMode
 from underkate.script import SimpleScript
+from underkate.state import get_state
 from underkate.text import draw_text
 from underkate.texture import load_texture
 
@@ -16,7 +17,11 @@ if TYPE_CHECKING:
 class FinalScreenMode(GameMode):
     def __init__(self, game: 'Game'):
         super().__init__(game)
-        self.logo = load_texture(Path('.') / 'assets' / 'textures' / 'logo.png', scale=12)
+        if get_state()['genocide_route_possible']:
+            logo_filename = 'logo_red.png'
+        else:
+            logo_filename = 'logo.png'
+        self.logo = load_texture(Path('.') / 'assets' / 'textures' / logo_filename, scale=12)
         self._elapsed_time = 0.0
 
 
