@@ -44,6 +44,15 @@ class SaveMenu(OverworldMenu):
         return ['Save your progress?']
 
 
+class SaveMessage(OverworldMenu):
+    def get_choices(self):
+        return ['OK']
+
+
+    def get_title(self):
+        return ['Progress saved']
+
+
 def _get_item(
     data: dict,
     key: str,
@@ -160,12 +169,13 @@ def load_room(
         async def saver(**kwargs):
             get_game().overworld.freeze()
             await save_text_displayer().wait_until_completion()
-            choice = await SaveMenu().choose()
             if should_restore_hp:
                 state = get_state()
                 state['player_hp'] = state['player_max_hp']
+            choice = await SaveMenu().choose()
             if isinstance(choice, Save):
                 save_file.save(get_game())
+                await SaveMessage().choose()  # TODO: probably make it NOT a menu
             get_game().overworld.unfreeze()
 
         save_point.on_interact = SimpleScript(saver)
