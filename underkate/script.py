@@ -1,10 +1,11 @@
+from underkate.event_manager import get_event_manager, EventId
 from underkate.global_game import get_game
 from underkate.load_text import load_text
-from underkate.scriptlib.common import display_text
+from underkate.scriptlib.common import display_text, wait_for_event
 
 import abc
 from pathlib import Path
-from typing import List, Callable, Any, Union, TYPE_CHECKING
+from typing import List, Callable, Any, Union, Optional, TYPE_CHECKING
 from importlib.util import module_from_spec, spec_from_file_location
 
 from memoization import cached  # type: ignore
@@ -47,6 +48,7 @@ class PythonScript(Script):
 class SuspendedPythonScript:
     def __init__(self, func: Callable, root: Path, args: Union[tuple, list], kwargs: dict):
         self.coro = func(*args, script=self, root=root, **kwargs)
+        self.finish_event: Optional[EventId] = get_event_manager().unique_id()
         self()
 
 
@@ -57,9 +59,23 @@ class SuspendedPythonScript:
                 self.coro.send(arg)
                 return False
             except StopIteration:
+                assert self.finish_event is not None
+                get_event_manager().raise_event(self.finish_event)
+                self.finish_event = None
                 return True
         finally:
             get_game().pop_current_script()
+
+
+    def _has_completed(self) -> bool:
+        return self.finish_event is None
+
+
+    async def wait_until_completion(self) -> None:
+        if self._has_completed():
+            return
+        await wait_for_event(self.finish_event)
+
 
 
 class SimpleScript(Script):

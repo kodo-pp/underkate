@@ -4,7 +4,7 @@ from underkate.sprite import Sprite
 from underkate.texture import BaseTexture
 from underkate.vector import Vector
 
-from typing import Optional, Callable
+from typing import Optional, Callable, Any
 
 import pygame as pg  # type: ignore
 
@@ -28,7 +28,7 @@ class Object(Sprite):
         self.is_passable = is_passable
         self.hitbox = hitbox if hitbox is not None else generate_hitbox(20, 20)
         get_event_manager().subscribe('key:confirm', Subscriber(self._on_interact_somewhere))
-        self.on_interact: Callable[[], None] = lambda: None
+        self.on_interact: Callable[[], Any] = lambda: None
 
 
     def __repr__(self) -> str:

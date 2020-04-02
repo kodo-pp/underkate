@@ -51,7 +51,12 @@ initial_positions:
     lyceum_1_canteen: [85, 383]
 
 scripts:
-    update: python::update_grumpylook.py
+    update: |
+        dynamic::
+        if state['grumpylook_met']:
+            return []
+        else:
+            return 'python::update_grumpylook.py'
 
 save_point:
     pos: [787, 452]

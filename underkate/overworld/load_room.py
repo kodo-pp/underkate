@@ -3,7 +3,8 @@ from underkate.global_game import get_game
 from underkate.overworld.object import Object
 from underkate.overworld.pass_map import PassMap
 from underkate.overworld.room import Room, Trigger, Event
-from underkate.script import load_script, make_function_from_code
+from underkate.script import load_script, make_function_from_code, SimpleScript
+from underkate.scriptlib.ui import OverworldMenu
 from underkate.state import get_state
 from underkate.texture import Texture, load_texture, BaseTexture
 from underkate.vector import Vector
@@ -22,6 +23,25 @@ class RoomError(Exception):
 
 class NoDefault:
     pass
+
+
+class Save:
+    def __str__(self):
+        return 'Save'
+
+
+class DoNotSave:
+    def __str__(self):
+        return "Don't save"
+
+
+class SaveMenu(OverworldMenu):
+    def get_choices(self):
+        return [Save(), DoNotSave()]
+
+
+    def get_title(self):
+        return ['Save your progress?']
 
 
 def _get_item(
@@ -137,14 +157,18 @@ def load_room(
         save_text_displayer = load_script(save_point_info['script'], root=path)
         should_restore_hp = save_point_info.get('restores_hp', True)
 
-        def saver(**kwargs):
-            del kwargs
-            save_text_displayer()
+        async def saver(**kwargs):
+            get_game().overworld.freeze()
+            await save_text_displayer().wait_until_completion()
+            choice = await SaveMenu().choose()
             if should_restore_hp:
                 state = get_state()
                 state['player_hp'] = state['player_max_hp']
-            save_file.save(get_game())
-        save_point.on_interact = saver
+            if isinstance(choice, Save):
+                save_file.save(get_game())
+            get_game().overworld.unfreeze()
+
+        save_point.on_interact = SimpleScript(saver)
     else:
         save_point = None
 

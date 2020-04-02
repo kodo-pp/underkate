@@ -166,12 +166,20 @@ class OverworldMenu(BaseMenu):
         self.kill()
 
 
-    def get_rect(self):
-        return pg.Rect(150, 150, 500, 250)
+    def get_left(self):
+        return 150
+
+
+    def get_top(self):
+        return 150
+
+
+    def get_height(self):
+        return 250
 
 
     def get_coords_for_title(self, index):
-        return (160, 180 + 40 * index)
+        return (170, 170 + 40 * index)
 
 
     def get_coords_for_line(self, index):
