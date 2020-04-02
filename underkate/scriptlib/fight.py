@@ -38,7 +38,7 @@ async def _play_transition_animation(pos=None):
         pos = get_game().overworld.room.player.pos if pos is None else pos,
         initial_scale = 10.0,
     )
-    await play_animation(animation)
+    await play_animation(animation, where=get_game().overworld.room)
 
 
 async def async_none():

@@ -126,13 +126,13 @@ class Room:
 
         self.player.update(time_delta)
 
-        self.objects.filter(lambda x: x.is_alive())
+        self.objects.filter(lambda x: x.is_alive(), deleter = lambda x: x.on_kill())
         self.named_objects = {
             name: obj
             for name, obj in self.named_objects.items()
             if obj.is_alive()
         }
-        self.sprites.filter(lambda x: x.is_alive())
+        self.sprites.filter(lambda x: x.is_alive(), deleter = lambda x: x.on_kill())
 
         with self.objects:
             for obj in self.objects:
