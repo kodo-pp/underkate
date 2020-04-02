@@ -250,8 +250,8 @@ class BulletBoard(FightMixin, BaseSprite):
 
 
     def move(self, dx: int, dy: int):
-        self.row = clamp(self.row + dy, 0, self.rows)
-        self.col = clamp(self.col + dx, 0, self.cols)
+        self.row = clamp(self.row + dy, 0, self.rows - 1)
+        self.col = clamp(self.col + dx, 0, self.cols - 1)
         self.movement_state.move_to(self.get_coords_at(self.row, self.col))
 
 
