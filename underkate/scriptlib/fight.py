@@ -6,6 +6,7 @@ from underkate.font import load_font
 from underkate.global_game import get_game
 from underkate.items.food import Food
 from underkate.items.weapon import Weapon
+from underkate.scriptlib.animation import play_animation
 from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.money import pay
@@ -30,12 +31,14 @@ from typing import Optional, Protocol, Dict, Callable, Any, Coroutine, cast, Lis
 import pygame as pg  # type: ignore
 
 
-async def _play_transition_animation():
-    event_id, callback = make_callback()
-    animation = FightEnterAnimation((800, 600), 0.4, callback)
-    get_game().overworld.spawn(animation)
-    animation.start_animation()
-    await wait_for_event(event_id)
+async def _play_transition_animation(pos=None):
+    animation = FightEnterAnimation(
+        narrow_down_length = 0.5,
+        remain_length = 0.8,
+        pos = get_game().overworld.room.player.pos if pos is None else pos,
+        initial_scale = 10.0,
+    )
+    await play_animation(animation)
 
 
 async def async_none():
