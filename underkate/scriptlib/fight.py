@@ -612,7 +612,14 @@ class FightScript:
         pass
 
 
+    def get_battle_entry_text(self):
+        return DisplayedText([
+            TextPage(f'{self.enemy.name} attacks you'),
+        ])
+
+
     async def run(self):
+        await display_text(self.get_battle_entry_text())
         while True:
             menu = self.get_main_menu()
             choice = await self.choose_from_menu_tree(menu)

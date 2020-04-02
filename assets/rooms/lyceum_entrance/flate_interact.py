@@ -16,7 +16,7 @@ from pathlib import Path
 from pygame import Rect
 
 
-DEBUG_SKIP = True
+DEBUG_SKIP = False
 
 
 async def main(*, root, script, **kwargs):

@@ -13,7 +13,7 @@ from underkate.vector import Vector
 from pathlib import Path
 
 
-DEBUG_SKIP = True
+DEBUG_SKIP = False
 
 
 class Script(FightScript):
