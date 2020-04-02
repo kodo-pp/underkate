@@ -32,6 +32,8 @@ class Game:
         # Initialize PyGame
         pg.init()
         pg.display.set_mode(self.window_size, pg.HWSURFACE | pg.DOUBLEBUF)
+        pg.display.set_caption('Underkate')
+        pg.display.set_icon(pg.image.load('assets/icon.png'))
         self.screen = pg.display.get_surface()
 
         # Initialize clock
