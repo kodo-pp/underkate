@@ -323,6 +323,7 @@ class Script(FightScript):
         self.spawn(grumpylook)
         sportick.kill()
         await grumpylook.walk_x(-500)
+        self.enemy.name = 'Grumpylook'
         self.enemy.sprite = grumpylook
 
 
@@ -343,8 +344,8 @@ class Script(FightScript):
         await super().on_hit(killed)
         if not killed:
             return
-        await display_text(load_text('fight/lyceum/sportick/after_fight'))
         self.enemy.name = 'Grumpylook'
+        await display_text(load_text('fight/lyceum/sportick/after_fight'))
 
 
 async def run(*, enemy_battle, **kwargs):
