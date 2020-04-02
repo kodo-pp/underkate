@@ -2,7 +2,9 @@ from underkate import save_file
 from underkate.game_mode import GameMode
 from underkate.script import SimpleScript
 from underkate.scriptlib.ui import BaseMenu
+from underkate.texture import load_texture
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pygame as pg  # type: ignore
@@ -56,6 +58,7 @@ class MainMenuMode(GameMode):
         super().__init__(game)
         self.menu = MainMenuUi(self)
         self.element = None
+        self.logo = load_texture(Path('.') / 'assets' / 'textures' / 'logo.png', scale=12)
         script = SimpleScript(self.run)
         script()
 
@@ -71,5 +74,6 @@ class MainMenuMode(GameMode):
 
     def draw(self, destination: pg.Surface):
         super().draw(destination)
+        self.logo.draw(destination, 400, 100)
         if self.element is not None:
             self.element.draw(destination)
