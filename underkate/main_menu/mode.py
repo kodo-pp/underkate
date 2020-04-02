@@ -62,7 +62,10 @@ class MainMenuMode(GameMode):
 
     async def run(self, **kwargs):
         del kwargs
-        choice = await self.menu.choose()
+        while True:
+            choice = await self.menu.choose()
+            if choice is not None:
+                break
         await choice.perform_action(self.game)
 
 
