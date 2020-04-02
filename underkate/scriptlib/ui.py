@@ -11,6 +11,7 @@ from underkate.util import clamp
 from underkate.vector import Vector, MappingFunction, Mappings
 from underkate.wal_list import WalList
 
+import itertools
 import time
 import sys
 from abc import abstractmethod
@@ -31,6 +32,7 @@ class BaseMenu(BaseSprite):
         if len(self.choices) == 0:
             return None
         self.index = 0
+        self._scroll_offset = 0
         self.font = load_font(Path('.') / 'assets' / 'fonts' / 'default')
         self.pointer_texture = load_texture(Path('.') / 'assets' / 'fight' / 'pointer.png', scale=2)
         self.start_displaying()
@@ -83,7 +85,7 @@ class BaseMenu(BaseSprite):
 
 
     def get_height(self):
-        return 40 * len(self.get_choices()) + 20
+        return 40 * min(len(self.get_choices()), self.get_max_single_screen_items()) + 20
 
 
     def get_rect(self):
@@ -102,6 +104,10 @@ class BaseMenu(BaseSprite):
         return 3
 
 
+    def get_max_single_screen_items(self):
+        return 4
+
+
     def _draw_border(self, destination):
         # TODO: replace with faster algorithm if performance issues arise
         border_width = self.get_border_width()
@@ -113,16 +119,44 @@ class BaseMenu(BaseSprite):
         pg.draw.rect(destination, self.get_border_color(), rect)
 
 
+    def indicate_scrollability_up(self, destination):
+        pg.draw.line(
+            destination,
+            (0, 255, 255),
+            self.get_rect().topleft,
+            self.get_rect().topright,
+            3,
+        )
+
+
+    def indicate_scrollability_down(self, destination):
+        pg.draw.line(
+            destination,
+            (0, 255, 255),
+            self.get_rect().bottomleft,
+            self.get_rect().bottomright,
+            3,
+        )
+
+
     def draw(self, destination):
         self._draw_border(destination)
         pg.draw.rect(destination, self.get_fill_color(), self.get_rect())
         for i, title_line in enumerate(self.get_title()):
             x, y = self.get_coords_for_title(i)
             draw_text(title_line, font=self.font, x=x, y=y, destination=destination)
-        for i, choice in enumerate(self.choices):
+
+        low = self._scroll_offset
+        high = low + self.get_max_single_screen_items()
+        for i, choice in zip(itertools.count(), self.choices[low:high]):
             x, y = self.get_coords_for_line(i)
             draw_text(str(choice), font=self.font, x=x, y=y, destination=destination)
-        x, y = self.get_coords_for_pointer(self.index)
+
+        if low != 0:
+            self.indicate_scrollability_up(destination)
+        if high < len(self.get_choices()):
+            self.indicate_scrollability_down(destination)
+        x, y = self.get_coords_for_pointer(self.index - self._scroll_offset)
         self.pointer_texture.draw(destination, x=x, y=y)
 
 
@@ -132,10 +166,14 @@ class BaseMenu(BaseSprite):
 
     def on_key_up(self):
         self.index = max(self.index - 1, 0)
+        if self._scroll_offset > self.index:
+            self._scroll_offset = self.index
 
 
     def on_key_down(self):
         self.index = min(self.index + 1, len(self.choices) - 1)
+        if self.index >= self._scroll_offset + self.get_max_single_screen_items():
+            self._scroll_offset += 1
 
 
     @abstractmethod
