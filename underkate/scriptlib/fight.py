@@ -217,11 +217,15 @@ class Particle(TexturedSprite):
 
 
 class DisappearAnimation:
-    def __init__(self, texture, pos, slowdown_factor=1.0):
+    def __init__(self, texture, pos, slowdown_factor=1.0, where=None):
         self.rect = texture.get_rect()
         self.rect.center = pos.ints()
         self.texture = texture
         self.slowdown_factor = slowdown_factor
+        if where is None:
+            self.where = get_game().current_game_mode
+        else:
+            self.where = where
 
 
     async def animate(self):
@@ -231,7 +235,7 @@ class DisappearAnimation:
         for x in range(x_count):
             for y in range(y_count):
                 particle = self.make_particle(x, y)
-                get_game().current_game_mode.spawn(particle)
+                self.where.spawn(particle)
 
         await sleep(self.max_lifetime * self.slowdown_factor)
 
@@ -309,6 +313,7 @@ class Enemy:
         self.normal_texture = normal_texture
         self.wounded_texture = wounded_texture
 
+        self.fight_script = fight_script
         self.sprite = TexturedSprite(pos, normal_texture)
         fight_script.spawn(self.sprite)
 
@@ -320,7 +325,7 @@ class Enemy:
     async def on_disappear(self):
         pos = self.sprite.pos
         self.sprite.kill()
-        disappear_animation = DisappearAnimation(self.wounded_texture, pos)
+        disappear_animation = DisappearAnimation(self.wounded_texture, pos, where=self.fight_script)
         await disappear_animation.animate()
 
 
