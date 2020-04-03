@@ -4,7 +4,7 @@ from underkate.util import clamp
 
 from pathlib import Path
 
-import pygame as pg
+import pygame as pg  # type: ignore
 
 
 class FightEnterAnimation(AnimatedSprite):
