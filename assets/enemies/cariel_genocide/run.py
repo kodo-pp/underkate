@@ -79,6 +79,13 @@ class Script(FightScript):
         raise NotImplementedError()
 
 
+    def get_battle_entry_text(self):
+        return DisplayedText([
+            TextPage('Cariel is attacked by you'),
+            TextPage('He looks terrified'),
+        ])
+
+
     def get_kill_text(self):
         return DisplayedText([
             TextPage(
