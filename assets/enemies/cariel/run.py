@@ -184,7 +184,7 @@ class Script(FightScript):
 
     def get_choices(self):
         items = list(inventory.enumerate_items(inventory.get_inventory()))
-        food_choices = [ConsumeFood(item) for item in items if isinstance(item, Food)]
+        food_choices = [ConsumeFood(item, i) for i, item in enumerate(items) if isinstance(item, Food)]
         return [
             Attack(),
             Submenu('Food', SimpleMenu(self, food_choices)),
@@ -202,7 +202,7 @@ class Script(FightScript):
         if isinstance(choice, Attack):
             return self.attack_xxl
         if isinstance(choice, ConsumeFood):
-            return lambda: self.consume_food(choice.food)
+            return lambda: self.consume_food(choice)
         if isinstance(choice, Spare):
             return self.spare
         if isinstance(choice, Interaction):
