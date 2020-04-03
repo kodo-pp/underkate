@@ -1,9 +1,7 @@
-from underkate import save_file
 from underkate.game_mode import GameMode
 from underkate.script import SimpleScript
 from underkate.scriptlib.common import sleep
 from underkate.scriptlib.fight import DisappearAnimation
-from underkate.state import get_state
 from underkate.text import draw_text
 from underkate.texture import load_texture
 from underkate.textured_sprite import TexturedSprite
@@ -28,6 +26,7 @@ class DeathScreenMode(GameMode):
 
 
     async def run(self, **kwargs):
+        del kwargs
         heart_texture = load_texture(Path('.') / 'assets' / 'fight' / 'heart.png', scale=1)
         sprite = TexturedSprite(pos=self.heart_pos, texture=heart_texture)
         self.spawn(sprite)
@@ -36,7 +35,7 @@ class DeathScreenMode(GameMode):
         await DisappearAnimation(pos=self.heart_pos, texture=heart_texture).animate()
         self._elapsed_time = 0.0
         await sleep(0.5)
-        self.draw = self.draw_death_text
+        self._draw = self.draw_death_text
 
 
     def draw_animation(self, destination: pg.Surface):

@@ -34,6 +34,7 @@ class Reset:
 
 class MainMenuUi(BaseMenu):
     def __init__(self, main_menu_mode):
+        super().__init__()
         self.main_menu_mode = main_menu_mode
 
 

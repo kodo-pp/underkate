@@ -1,6 +1,4 @@
-from underkate import save_file
 from underkate.game_mode import GameMode
-from underkate.script import SimpleScript
 from underkate.state import get_state
 from underkate.text import draw_text
 from underkate.texture import load_texture

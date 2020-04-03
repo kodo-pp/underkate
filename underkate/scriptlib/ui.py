@@ -13,7 +13,6 @@ from underkate.wal_list import WalList
 
 import itertools
 import time
-import sys
 from abc import abstractmethod
 from copy import copy
 from pathlib import Path
@@ -192,10 +191,6 @@ class BaseMenu(BaseSprite):
 
 
 class OverworldMenu(BaseMenu):
-    def __init__(self):
-        super().__init__()
-
-
     def start_displaying(self):
         get_game().overworld.spawn(self)
 

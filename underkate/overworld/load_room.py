@@ -167,6 +167,7 @@ def load_room(
         should_restore_hp = save_point_info.get('restores_hp', True)
 
         async def saver(**kwargs):
+            del kwargs
             get_game().overworld.freeze()
             await save_text_displayer().wait_until_completion()
             if should_restore_hp:

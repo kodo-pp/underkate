@@ -7,7 +7,7 @@ from underkate.global_game import get_game
 from underkate.items.food import Food
 from underkate.items.weapon import Weapon
 from underkate.scriptlib.animation import play_animation
-from underkate.scriptlib.common import wait_for_event, display_text, make_callback, sleep
+from underkate.scriptlib.common import wait_for_event, display_text, sleep
 from underkate.scriptlib.fight_enter_animation import FightEnterAnimation
 from underkate.scriptlib.money import pay
 from underkate.scriptlib.ui import BaseMenu, Menu, BulletBoard, FightHpIndicator, EnemyHpIndicator
@@ -440,7 +440,10 @@ class FightScript:
     def get_choices(self):
         items = list(inventory.enumerate_items(inventory.get_inventory()))
         weapon_choices = [UseWeapon(item) for item in items if isinstance(item, Weapon)]
-        food_choices = [ConsumeFood(item, i) for i, item in enumerate(items) if isinstance(item, Food)]
+        food_choices = [
+            ConsumeFood(item, i)
+            for i, item in enumerate(items) if isinstance(item, Food)
+        ]
         return [
             Submenu('Weapons', SimpleMenu(self, weapon_choices)),
             Submenu('Food', SimpleMenu(self, food_choices)),

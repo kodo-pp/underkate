@@ -9,6 +9,7 @@ import pygame as pg  # type: ignore
 
 class FightEnterAnimation(AnimatedSprite):
     def __init__(self, narrow_down_length, remain_length, pos, initial_scale):
+        super().__init__()
         self.narrow_down_length = narrow_down_length
         self.remain_length = remain_length
         self.pos = pos
