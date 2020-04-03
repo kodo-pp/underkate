@@ -209,7 +209,7 @@ class Script(FightScript):
         if self.can_spare():
             await display_text(
                 DisplayedText([
-                    TextPage("It looks absolutely happy"),
+                    TextPage("It looks absolutely delighted"),
                 ])
             )
 
@@ -236,7 +236,7 @@ class Script(FightScript):
         if self.can_spare():
             await display_text(
                 DisplayedText([
-                    TextPage("It looks absolutely happy"),
+                    TextPage("It looks absolutely delighted"),
                 ])
             )
 

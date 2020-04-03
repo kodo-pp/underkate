@@ -6,13 +6,13 @@ pictures:
     thinking_r: cariel/face_thinking_r.png//2
 
 pages:
-    - text: "That's right. You answered correctly"
+    - text: "That is right. You answered correctly"
       picture: bothered
 
     - text: "..."
       picture: bothered
 
-    - text: "You didn't listen to me, did you?"
+    - text: "You did not listen to me, did you?"
       picture: bothered
 
     - text: "..."

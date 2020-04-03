@@ -17,7 +17,7 @@ pages:
       picture: thinking
     - text: "Oh, hi! How're you doing?"
       picture: smiling
-    - text: "Awful, as usual? Yeah, that's the spirit"
+    - text: "Awful, as usual? Yeah, that's the spirit!"
       picture: smiling
     - text: "Do you want to hear a little secret?"
       picture: smiling
@@ -25,7 +25,7 @@ pages:
       picture: thinking
     - text: "You think everything can be solved by logic?"
       picture: thinking
-    - text: "Forget about it!"
+    - text: "Forget it!"
       picture: smiling
     - text: "Sometimes you say complete nonsense and that's exactly what they want from you"
       picture: smiling

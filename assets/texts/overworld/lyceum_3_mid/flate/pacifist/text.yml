@@ -43,5 +43,5 @@ pages:
       delay: 0.15
       skippable: false
 
-    - text: "I'm disappointed with you, student"
+    - text: "I'm disappointed in you, student"
       picture: neutral

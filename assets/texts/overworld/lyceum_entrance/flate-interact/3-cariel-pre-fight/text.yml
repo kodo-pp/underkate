@@ -7,24 +7,24 @@ pages:
     - text: "Well.. they're gone"
       picture: neutral
     
-    - text: "Excuse them, please, theye are a bit strange, you see..."
+    - text: "Excuse them, please, they are a bit strange, you see..."
       picture: neutral
 
     - text: "..."
       picture: thinking
 
     - text: >
-        I'm Cariel, the one who helps newcomers to achieve their goals here
+        I am Cariel, the one who helps newcomers to achieve their goals here
         and protects them through their way in the Lyceum
       picture: smiling
 
-    - text: Don't be afraid, I'll take good care of you!
+    - text: "Do not be afraid, I will take good care of you!"
       picture: smiling
 
-    - text: ...
+    - text: "..."
       picture: thinking
 
-    - text: "Before we begin, you'll have to learn some basic things"
+    - text: "Before we begin, you will have to learn some basic concepts"
       picture: neutral
 
     - text: "First of all, while you are here, deadlines and tasks may attack you"

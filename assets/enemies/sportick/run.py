@@ -233,7 +233,7 @@ class Script(FightScript):
         elif self._has_moved:
             await display_text(
                 DisplayedText([
-                    TextPage("You begin to walk slowly first, but then start to increase the speed"),
+                    TextPage("You begin to walk slowly first, but then start to increase your speed"),
                     TextPage("Sportick admits that your running skills are fine"),
                     TextPage("Also, you have warmed up even more"),
                 ])
@@ -242,7 +242,7 @@ class Script(FightScript):
         else:
             await display_text(
                 DisplayedText([
-                    TextPage("... but, before you run, you have to make your first movement"),
+                    TextPage("... but, before you run, you have to make your first movements"),
                 ])
             )
 

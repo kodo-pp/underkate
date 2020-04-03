@@ -8,13 +8,13 @@ pages:
     - text: "Oh, really?"
       picture: surprised
 
-    - text: "Is it that you can't solve even such a simple task or..."
+    - text: "Is it that you cannot solve even such a simple task or..."
       picture: surprised
 
     - text: "..."
       picture: thinking
 
-    - text: "Wow, I'm impressed"
+    - text: "Wow, I am impressed"
       picture: neutral
 
     - text: "You willingly failed to tackle that problem only to make me happy"
