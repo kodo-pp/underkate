@@ -24,7 +24,11 @@ async def branch_neutral():
 
 async def branch_genocide():
     await display_text(load_text('overworld/lyceum_3_cariel/genocide'))
-    await fight(load_enemy_battle_by_name('cariel_genocide'), on_before_finish=remove_cariel)
+    await fight(
+        load_enemy_battle_by_name('cariel_genocide'),
+        on_before_finish = remove_cariel,
+        warning_pos = get_game().overworld.room.state['cariel_sprite'].pos,
+    )
 
 
 def respawn_cariel(root, room):

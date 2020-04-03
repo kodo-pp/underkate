@@ -45,9 +45,11 @@ async def async_none():
     pass
 
 
-async def fight(battle, on_after_enter=async_none, on_before_finish=async_none):
+async def fight(battle, on_after_enter=async_none, on_before_finish=async_none, warning_pos=None):
     game = get_game()
-    await _play_transition_animation()
+    if warning_pos is None:
+        warning_pos = game.overworld.room.player.pos
+    await _play_transition_animation(warning_pos)
     await on_after_enter()
     game.current_game_mode = Fight(battle)
     game.current_game_mode.run()
