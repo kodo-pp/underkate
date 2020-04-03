@@ -1,0 +1,10 @@
+include underkate/assets/*
+include underkate/assets/*/*
+include underkate/assets/*/*/*
+include underkate/assets/*/*/*/*
+include underkate/assets/*/*/*/*/*
+include underkate/assets/*/*/*/*/*/*
+include underkate/assets/*/*/*/*/*/*/*
+include underkate/assets/*/*/*/*/*/*/*/*
+include underkate/assets/*/*/*/*/*/*/*/*/*
+include underkate/assets/*/*/*/*/*/*/*/*/*/*
