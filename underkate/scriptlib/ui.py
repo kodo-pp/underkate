@@ -267,6 +267,12 @@ class MovementState:
         self.elapsed_time = 0.0
 
 
+# TODO: move either to fight.py or to a separate file.
+# It is necessary because of the dependency chain:
+# scriptlib.ui.BulletBoard
+#   [depends on] death_screen.mode.DeathScreenMode
+#     [depends on] scriptlib.fight.***
+#       [depends on] scriptlib.ui.***
 class BulletBoard(FightMixin, BaseSprite):
     def __init__(self, fight_script: 'FightScript'):
         super().__init__(fight_script)
@@ -414,8 +420,11 @@ class BulletBoard(FightMixin, BaseSprite):
         logger.debug('Player was hit, {} hp left', state['player_hp'])
         if state['player_hp'] == 0:
             logger.info('Player died')
-            # TODO: show game over screen
-            sys.exit()
+            from underkate.death_screen.mode import DeathScreenMode  # TODO: fix this shit
+            get_game().current_game_mode = DeathScreenMode(
+                game = get_game(),
+                heart_pos = self.get_current_coords(),
+            )
 
 
     center = Vector(400, 300)
