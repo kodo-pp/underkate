@@ -442,13 +442,13 @@ class FightHpIndicator(FightMixin):
         if filled_width > 0:
             pg.draw.rect(
                 destination,
-                self.fg_color,
+                self.get_fg_color(),
                 pg.Rect(rect.left, rect.top, filled_width, rect.height),
             )
         if rect.width > filled_width:
             pg.draw.rect(
                 destination,
-                self.bg_color,
+                self.get_bg_color(),
                 pg.Rect(rect.left + filled_width, rect.top, rect.width - filled_width, rect.height),
             )
 
@@ -472,8 +472,14 @@ class FightHpIndicator(FightMixin):
         return get_state()['player_max_hp']
 
 
-    fg_color = (0, 255, 255)
-    bg_color = (128, 128, 128)
+    @staticmethod
+    def get_fg_color():
+        return (0, 255, 255)
+
+
+    @staticmethod
+    def get_bg_color():
+        return (128, 128, 128)
 
 
 class EnemyNameIndicator(FightMixin):
@@ -510,4 +516,8 @@ class EnemyHpIndicator(FightHpIndicator):
         return self._max_hp
 
 
-    fg_color = (255, 200, 0)
+    def get_fg_color(self):
+        if self.enemy.fight_script.can_spare():
+            return (200, 255, 170)
+        else:
+            return (255, 200, 0)
