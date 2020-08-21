@@ -11,16 +11,28 @@ pages:
     - text: "... for example, right now"
       picture: neutral
 
-    - text: "But don't be afraid! Many of the tasks are simple, and..."
+    - text: "A task has appeared on your way, blocking your progress until this conflict is resolved"
+      picture: neutral
+
+    - text: "We call this situation a FIGHT"
+      picture: neutral
+
+    - text: "At first, this may sound a bit scary..."
+      picture: neutral
+
+    - text: "But don't you be afraid!"
       picture: smiling
 
-    - text: "it might be not too difficult... to solve..."
+    - text: "Many of the tasks are simple, and..."
+      picture: smiling
+
+    - text: "it might be not too difficult... to solve them..."
       picture: neutral
 
     - text: "..."
       picture: thinking
 
-    - text: "Forgive me, please. I'm a bit worried about that"
+    - text: "Forgive me, please. I'm a bit worried about this"
       picture: neutral
       
     - text: "Teachers commit themselves into designing these problems and tasks"
@@ -46,6 +58,24 @@ pages:
 
     - text: "Don't solve them that easily"
       picture: begging
+
+    - text: "Sometimes you can convince a task that you have no intent of hurting its creator by solving it"
+      picture: neutral
+
+    - text: "Once the problem you are facing understands that you are unwilling to fight it..."
+      picture: neutral
+
+    - text: "... it will reciprocate, becoming reluctant to continue the battle"
+      picture: neutral
+
+    - text: "When the problem enters this state, its HEALTH BAR becomes of a very light shade of green"
+      picture: neutral
+
+    - text: "Then it becomes possible to SPARE it and leave the fight without hurting or getting hurt"
+      picture: neutral
+
+    - text: "Please keep it in mind when yet another difficult problem confronts you"
+      picture: neutral
 
     - text: "I just don't want you to hurt anyone"
       picture: smiling
