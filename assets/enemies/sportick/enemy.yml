@@ -1,5 +1,5 @@
 name: Sportick
-hp: 9
+hp: 99
 phrases: {}
 damage_by_weapon:
     logic: 10
