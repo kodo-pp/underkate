@@ -360,9 +360,9 @@ class ElementProtocol(Drawable, Updatable, Protocol):
 
 class FightScript:
     def __init__(self, battle: EnemyBattle):
-        # TODO: Rewrite this code since it is absolutely unmantainable.
+        # TODO: Rewrite this code since it is absolutely unmaintainable.
         # Some objects start using FightScript before it is fully constructed,
-        # which leads to a complete nightmare with undefined attributes,
+        # which leads to complete nightmare with undefined attributes,
         # which aren't catchable by mypy.
         self.battle = battle
         self.textures = {
