@@ -30,11 +30,12 @@ async def main(*, root, script, **kwargs):
         await display_text(load_text('overworld/lyceum_entrance/flate-interact/2-flate-speech'))
 
     animation = load_animated_once_texture(root / 'flate' / 'disappear', scale=2)
-    get_game().overworld.room.state['flate_object'].texture = animation
+    flate = get_game().overworld.room.named_objects['flate']
+    flate.texture = animation
     event_id, callback = make_callback()
     animation.on_finish = callback
     await wait_for_event(event_id)
-    get_game().overworld.room.state['flate_object'].kill()
+    flate.kill()
 
     cariel_overworld = TexturedWalkingSprite(
         pos = Vector(400, -170),
