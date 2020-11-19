@@ -4,7 +4,7 @@ from underkate.global_game import get_game
 from underkate.load_text import load_text
 from underkate.scriptlib.common import display_text
 from underkate.scriptlib.fight import BulletSpawner, Interaction
-from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon, BaseBullet
+from underkate.scriptlib.fight import FightScript, Weapon, Spare, UseWeapon, BaseBullet, RectangularBullet
 from underkate.state import get_state
 from underkate.text import DisplayedText, TextPage
 from underkate.texture import load_texture
@@ -99,9 +99,14 @@ class Line(BaseBullet):
     teardown_duration = 0.2
 
 
-class LineSpawner(BulletSpawner):
+class Triangle(RectangularBullet):
+    def get_hitbox(self):
+        return pg.Rect(-40, -35, 80, 70)
+
+
+class Spawner(BulletSpawner):
     async def run(self):
-        await rd.choice([self.run_line_grid, self.run_chaotic_lines, self.run_chaotic_lines])()
+        await rd.choice([self.run_triangles, self.run_chaotic_lines])()
 
 
     async def run_line_grid(self):
@@ -119,6 +124,33 @@ class LineSpawner(BulletSpawner):
 
         await self.sleep_for(2.8)
 
+
+    async def run_triangles(self):
+        self.set_timeout(100.0)
+        for i in range(9):
+            self._spawn_triangle()
+            await self.sleep_for(0.6)
+
+
+    def _spawn_triangle(self):
+        pi3 = math.pi / 3
+        angle = rd.choice([0, pi3, 2 * pi3, 3 * pi3, 4 * pi3, 5 * pi3])
+        direction = Vector(math.cos(angle), math.sin(angle))
+        angle_margin = 1.0
+        spawn_angle = rd.uniform(angle - angle_margin, angle + angle_margin)
+        spawn_radius = 300
+        coords = Vector(*self.bullet_board.get_rect().center)
+        spawn_pos = coords - Vector(math.cos(spawn_angle), math.sin(spawn_angle)) * spawn_radius
+        velocity = 200
+        self.spawn(
+            Triangle(
+                bullet_board = self.bullet_board,
+                pos = spawn_pos,
+                speed = direction * velocity,
+                damage = 3,
+                texture = self.bullet_board.fight_script.textures['triangle'],
+            )
+        )
 
     def _spawn_line(self, r1, c1, r2, c2):
         start = self.bullet_board.get_coords_at(r1, c1)
@@ -175,7 +207,7 @@ class Script(FightScript):
 
 
     def create_bullet_spawner(self):
-        return LineSpawner(bullet_board=self.bullet_board)
+        return Spawner(bullet_board=self.bullet_board)
 
 
     async def interact(self, interaction):

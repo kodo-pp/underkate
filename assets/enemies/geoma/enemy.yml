@@ -8,6 +8,7 @@ damage_by_weapon:
 textures:
     enemy_normal: geoma.png//4
     enemy_wounded: geoma_wounded.png//4
+    triangle: triangle.png
 scripts:
     run: python::run@run.py
     draw: python::draw@run.py
