@@ -7,7 +7,7 @@ setup(
     packages = find_packages(),
     author = 'kodopp',
     install_requires = [
-        'pyyaml',
+        'pyyaml>=5.4',
         'pygame',
         'memoization',
         'loguru',
